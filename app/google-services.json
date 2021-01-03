@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "558238520871",
+    "project_id": "better-gsts",
+    "storage_bucket": "better-gsts.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558238520871:android:9d2e5ad34fb81f6e4a6002",
+        "android_client_info": {
+          "package_name": "com.better"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "558238520871-dsr87ma3uh41v269f7h88e3c7n3l4flf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlviZ9EYQyVg2pnDN4xVsQ4DzQhgqt-iI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "558238520871-dsr87ma3uh41v269f7h88e3c7n3l4flf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
