@@ -1,4 +1,4 @@
-package com.better.data
+package com.better.model.dataHolders
 
 data class Team(
     val id: Int,
