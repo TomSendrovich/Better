@@ -1,4 +1,4 @@
-package com.better
+package com.better.ui
 
 import android.os.Bundle
 import android.view.Menu
@@ -10,6 +10,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.better.R
 import com.better.model.Repository
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
