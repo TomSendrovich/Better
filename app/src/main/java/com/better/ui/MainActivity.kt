@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
 
         // TODO: 05/01/2021 delete this demo check
-        Repository.demo()
+        // Repository.demo()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

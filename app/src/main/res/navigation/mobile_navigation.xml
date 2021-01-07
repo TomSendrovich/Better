@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/nav_feed"
-        android:name="com.better.ui.home.HomeFragment"
+        android:name="com.better.ui.feed.FeedFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_matches"
-        android:name="com.better.ui.gallery.GalleryFragment"
+        android:name="com.better.ui.matches.MatchesFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
         android:id="@+id/nav_about"
-        android:name="com.better.ui.slideshow.SlideshowFragment"
+        android:name="com.better.ui.about.AboutFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
 </navigation>
