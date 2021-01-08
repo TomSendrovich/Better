@@ -3,13 +3,13 @@ package com.better.model.dataHolders
 import java.util.*
 
 data class Fixture(
-    val id: Int,
-    val date: Date,
-    val timestamp: Int,
+    val id: Long,
+    val date: String,
+    val timestamp: Long,
     val timezone: String,
     val status: Status,
     val goals: Goals,
-    val league: Int,
+    val league: Long,
     val score: Score,
     val home: FixtureTeam,
     val away: FixtureTeam
