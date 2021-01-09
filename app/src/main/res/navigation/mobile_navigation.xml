@@ -8,18 +8,18 @@
     <fragment
         android:id="@+id/nav_feed"
         android:name="com.better.ui.feed.FeedFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        android:label="@string/menu_feed"
+        tools:layout="@layout/fragment_feed" />
 
     <fragment
         android:id="@+id/nav_matches"
         android:name="com.better.ui.matches.MatchesFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:label="@string/menu_matches"
+        tools:layout="@layout/fragment_matches" />
 
     <fragment
         android:id="@+id/nav_about"
         android:name="com.better.ui.about.AboutFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:label="@string/menu_about"
+        tools:layout="@layout/fragment_about" />
 </navigation>

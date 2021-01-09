@@ -21,8 +21,8 @@ class MatchesFragment : Fragment() {
     ): View? {
         matchesViewModel =
             ViewModelProvider(this).get(MatchesViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_gallery, container, false)
-        val textView: TextView = root.findViewById(R.id.text_gallery)
+        val root = inflater.inflate(R.layout.fragment_matches, container, false)
+        val textView: TextView = root.findViewById(R.id.text_matches)
         matchesViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
