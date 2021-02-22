@@ -1,7 +1,5 @@
 package com.better.model.dataHolders
 
-import java.util.*
-
 data class Fixture(
     val id: Long,
     val date: String,
@@ -13,4 +11,8 @@ data class Fixture(
     val score: Score,
     val home: FixtureTeam,
     val away: FixtureTeam
-)
+) {
+    override fun toString(): String {
+        return "[id=$id, date='$date]"
+    }
+}

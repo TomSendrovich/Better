@@ -1,6 +1,7 @@
 package com.better.model
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.better.*
 import com.better.Utils.toSimpleString
 import com.better.model.dataHolders.*
@@ -12,6 +13,7 @@ import java.util.*
 object Repository {
     private val db: FirebaseFirestore = Firebase.firestore
     private const val TAG = "Repository"
+    val fixtures = MutableLiveData<List<Fixture>>()
 
     fun getLastWeekFixtures() {
         val today = Calendar.getInstance()
@@ -25,6 +27,7 @@ object Repository {
             .whereLessThanOrEqualTo(FIXTURE_DATE, toSimpleString(nextWeek.time))
             .get()
             .addOnSuccessListener { documents ->
+                val list: ArrayList<Fixture> = ArrayList<Fixture>()
                 for (doc in documents) {
                     Log.d(TAG, "${doc.id} => ${doc.data}")
                     val id = doc[FIXTURE_ID] as Long
@@ -87,8 +90,9 @@ object Repository {
                     )
 
                     Log.i(TAG, fixture.toString())
-
-                }
+                    list.add(fixture)
+                } // end of documents loop
+                fixtures.postValue(list)
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents: ", exception)
