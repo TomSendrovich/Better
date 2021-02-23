@@ -10,11 +10,6 @@ class MatchesViewModel() : ViewModel() {
 
     val fixtures: LiveData<List<Fixture>> = Repository.fixtures
 
-//    private val _text = MutableLiveData<String>().apply {
-//        value = "This is matches Fragment"
-//    }
-//    val text: LiveData<String> = _text
-
     fun demoClick(){
         Repository.getLastWeekFixtures()
     }

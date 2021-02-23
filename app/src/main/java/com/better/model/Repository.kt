@@ -5,13 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import com.better.*
 import com.better.Utils.toSimpleString
 import com.better.model.dataHolders.*
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
 
 object Repository {
-    private val db: FirebaseFirestore = Firebase.firestore
     private const val TAG = "Repository"
     val fixtures = MutableLiveData<List<Fixture>>()
 
@@ -20,7 +18,7 @@ object Repository {
         val nextWeek = Calendar.getInstance()
         nextWeek.add(Calendar.DAY_OF_YEAR, 7)
 
-        val fixturesRef = db.collection(DB_COLLECTION_FIXTURES)
+        val fixturesRef = Firebase.firestore.collection(DB_COLLECTION_FIXTURES)
 
         fixturesRef
             .whereGreaterThanOrEqualTo(FIXTURE_DATE, toSimpleString(today.time))
@@ -100,7 +98,7 @@ object Repository {
     }
 
     fun demo() {
-        db.collection(DB_COLLECTION_USERS)
+        Firebase.firestore.collection(DB_COLLECTION_USERS)
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {

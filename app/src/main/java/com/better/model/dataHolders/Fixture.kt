@@ -11,8 +11,4 @@ data class Fixture(
     val score: Score,
     val home: FixtureTeam,
     val away: FixtureTeam
-) {
-    override fun toString(): String {
-        return "[id=$id, date='$date]"
-    }
-}
+)

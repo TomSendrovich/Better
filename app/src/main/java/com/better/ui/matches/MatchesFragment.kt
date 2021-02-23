@@ -21,12 +21,14 @@ class MatchesFragment : Fragment() {
     private lateinit var viewModel: MatchesViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var textView: TextView
-    private val TAG = "MatchesFragment"
+
+    companion object {
+        private const val TAG = "MatchesFragment"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(TAG, "onCreate: ")
         super.onCreate(savedInstanceState)
-
+        viewModel = ViewModelProvider(this).get(MatchesViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -35,10 +37,11 @@ class MatchesFragment : Fragment() {
         Log.d(TAG, "onCreateView: ")
         val view = inflater.inflate(R.layout.fragment_matches, container, false)
         recyclerView = view.findViewById(R.id.recycler_view)
+        return view
+    }
 
-        // TODO: 22/02/2021 take all code below to other function. should not be here.
-
-        viewModel = ViewModelProvider(this).get(MatchesViewModel::class.java)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         recyclerView.apply {
             adapter = FixtureAdapter(ArrayList())
@@ -51,6 +54,5 @@ class MatchesFragment : Fragment() {
             (recyclerView.adapter as FixtureAdapter).setList(it as ArrayList<Fixture>)
             (recyclerView.adapter as FixtureAdapter).notifyDataSetChanged()
         })
-        return view
     }
 }
