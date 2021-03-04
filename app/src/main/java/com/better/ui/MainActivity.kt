@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener {
-            Repository.getYesterdayFixtures()
+            Repository.getTodayFixtures()
 //            Repository.getLastWeekFixtures()
         }
 

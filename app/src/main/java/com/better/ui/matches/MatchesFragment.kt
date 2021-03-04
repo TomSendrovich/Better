@@ -49,7 +49,7 @@ class MatchesFragment : Fragment() {
         }
 
         viewModel.fixtures.observe(viewLifecycleOwner, Observer {
-            Toast.makeText(context, "Number of fixtures: " + it.size, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(context, "Number of fixtures: " + it.size, Toast.LENGTH_SHORT).show()
 
             (recyclerView.adapter as FixtureAdapter).setList(it as ArrayList<Fixture>)
             (recyclerView.adapter as FixtureAdapter).notifyDataSetChanged()

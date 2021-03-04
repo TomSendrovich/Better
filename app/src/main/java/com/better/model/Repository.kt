@@ -14,16 +14,16 @@ object Repository {
     private const val TAG = "Repository"
     val fixtures = MutableLiveData<List<Fixture>>()
 
-    fun getYesterdayFixtures() {
+    fun getTodayFixtures() {
         val today = Calendar.getInstance()
-        val yesterday = Calendar.getInstance()
-        yesterday.add(Calendar.DAY_OF_YEAR, -1)
+        val tomorrow = Calendar.getInstance()
+        tomorrow.add(Calendar.DAY_OF_YEAR, 1)
 
         val fixturesRef = Firebase.firestore.collection(DB_COLLECTION_FIXTURES)
 
         fixturesRef
-            .whereGreaterThanOrEqualTo(FIXTURE_DATE, toSimpleString(yesterday.time))
-            .whereLessThanOrEqualTo(FIXTURE_DATE, toSimpleString(today.time))
+            .whereGreaterThanOrEqualTo(FIXTURE_DATE, toSimpleString(today.time))
+            .whereLessThanOrEqualTo(FIXTURE_DATE, toSimpleString(tomorrow.time))
             .get()
             .addOnSuccessListener { documents ->
                 Log.i(TAG, "queried ${documents.size()} documents")

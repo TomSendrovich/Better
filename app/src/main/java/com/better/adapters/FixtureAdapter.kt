@@ -54,7 +54,7 @@ class FixtureAdapter(private var list: List<Fixture>) :
         val fixture = list[position]
         viewHolder.homeName.text = fixture.home.name
         viewHolder.awayName.text = fixture.away.name
-        viewHolder.status.text = fixture.status.short
+        viewHolder.status.text = buildStatusText(fixture)
 
         val scoreText = buildScoreText(fixture)
         if (scoreText == "null-null") {
@@ -65,6 +65,19 @@ class FixtureAdapter(private var list: List<Fixture>) :
 
         bindImage(viewHolder.homeLogo, fixture.home.logo)
         bindImage(viewHolder.awayLogo, fixture.away.logo)
+    }
+
+    private fun buildStatusText(fixture: Fixture): String {
+        val status = fixture.status.short
+        if (status == "NS") {
+            var time =
+                fixture.date.substringAfter('T').substringBefore('+').substringBeforeLast(':')
+            val hour = time.substring(0, 2).toInt() + 2
+            time = hour.toString() + time.substring(2, 5)
+            return time
+
+        }
+        return status
     }
 
     private fun buildScoreText(fixture: Fixture): String {
