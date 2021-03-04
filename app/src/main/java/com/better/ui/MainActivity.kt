@@ -27,7 +27,8 @@ class MainActivity : AppCompatActivity() {
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener {
-            Repository.getLastWeekFixtures()
+            Repository.getYesterdayFixtures()
+//            Repository.getLastWeekFixtures()
         }
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -40,10 +41,6 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-
-        // TODO: 05/01/2021 delete this demo check
-        // Repository.demo()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

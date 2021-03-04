@@ -3,12 +3,15 @@ package com.better.adapters
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.better.R
 import com.better.model.dataHolders.Fixture
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 
 class FixtureAdapter(private var list: List<Fixture>) :
@@ -51,6 +54,33 @@ class FixtureAdapter(private var list: List<Fixture>) :
         val fixture = list[position]
         viewHolder.homeName.text = fixture.home.name
         viewHolder.awayName.text = fixture.away.name
+        viewHolder.status.text = fixture.status.short
+
+        val scoreText = buildScoreText(fixture)
+        if (scoreText == "null-null") {
+            viewHolder.score.visibility = GONE
+        } else {
+            viewHolder.score.text = buildScoreText(fixture)
+        }
+
+        bindImage(viewHolder.homeLogo, fixture.home.logo)
+        bindImage(viewHolder.awayLogo, fixture.away.logo)
+    }
+
+    private fun buildScoreText(fixture: Fixture): String {
+        val homeScore = fixture.score.fullTime.home.toString()
+        val awayScore = fixture.score.fullTime.away.toString()
+        return "${homeScore}-${awayScore}"
+    }
+
+    private fun bindImage(imgView: ImageView, imgUrl: String?) {
+        Glide
+            .with(imgView.context)
+            .load(imgUrl)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .circleCrop()
+            .placeholder(R.drawable.ic_menu_soccer)
+            .into(imgView)
     }
 
     // Return the size of your dataset (invoked by the layout manager)
