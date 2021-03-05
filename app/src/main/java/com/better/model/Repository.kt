@@ -13,6 +13,7 @@ import java.util.*
 object Repository {
     private const val TAG = "Repository"
     val fixtures = MutableLiveData<List<Fixture>>()
+    lateinit var user: AppUser
 
     fun getTodayFixtures() {
         val today = Calendar.getInstance()
@@ -126,5 +127,9 @@ object Repository {
             home = home,
             away = away
         )
+    }
+
+    fun loadUser(user: AppUser) {
+        this.user = user
     }
 }

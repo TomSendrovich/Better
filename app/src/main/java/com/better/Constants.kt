@@ -1,5 +1,8 @@
 package com.better
 
+// Intent Constants
+const val EXTRA_LOGOUT = "logout"
+
 const val DB_COLLECTION_FIXTURES: String = "fixtures"
 const val DB_COLLECTION_LEAGUES: String = "leagues"
 const val DB_COLLECTION_TEAMS: String = "teams"
@@ -28,7 +31,6 @@ const val TEAMS: String = "teams"
 const val LOGO: String = "logo"
 const val NAME: String = "name"
 const val WINNER: String = "winner"
-
 
 const val FIXTURE_ID: String = "${FIXTURE}.${ID}"
 const val FIXTURE_DATE: String = "${FIXTURE}.${DATE}"

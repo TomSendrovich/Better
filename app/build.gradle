@@ -46,7 +46,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.3'
 
     // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:26.2.0')
+    implementation platform('com.google.firebase:firebase-bom:26.6.0')
 
     // Add the dependencies for any other desired Firebase products
     implementation 'com.google.firebase:firebase-analytics-ktx'
@@ -54,7 +54,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-functions-ktx'
 
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+
     // Glide
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 }
