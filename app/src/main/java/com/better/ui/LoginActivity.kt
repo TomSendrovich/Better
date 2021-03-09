@@ -128,13 +128,7 @@ class LoginActivity : AppCompatActivity() {
     private fun updateUI(currentUser: FirebaseUser?) {
         Log.d(TAG, "updateUI: ")
         if (currentUser != null) {
-            val user = AppUser(
-                name = currentUser.displayName,
-                photoUrl = currentUser.photoUrl,
-                email = currentUser.email,
-                uid = currentUser.uid
-            )
-            Repository.loadUser(user)
+            Repository.loadUser(currentUser)
 
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

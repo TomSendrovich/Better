@@ -5,15 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import com.better.*
 import com.better.Utils.toSimpleString
 import com.better.model.dataHolders.*
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
+import kotlin.collections.ArrayList
 
 object Repository {
     private const val TAG = "Repository"
     val fixtures = MutableLiveData<List<Fixture>>()
-    lateinit var user: AppUser
+    lateinit var appUser: AppUser
 
     fun getTodayFixtures() {
         val today = Calendar.getInstance()
@@ -129,7 +131,62 @@ object Repository {
         )
     }
 
-    fun loadUser(user: AppUser) {
-        this.user = user
+    fun loadUser(currentUser: FirebaseUser) {
+        appUser = AppUser(
+            name = currentUser.displayName,
+            photoUrl = currentUser.photoUrl,
+            email = currentUser.email,
+            uid = currentUser.uid,
+            eventTips = arrayListOf()
+        )
+
+        // query user from DB
+        val usersRef = Firebase.firestore.collection(DB_COLLECTION_USERS)
+
+        usersRef
+            .whereEqualTo(UID, currentUser.uid)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting user: ", exception)
+            }.addOnCompleteListener { data ->
+                Log.d(TAG, "queryUser: completed with ${data.result?.size()} results")
+                if (data.result?.size() == 0) {
+                    createNewUser()
+                }
+            }
+    }
+
+    /**
+     * create new user document and save in firestore.
+     * the data is taken from the user reference.
+     *
+     * we store only the uid of the user (unique id given by google), because the user display name
+     * and user profile picture can be changed. we can get the from the user reference.
+     *
+     * we do not set an empty list of eventTips at the point.
+     *
+     * @see appUser
+     */
+    private fun createNewUser() {
+        val newUser = hashMapOf(
+            UID to appUser.uid
+        )
+
+        val usersRef = Firebase.firestore.collection(DB_COLLECTION_USERS)
+
+        usersRef
+            .document(appUser.uid)
+            .set(newUser)
+            .addOnSuccessListener {
+                Log.i(TAG, "createNewUser: document ${appUser.uid} was created for user ${appUser.name}")
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error creating user: ", exception)
+            }
     }
 }

@@ -11,6 +11,7 @@ const val DB_COLLECTION_VENUES: String = "venues"
 
 const val FIXTURE: String = "fixture"
 const val ID: String = "id"
+const val UID: String = "uid"
 const val DATE: String = "date"
 const val TIMESTAMP: String = "timestamp"
 const val TIMEZONE: String = "timezone"

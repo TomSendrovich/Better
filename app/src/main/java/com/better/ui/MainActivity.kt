@@ -45,8 +45,8 @@ class MainActivity : AppCompatActivity() {
         logoutButton = findViewById(R.id.logout)
 
         fab.setOnClickListener {
-            Repository.getTodayFixtures()
-//            Repository.getLastWeekFixtures()
+//            Repository.getTodayFixtures()
+            Repository.getLastWeekFixtures()
         }
         logoutButton.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
@@ -75,12 +75,12 @@ class MainActivity : AppCompatActivity() {
         val navTitle = headerView.findViewById<View>(R.id.nav_header_title) as TextView
         val navSubtitle = headerView.findViewById<View>(R.id.num_header_subtitle) as TextView
 
-        navTitle.text = Repository.user.name
-        navSubtitle.text = Repository.user.email
+        navTitle.text = Repository.appUser.name
+        navSubtitle.text = Repository.appUser.email
 
         Glide
             .with(imageViewUser.context)
-            .load(Repository.user.photoUrl)
+            .load(Repository.appUser.photoUrl)
             .transition(DrawableTransitionOptions.withCrossFade())
             .circleCrop()
             .placeholder(R.drawable.ic_profile)
