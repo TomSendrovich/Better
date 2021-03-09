@@ -1,7 +1,10 @@
 package com.better.model.dataHolders
 
+/**
+ * Represents a country.
+ */
 data class Country(
-    val code: String,
     val name: String,
+    val code: String,
     val flag: String
 )

@@ -1,9 +1,13 @@
 package com.better.model.dataHolders
 
+// TODO: 09/03/2021 is this data class necessary?
+/**
+ * Represents a season.
+ */
 data class Season(
-    val coverage: String,
-    val current: Boolean,
-    val end: String,
+    val year: Long,
     val start: String,
-    val year: Int,
+    val end: String,
+    val current: Boolean,
+    val coverage: String,
 )
