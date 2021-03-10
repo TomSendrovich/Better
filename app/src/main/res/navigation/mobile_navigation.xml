@@ -15,11 +15,24 @@
         android:id="@+id/nav_matches"
         android:name="com.better.ui.matches.MatchesFragment"
         android:label="@string/menu_matches"
-        tools:layout="@layout/fragment_matches" />
+        tools:layout="@layout/fragment_matches">
+        <action
+            android:id="@+id/action_nav_matches_to_matchDetailsFragment"
+            app:destination="@id/matchDetailsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_about"
         android:name="com.better.ui.about.AboutFragment"
         android:label="@string/menu_about"
         tools:layout="@layout/fragment_about" />
+    <fragment
+        android:id="@+id/matchDetailsFragment"
+        android:name="com.better.ui.matchDetails.MatchDetailsFragment"
+        android:label="fragment_match_details"
+        tools:layout="@layout/fragment_match_details">
+        <argument
+            android:name="selectedFixture"
+            app:argType="com.better.model.dataHolders.Fixture" />
+    </fragment>
 </navigation>

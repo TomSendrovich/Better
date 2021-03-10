@@ -15,6 +15,7 @@ import kotlin.collections.ArrayList
 object Repository {
     private const val TAG = "Repository"
     val fixtures = MutableLiveData<List<Fixture>>()
+    val feedList = MutableLiveData<List<EventTip>>()
     lateinit var appUser: AppUser
 
     fun getTodayFixtures() {
@@ -33,7 +34,7 @@ object Repository {
                 val list: ArrayList<Fixture> = ArrayList<Fixture>()
                 for (doc in documents) {
                     val fixture = createFixtureFromDocument(doc)
-                    Log.i(TAG, fixture.toString())
+//                    Log.i(TAG, fixture.toString())
                     list.add(fixture)
                 } // end of documents loop
                 fixtures.postValue(list)
@@ -59,7 +60,7 @@ object Repository {
                 val list: ArrayList<Fixture> = ArrayList<Fixture>()
                 for (doc in documents) {
                     val fixture = createFixtureFromDocument(doc)
-                    Log.i(TAG, fixture.toString())
+//                    Log.i(TAG, fixture.toString())
                     list.add(fixture)
                 } // end of documents loop
                 fixtures.postValue(list)
@@ -70,7 +71,7 @@ object Repository {
     }
 
     private fun createFixtureFromDocument(doc: QueryDocumentSnapshot): Fixture {
-        Log.d(TAG, "${doc.id} => ${doc.data}")
+//        Log.d(TAG, "${doc.id} => ${doc.data}")
         val id = doc[FIXTURE_ID] as Long
         val date = doc[FIXTURE_DATE] as String
         val timestamp = doc[FIXTURE_TIMESTAMP] as Long
@@ -148,7 +149,7 @@ object Repository {
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
+//                    Log.d(TAG, "${document.id} => ${document.data}")
                 }
             }
             .addOnFailureListener { exception ->
@@ -183,7 +184,10 @@ object Repository {
             .document(appUser.uid)
             .set(newUser)
             .addOnSuccessListener {
-                Log.i(TAG, "createNewUser: document ${appUser.uid} was created for user ${appUser.name}")
+                Log.i(
+                    TAG,
+                    "createNewUser: document ${appUser.uid} was created for user ${appUser.name}"
+                )
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error creating user: ", exception)

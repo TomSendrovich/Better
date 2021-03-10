@@ -1,6 +1,5 @@
 package com.better.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -14,8 +13,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 
-class FixtureAdapter(private var list: List<Fixture>) :
+class FixtureAdapter(private var list: List<Fixture>, private val listener: FixtureListener) :
     RecyclerView.Adapter<FixtureAdapter.ViewHolder>() {
+
+    interface FixtureListener {
+        fun onItemClicked(item: Fixture)
+    }
 
     /**
      * Provide a reference to the type of views that you are using
@@ -28,13 +31,6 @@ class FixtureAdapter(private var list: List<Fixture>) :
         val awayLogo: ImageView = view.findViewById(R.id.away_team_logo)
         val status: TextView = view.findViewById(R.id.status)
         val score: TextView = view.findViewById(R.id.score)
-
-        init {
-            // Define click listener for the ViewHolder's View.
-            view.setOnClickListener {
-                Log.d(TAG, "ViewHolder: clicked")
-            }
-        }
     }
 
     // Create new views (invoked by the layout manager)
@@ -65,6 +61,10 @@ class FixtureAdapter(private var list: List<Fixture>) :
 
         bindImage(viewHolder.homeLogo, fixture.home.logo)
         bindImage(viewHolder.awayLogo, fixture.away.logo)
+
+        viewHolder.itemView.setOnClickListener {
+            listener.onItemClicked(list[position])
+        }
     }
 
     private fun buildStatusText(fixture: Fixture): String {

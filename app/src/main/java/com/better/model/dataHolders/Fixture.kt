@@ -1,5 +1,8 @@
 package com.better.model.dataHolders
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /**
  * Represents a fixture.
  * @property id (e.g 239625)
@@ -13,6 +16,7 @@ package com.better.model.dataHolders
  * @property home home team (see FixtureTeam data class)
  * @property away away team (see FixtureTeam data class)
  */
+@Parcelize
 data class Fixture(
     val id: Long,
     val date: String,
@@ -24,4 +28,4 @@ data class Fixture(
     val score: Score,
     val home: FixtureTeam,
     val away: FixtureTeam
-)
+) : Parcelable

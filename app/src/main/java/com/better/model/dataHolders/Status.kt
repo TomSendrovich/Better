@@ -1,5 +1,8 @@
 package com.better.model.dataHolders
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /**
  * Represents a fixture status.
  * @property short short string represent status (NS, FT, TBD...)
@@ -27,8 +30,9 @@ package com.better.model.dataHolders
  * AWD : Technical Loss
  * WO : WalkOver
  */
+@Parcelize
 data class Status(
     val short: String,
     val long: String,
     val elapsed: Long?,
-)
+) : Parcelable
