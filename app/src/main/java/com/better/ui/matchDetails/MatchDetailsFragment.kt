@@ -9,7 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.better.R
 import com.better.model.dataHolders.Fixture
+import com.better.ui.MainActivity
 import com.better.utils.Utils
+import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.app_bar_main.view.*
 import kotlinx.android.synthetic.main.fragment_match_details.view.*
 
 
@@ -29,6 +32,8 @@ class MatchDetailsFragment : Fragment() {
         Log.d(TAG, "onCreateView: ")
         val view = inflater.inflate(R.layout.fragment_match_details, container, false)
 
+        (activity as MainActivity).supportActionBar?.title = Fixture.buildHead2HeadText(args.selectedFixture)
+
         Utils.bindImage(view.home_imageView, args.selectedFixture.home.logo)
         Utils.bindImage(view.away_imageView, args.selectedFixture.away.logo)
 
@@ -40,11 +45,17 @@ class MatchDetailsFragment : Fragment() {
             view.score_textView.visibility = View.GONE
             view.date_textView.text = Fixture.buildStatusText(args.selectedFixture)
         } else {
-            view.status_textView.text = args.selectedFixture.status.elapsed.toString()
+            view.status_textView.text = Fixture.buildStatusText(args.selectedFixture)
+            view.score_textView.text = Fixture.buildScoreText(args.selectedFixture)
             view.date_textView.visibility = View.GONE
         }
 
         return view
+    }
+
+    override fun onDestroyView() {
+        Log.d(TAG, "onDestroyView: ")
+        super.onDestroyView()
     }
 
     companion object {

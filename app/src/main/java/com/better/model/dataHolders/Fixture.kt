@@ -48,6 +48,10 @@ data class Fixture(
             }
             return status
         }
+
+        fun buildHead2HeadText(fixture: Fixture): CharSequence {
+            return "${fixture.home.name} - ${fixture.away.name}"
+        }
     }
 }
 
