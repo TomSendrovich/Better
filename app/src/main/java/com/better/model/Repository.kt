@@ -3,8 +3,8 @@ package com.better.model
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.better.*
-import com.better.utils.Utils.toSimpleString
 import com.better.model.dataHolders.*
+import com.better.utils.DateUtils
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
@@ -26,8 +26,8 @@ object Repository {
         val fixturesRef = Firebase.firestore.collection(DB_COLLECTION_FIXTURES)
 
         fixturesRef
-            .whereGreaterThanOrEqualTo(FIXTURE_DATE, toSimpleString(today.time))
-            .whereLessThanOrEqualTo(FIXTURE_DATE, toSimpleString(tomorrow.time))
+            .whereGreaterThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(today.time))
+            .whereLessThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(tomorrow.time))
             .get()
             .addOnSuccessListener { documents ->
                 Log.i(TAG, "queried ${documents.size()} documents")
@@ -52,8 +52,8 @@ object Repository {
         val fixturesRef = Firebase.firestore.collection(DB_COLLECTION_FIXTURES)
 
         fixturesRef
-            .whereGreaterThanOrEqualTo(FIXTURE_DATE, toSimpleString(lastWeek.time))
-            .whereLessThanOrEqualTo(FIXTURE_DATE, toSimpleString(today.time))
+            .whereGreaterThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(lastWeek.time))
+            .whereLessThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(today.time))
             .get()
             .addOnSuccessListener { documents ->
                 Log.i(TAG, "queried ${documents.size()} documents")
@@ -78,8 +78,8 @@ object Repository {
         val fixturesRef = Firebase.firestore.collection(DB_COLLECTION_FIXTURES)
 
         fixturesRef
-            .whereGreaterThanOrEqualTo(FIXTURE_DATE, toSimpleString(today.time))
-            .whereLessThanOrEqualTo(FIXTURE_DATE, toSimpleString(nextWeek.time))
+            .whereGreaterThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(today.time))
+            .whereLessThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(nextWeek.time))
             .get()
             .addOnSuccessListener { documents ->
                 Log.i(TAG, "queried ${documents.size()} documents")

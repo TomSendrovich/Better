@@ -35,4 +35,16 @@ data class Status(
     val short: String,
     val long: String,
     val elapsed: Long?,
-) : Parcelable
+) : Parcelable {
+    fun isActive(): Boolean {
+        return elapsed != null && elapsed > 0 && !isDone()
+    }
+
+    fun isDone(): Boolean {
+        return short == "FT"
+    }
+
+    fun isNotStarted(): Boolean {
+        return short == "NS"
+    }
+}

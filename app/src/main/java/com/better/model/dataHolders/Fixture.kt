@@ -1,7 +1,9 @@
 package com.better.model.dataHolders
 
 import android.os.Parcelable
+import com.better.utils.DateUtils
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 /**
  * Represents a fixture.
@@ -52,6 +54,10 @@ data class Fixture(
         fun buildHead2HeadText(fixture: Fixture): CharSequence {
             return "${fixture.home.name} - ${fixture.away.name}"
         }
+    }
+
+    fun getCalendar(): Calendar {
+        return DateUtils.getCalendarFromTimestamp(timestamp)
     }
 }
 

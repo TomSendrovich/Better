@@ -49,10 +49,10 @@
         tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/status_textView"
+        android:id="@+id/topText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Status"
+        android:text="1-1"
         app:layout_constraintBottom_toBottomOf="@+id/home_imageView"
         app:layout_constraintEnd_toStartOf="@+id/away_imageView"
         app:layout_constraintStart_toEndOf="@+id/home_imageView"
@@ -60,23 +60,14 @@
         tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/score_textView"
+        android:id="@+id/bottomText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Score"
-        app:layout_constraintBottom_toTopOf="@+id/status_textView"
-        app:layout_constraintEnd_toStartOf="@+id/away_imageView"
-        app:layout_constraintStart_toEndOf="@+id/home_imageView"
+        android:text="FT"
+        app:layout_constraintEnd_toEndOf="@+id/topText"
+        app:layout_constraintStart_toStartOf="@+id/topText"
+        app:layout_constraintTop_toBottomOf="@id/topText"
         tools:ignore="HardcodedText" />
 
-    <TextView
-        android:id="@+id/date_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Date"
-        app:layout_constraintBottom_toBottomOf="@+id/home_imageView"
-        app:layout_constraintEnd_toStartOf="@+id/away_imageView"
-        app:layout_constraintStart_toEndOf="@+id/home_imageView"
-        app:layout_constraintTop_toTopOf="@+id/home_imageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

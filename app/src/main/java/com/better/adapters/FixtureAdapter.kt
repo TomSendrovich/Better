@@ -9,9 +9,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.better.R
 import com.better.model.dataHolders.Fixture
+import com.better.utils.DateUtils
 import com.better.utils.Utils
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import java.util.*
 
 
 class FixtureAdapter(private var list: List<Fixture>, private val listener: FixtureListener) :
@@ -26,12 +26,12 @@ class FixtureAdapter(private var list: List<Fixture>, private val listener: Fixt
      * (custom ViewHolder).
      */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val homeName: TextView = view.findViewById(R.id.home_team_name)
-        val awayName: TextView = view.findViewById(R.id.away_team_name)
-        val homeLogo: ImageView = view.findViewById(R.id.home_team_logo)
-        val awayLogo: ImageView = view.findViewById(R.id.away_team_logo)
-        val status: TextView = view.findViewById(R.id.status)
-        val score: TextView = view.findViewById(R.id.score)
+        val homeName: TextView = view.findViewById(R.id.viewHolder_match_home_text)
+        val awayName: TextView = view.findViewById(R.id.viewHolder_match_away_text)
+        val homeLogo: ImageView = view.findViewById(R.id.viewHolder_match_home_image)
+        val awayLogo: ImageView = view.findViewById(R.id.viewHolder_match_away_image)
+        val topText: TextView = view.findViewById(R.id.viewHolder_match_topText)
+        val bottomText: TextView = view.findViewById(R.id.viewHolder_match_bottomText)
     }
 
     // Create new views (invoked by the layout manager)
@@ -51,13 +51,26 @@ class FixtureAdapter(private var list: List<Fixture>, private val listener: Fixt
         val fixture = list[position]
         viewHolder.homeName.text = fixture.home.name
         viewHolder.awayName.text = fixture.away.name
-        viewHolder.status.text = Fixture.buildStatusText(fixture)
 
-        val scoreText = Fixture.buildScoreText(fixture)
-        if (scoreText == "null-null") {
-            viewHolder.score.visibility = GONE
-        } else {
-            viewHolder.score.text = scoreText
+        when {
+            fixture.status.isDone() -> {
+                viewHolder.topText.text = Fixture.buildScoreText(fixture)
+                viewHolder.bottomText.text = fixture.status.short
+            }
+            fixture.status.isActive() -> {
+                viewHolder.topText.text = Fixture.buildScoreText(fixture)
+                viewHolder.bottomText.visibility = GONE
+            }
+            fixture.status.isNotStarted() -> {
+                val weekDay = DateUtils.getWeekDayFromCalendar(fixture.getCalendar())
+                val hour = DateUtils.getHourFromCalendar(fixture.getCalendar())
+                viewHolder.topText.text = weekDay
+                viewHolder.bottomText.text = hour
+            }
+            else -> {
+                viewHolder.topText.visibility = GONE
+                viewHolder.bottomText.text = fixture.status.short
+            }
         }
 
         Utils.bindImage(viewHolder.homeLogo, fixture.home.logo)
