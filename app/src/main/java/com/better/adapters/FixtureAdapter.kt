@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.better.R
 import com.better.model.dataHolders.Fixture
+import com.better.utils.Utils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
@@ -50,50 +51,21 @@ class FixtureAdapter(private var list: List<Fixture>, private val listener: Fixt
         val fixture = list[position]
         viewHolder.homeName.text = fixture.home.name
         viewHolder.awayName.text = fixture.away.name
-        viewHolder.status.text = buildStatusText(fixture)
+        viewHolder.status.text = Fixture.buildStatusText(fixture)
 
-        val scoreText = buildScoreText(fixture)
+        val scoreText = Fixture.buildScoreText(fixture)
         if (scoreText == "null-null") {
             viewHolder.score.visibility = GONE
         } else {
-            viewHolder.score.text = buildScoreText(fixture)
+            viewHolder.score.text = scoreText
         }
 
-        bindImage(viewHolder.homeLogo, fixture.home.logo)
-        bindImage(viewHolder.awayLogo, fixture.away.logo)
+        Utils.bindImage(viewHolder.homeLogo, fixture.home.logo)
+        Utils.bindImage(viewHolder.awayLogo, fixture.away.logo)
 
         viewHolder.itemView.setOnClickListener {
             listener.onItemClicked(list[position])
         }
-    }
-
-    private fun buildStatusText(fixture: Fixture): String {
-        val status = fixture.status.short
-        if (status == "NS") {
-            var time =
-                fixture.date.substringAfter('T').substringBefore('+').substringBeforeLast(':')
-            val hour = time.substring(0, 2).toInt() + 2
-            time = hour.toString() + time.substring(2, 5)
-            return time
-
-        }
-        return status
-    }
-
-    private fun buildScoreText(fixture: Fixture): String {
-        val homeScore = fixture.score.fullTime.home.toString()
-        val awayScore = fixture.score.fullTime.away.toString()
-        return "${homeScore}-${awayScore}"
-    }
-
-    private fun bindImage(imgView: ImageView, imgUrl: String?) {
-        Glide
-            .with(imgView.context)
-            .load(imgUrl)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .circleCrop()
-            .placeholder(R.drawable.ic_menu_soccer)
-            .into(imgView)
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -6,14 +6,77 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
+    <ImageView
+        android:id="@+id/home_imageView"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_menu_soccer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/away_imageView"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_menu_soccer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/home_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="8dp"
+        android:text="Home"
+        app:layout_constraintEnd_toEndOf="@+id/home_imageView"
+        app:layout_constraintStart_toStartOf="@+id/home_imageView"
+        app:layout_constraintTop_toBottomOf="@+id/home_imageView"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/away_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Away"
+        app:layout_constraintEnd_toEndOf="@+id/away_imageView"
+        app:layout_constraintStart_toStartOf="@+id/away_imageView"
+        app:layout_constraintTop_toBottomOf="@+id/away_imageView"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/status_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        app:layout_constraintBottom_toBottomOf="@+id/home_imageView"
+        app:layout_constraintEnd_toStartOf="@+id/away_imageView"
+        app:layout_constraintStart_toEndOf="@+id/home_imageView"
+        app:layout_constraintTop_toTopOf="@+id/home_imageView"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/score_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score"
+        app:layout_constraintBottom_toTopOf="@+id/status_textView"
+        app:layout_constraintEnd_toStartOf="@+id/away_imageView"
+        app:layout_constraintStart_toEndOf="@+id/home_imageView"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/date_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date"
+        app:layout_constraintBottom_toBottomOf="@+id/home_imageView"
+        app:layout_constraintEnd_toStartOf="@+id/away_imageView"
+        app:layout_constraintStart_toEndOf="@+id/home_imageView"
+        app:layout_constraintTop_toTopOf="@+id/home_imageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

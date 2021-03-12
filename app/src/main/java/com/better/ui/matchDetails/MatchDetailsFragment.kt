@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.better.R
+import com.better.model.dataHolders.Fixture
+import com.better.utils.Utils
 import kotlinx.android.synthetic.main.fragment_match_details.view.*
 
 
@@ -18,7 +20,6 @@ class MatchDetailsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate: ")
-
     }
 
     override fun onCreateView(
@@ -26,10 +27,22 @@ class MatchDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Log.d(TAG, "onCreateView: ")
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_match_details, container, false)
 
-        view.textView.text = "${args.selectedFixture.home.name} - ${args.selectedFixture.away.name}"
+        Utils.bindImage(view.home_imageView, args.selectedFixture.home.logo)
+        Utils.bindImage(view.away_imageView, args.selectedFixture.away.logo)
+
+        view.home_textView.text = args.selectedFixture.home.name
+        view.away_textView.text = args.selectedFixture.away.name
+
+        if (args.selectedFixture.status.elapsed == null) {
+            view.status_textView.visibility = View.GONE
+            view.score_textView.visibility = View.GONE
+            view.date_textView.text = Fixture.buildStatusText(args.selectedFixture)
+        } else {
+            view.status_textView.text = args.selectedFixture.status.elapsed.toString()
+            view.date_textView.visibility = View.GONE
+        }
 
         return view
     }

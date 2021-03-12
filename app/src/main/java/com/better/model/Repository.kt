@@ -3,7 +3,7 @@ package com.better.model
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.better.*
-import com.better.Utils.toSimpleString
+import com.better.utils.Utils.toSimpleString
 import com.better.model.dataHolders.*
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.QueryDocumentSnapshot

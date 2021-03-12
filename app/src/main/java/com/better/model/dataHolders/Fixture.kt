@@ -28,4 +28,27 @@ data class Fixture(
     val score: Score,
     val home: FixtureTeam,
     val away: FixtureTeam
-) : Parcelable
+) : Parcelable {
+    companion object {
+        fun buildScoreText(fixture: Fixture): String {
+            val homeScore = fixture.score.fullTime.home.toString()
+            val awayScore = fixture.score.fullTime.away.toString()
+            return "${homeScore}-${awayScore}"
+        }
+
+        fun buildStatusText(fixture: Fixture): String {
+            val status = fixture.status.short
+            if (status == "NS") {
+                var time =
+                    fixture.date.substringAfter('T').substringBefore('+').substringBeforeLast(':')
+                val hour = time.substring(0, 2).toInt() + 2
+                time = hour.toString() + time.substring(2, 5)
+                return time
+
+            }
+            return status
+        }
+    }
+}
+
+
