@@ -11,7 +11,7 @@ import com.better.R
 import com.better.model.dataHolders.Fixture
 import com.better.ui.MainActivity
 import com.better.utils.DateUtils
-import com.better.utils.Utils
+import com.better.utils.AppUtils
 import kotlinx.android.synthetic.main.fragment_match_details.view.*
 
 
@@ -36,8 +36,8 @@ class MatchDetailsFragment : Fragment() {
 
         val selectedFixture = args.selectedFixture
 
-        Utils.bindImage(view.home_imageView, selectedFixture.home.logo)
-        Utils.bindImage(view.away_imageView, selectedFixture.away.logo)
+        AppUtils.bindImage(view.home_imageView, selectedFixture.home.logo)
+        AppUtils.bindImage(view.away_imageView, selectedFixture.away.logo)
 
         view.home_textView.text = selectedFixture.home.name
         view.away_textView.text = selectedFixture.away.name

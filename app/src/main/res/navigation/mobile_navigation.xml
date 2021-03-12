@@ -39,4 +39,9 @@
             android:name="selectedFixture"
             app:argType="com.better.model.dataHolders.Fixture" />
     </fragment>
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.better.ui.profile.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

@@ -161,7 +161,7 @@ object Repository {
     fun loadUser(currentUser: FirebaseUser) {
         appUser = AppUser(
             name = currentUser.displayName,
-            photoUrl = currentUser.photoUrl,
+            photoUrl = currentUser.photoUrl?.toString(),
             email = currentUser.email,
             uid = currentUser.uid,
             eventTips = arrayListOf()

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.better.R
 import com.better.model.dataHolders.Fixture
 import com.better.utils.DateUtils
-import com.better.utils.Utils
+import com.better.utils.AppUtils
 import java.util.*
 
 
@@ -73,8 +73,8 @@ class FixtureAdapter(private var list: List<Fixture>, private val listener: Fixt
             }
         }
 
-        Utils.bindImage(viewHolder.homeLogo, fixture.home.logo)
-        Utils.bindImage(viewHolder.awayLogo, fixture.away.logo)
+        AppUtils.bindImage(viewHolder.homeLogo, fixture.home.logo)
+        AppUtils.bindImage(viewHolder.awayLogo, fixture.away.logo)
 
         viewHolder.itemView.setOnClickListener {
             listener.onItemClicked(list[position])

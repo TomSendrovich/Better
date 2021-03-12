@@ -6,6 +6,7 @@ import com.better.model.Repository
 import com.better.ui.about.AboutViewModel
 import com.better.ui.feed.FeedViewModel
 import com.better.ui.matches.MatchesViewModel
+import com.better.ui.profile.ProfileViewModel
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(private val repository: Repository) : ViewModelProvider.Factory {
@@ -18,7 +19,10 @@ class ViewModelFactory(private val repository: Repository) : ViewModelProvider.F
                 return MatchesViewModel(repository) as T
             }
             modelClass.isAssignableFrom(AboutViewModel::class.java) -> {
-                return FeedViewModel(repository) as T
+                return AboutViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(ProfileViewModel::class.java) -> {
+                return ProfileViewModel(repository) as T
             }
         }
         throw IllegalArgumentException("ViewModel class not found.")

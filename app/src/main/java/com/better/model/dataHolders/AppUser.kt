@@ -13,7 +13,7 @@ import android.net.Uri
 data class AppUser(
     val name: String?,
     val email: String?,
-    val photoUrl: Uri?,
+    val photoUrl: String?,
     val uid: String,
     val eventTips: List<EventTip>
 )
