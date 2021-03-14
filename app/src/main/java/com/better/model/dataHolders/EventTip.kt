@@ -2,12 +2,21 @@ package com.better.model.dataHolders
 
 /**
  * Represents an event tip.
- * @property uid The uid of the user
- * @property event The event itself (fixture)
- * @property tip The tip (0 1 or 2)
+ * @property tipID id of the tip
+ * @property userID id of the user
+ * @property fixtureID id of the fixture
+ * @property description description of the tip (free style text)
+ * @property tipValue The tip value
+ *
+ *  Available tip values:
+ *  0 - draw
+ *  1 - home wins
+ *  2 - away wins
  */
 data class EventTip(
-    val uid: String,
-    val event: Fixture,
-    val tip: Long
+    val tipID: String,
+    val userID: String,
+    val fixtureID: String,
+    val description: String,
+    val tipValue: Long?
 )
