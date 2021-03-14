@@ -31,7 +31,7 @@ object Repository {
             .get()
             .addOnSuccessListener { documents ->
                 Log.i(TAG, "queried ${documents.size()} documents")
-                val list: ArrayList<Fixture> = ArrayList<Fixture>()
+                val list: ArrayList<Fixture> = ArrayList()
                 for (doc in documents) {
                     val fixture = createFixtureFromDocument(doc)
 //                    Log.i(TAG, fixture.toString())
@@ -57,7 +57,7 @@ object Repository {
             .get()
             .addOnSuccessListener { documents ->
                 Log.i(TAG, "queried ${documents.size()} documents")
-                val list: ArrayList<Fixture> = ArrayList<Fixture>()
+                val list: ArrayList<Fixture> = ArrayList()
                 for (doc in documents) {
                     val fixture = createFixtureFromDocument(doc)
 //                    Log.i(TAG, fixture.toString())
@@ -83,7 +83,7 @@ object Repository {
             .get()
             .addOnSuccessListener { documents ->
                 Log.i(TAG, "queried ${documents.size()} documents")
-                val list: ArrayList<Fixture> = ArrayList<Fixture>()
+                val list: ArrayList<Fixture> = ArrayList()
                 for (doc in documents) {
                     val fixture = createFixtureFromDocument(doc)
 //                    Log.i(TAG, fixture.toString())

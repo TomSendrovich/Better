@@ -10,8 +10,8 @@ import androidx.navigation.fragment.navArgs
 import com.better.R
 import com.better.model.dataHolders.Fixture
 import com.better.ui.MainActivity
-import com.better.utils.DateUtils
 import com.better.utils.AppUtils
+import com.better.utils.DateUtils
 import kotlinx.android.synthetic.main.fragment_match_details.view.*
 
 
@@ -50,8 +50,7 @@ class MatchDetailsFragment : Fragment() {
             }
             selectedFixture.status.isActive() -> {
                 view.topText.text = Fixture.buildScoreText(selectedFixture)
-                view.bottomText.visibility = View.GONE
-
+                view.bottomText.text = Fixture.buildTimeText(selectedFixture)
             }
             selectedFixture.status.isNotStarted() -> {
                 val weekDay = DateUtils.getWeekDayFromCalendar(selectedFixture.getCalendar())

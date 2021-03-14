@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.better.R
 import com.better.model.dataHolders.Fixture
-import com.better.utils.DateUtils
 import com.better.utils.AppUtils
+import com.better.utils.DateUtils
 import java.util.*
 
 
@@ -59,7 +59,7 @@ class FixtureAdapter(private var list: List<Fixture>, private val listener: Fixt
             }
             fixture.status.isActive() -> {
                 viewHolder.topText.text = Fixture.buildScoreText(fixture)
-                viewHolder.bottomText.visibility = GONE
+                viewHolder.bottomText.text = Fixture.buildTimeText(fixture)
             }
             fixture.status.isNotStarted() -> {
                 val weekDay = DateUtils.getWeekDayFromCalendar(fixture.getCalendar())
@@ -89,7 +89,7 @@ class FixtureAdapter(private var list: List<Fixture>, private val listener: Fixt
     }
 
     companion object {
-        private const val TAG = "com.better.adapters.FixtureAdapter"
+        private const val TAG = "FixtureAdapter"
     }
 
 }

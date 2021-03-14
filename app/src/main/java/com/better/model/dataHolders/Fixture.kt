@@ -32,26 +32,22 @@ data class Fixture(
     val away: FixtureTeam
 ) : Parcelable {
     companion object {
+
         fun buildScoreText(fixture: Fixture): String {
-            val homeScore = fixture.score.fullTime.home.toString()
-            val awayScore = fixture.score.fullTime.away.toString()
+            val homeScore = fixture.goals.home.toString()
+            val awayScore = fixture.goals.away.toString()
             return "${homeScore}-${awayScore}"
         }
 
-        fun buildStatusText(fixture: Fixture): String {
-            val status = fixture.status.short
-            if (status == "NS") {
-                var time =
-                    fixture.date.substringAfter('T').substringBefore('+').substringBeforeLast(':')
-                val hour = time.substring(0, 2).toInt() + 2
-                time = hour.toString() + time.substring(2, 5)
-                return time
-
+        fun buildTimeText(fixture: Fixture): String {
+            return when (fixture.status.short) {
+                "HT" -> "Halftime"
+                "P" -> "Penalty"
+                else -> "${fixture.status.elapsed}'"
             }
-            return status
         }
 
-        fun buildHead2HeadText(fixture: Fixture): CharSequence {
+        fun buildHead2HeadText(fixture: Fixture): String {
             return "${fixture.home.name} - ${fixture.away.name}"
         }
     }
