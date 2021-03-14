@@ -160,11 +160,10 @@ object Repository {
 
     fun loadUser(currentUser: FirebaseUser) {
         appUser = AppUser(
-            name = currentUser.displayName,
-            photoUrl = currentUser.photoUrl?.toString(),
-            email = currentUser.email,
             uid = currentUser.uid,
-            eventTips = arrayListOf(),
+            name = currentUser.displayName,
+            email = currentUser.email,
+            photoUrl = currentUser.photoUrl?.toString()
         )
 
         // query user from DB
@@ -174,6 +173,7 @@ object Repository {
             .whereEqualTo(UID, currentUser.uid)
             .get()
             .addOnSuccessListener { documents ->
+                // TODO: 14/03/2021 update appUser with document data
                 for (document in documents) {
 //                    Log.d(TAG, "${document.id} => ${document.data}")
                 }
@@ -193,7 +193,7 @@ object Repository {
      * the data is taken from the user reference.
      *
      * we store only the uid of the user (unique id given by google), because the user display name
-     * and user profile picture can be changed. we can get the from the user reference.
+     * and user profile picture can be changed. we can get them from the user reference.
      *
      * we do not set an empty list of eventTips at the point.
      *
