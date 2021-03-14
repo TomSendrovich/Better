@@ -165,9 +165,6 @@ object Repository {
             email = currentUser.email,
             uid = currentUser.uid,
             eventTips = arrayListOf(),
-            tips = 0,
-            followers = 0,
-            following = 0,
         )
 
         // query user from DB
