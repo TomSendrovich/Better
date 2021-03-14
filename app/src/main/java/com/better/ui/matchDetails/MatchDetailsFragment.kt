@@ -34,6 +34,7 @@ class MatchDetailsFragment : Fragment() {
         (activity as MainActivity).supportActionBar?.title =
             Fixture.buildHead2HeadText(args.selectedFixture)
 
+
         val selectedFixture = args.selectedFixture
 
         AppUtils.bindImage(view.home_imageView, selectedFixture.home.logo)
