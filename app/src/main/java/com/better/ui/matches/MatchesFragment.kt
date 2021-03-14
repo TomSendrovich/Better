@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -63,11 +62,8 @@ class MatchesFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
         }
 
-        viewModel.fixtures.observe(viewLifecycleOwner, Observer {
-//            Toast.makeText(context, "Number of fixtures: " + it.size, Toast.LENGTH_SHORT).show()
-
-            (recyclerView.adapter as FixtureAdapter).setList(it as ArrayList<Fixture>)
-            (recyclerView.adapter as FixtureAdapter).notifyDataSetChanged()
+        viewModel.fixtures.observe(viewLifecycleOwner, {
+            (recyclerView.adapter as FixtureAdapter).setData(it as ArrayList<Fixture>)
         })
     }
 }

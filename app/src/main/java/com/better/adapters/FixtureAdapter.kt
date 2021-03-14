@@ -6,15 +6,20 @@ import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.better.R
 import com.better.model.dataHolders.Fixture
 import com.better.utils.AppUtils
 import com.better.utils.DateUtils
+import com.better.utils.FixtureDiffUtil
 import java.util.*
 
 
-class FixtureAdapter(private var list: List<Fixture>, private val listener: FixtureListener) :
+class FixtureAdapter(
+    private var oldList: ArrayList<Fixture>,
+    private val listener: FixtureListener
+) :
     RecyclerView.Adapter<FixtureAdapter.ViewHolder>() {
 
     interface FixtureListener {
@@ -48,7 +53,7 @@ class FixtureAdapter(private var list: List<Fixture>, private val listener: Fixt
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        val fixture = list[position]
+        val fixture = oldList[position]
         viewHolder.homeName.text = fixture.home.name
         viewHolder.awayName.text = fixture.away.name
 
@@ -77,15 +82,18 @@ class FixtureAdapter(private var list: List<Fixture>, private val listener: Fixt
         AppUtils.bindImage(viewHolder.awayLogo, fixture.away.logo)
 
         viewHolder.itemView.setOnClickListener {
-            listener.onItemClicked(list[position])
+            listener.onItemClicked(oldList[position])
         }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = list.size
+    override fun getItemCount() = oldList.size
 
-    fun setList(newList: ArrayList<Fixture>) {
-        list = newList
+    fun setData(newList: ArrayList<Fixture>) {
+        val diffUtil = FixtureDiffUtil(oldList, newList)
+        val diffResults = DiffUtil.calculateDiff(diffUtil)
+        oldList = newList
+        diffResults.dispatchUpdatesTo(this)
     }
 
     companion object {
