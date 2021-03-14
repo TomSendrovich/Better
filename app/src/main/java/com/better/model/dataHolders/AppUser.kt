@@ -15,5 +15,8 @@ data class AppUser(
     val email: String?,
     val photoUrl: String?,
     val uid: String,
-    val eventTips: List<EventTip>
+    val eventTips: List<EventTip>,
+    val followers: Long?,
+    val following: Long?,
+    val tips: Long?
 )
