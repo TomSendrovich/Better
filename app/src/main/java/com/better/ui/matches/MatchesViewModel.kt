@@ -9,6 +9,7 @@ import java.util.*
 class MatchesViewModel(private val repository: Repository) : ViewModel() {
 
     val fixtures: LiveData<HashMap<Int, List<Fixture>>> = repository.fixtures
+    val monthAndYearText: LiveData<String> = repository.monthAndYearText
 
     fun getFixturesByDate(position: Int) {
         val date = Calendar.getInstance()
@@ -32,5 +33,9 @@ class MatchesViewModel(private val repository: Repository) : ViewModel() {
 
             repository.getFixturesByDate(date, oneDayAfter)
         }
+    }
+
+    fun updateMonthAndYearText(position: Int) {
+        repository.updateMonthAndYearText(position)
     }
 }

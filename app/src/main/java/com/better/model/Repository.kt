@@ -18,6 +18,7 @@ object Repository {
     //    val fixtures = MutableLiveData<List<Fixture>>()
     val fixtures = MutableLiveData<HashMap<Int, List<Fixture>>>()
     val feedList = MutableLiveData<List<EventTip>>()
+    val monthAndYearText = MutableLiveData<String>()
     lateinit var appUser: AppUser
 
     init {
@@ -247,5 +248,12 @@ object Repository {
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error creating user: ", exception)
             }
+    }
+
+    fun updateMonthAndYearText(position: Int) {
+        val date = Calendar.getInstance()
+        date.add(Calendar.DAY_OF_YEAR, position)
+
+        monthAndYearText.postValue(DateUtils.getMonthAndYearFromCalendar(date))
     }
 }
