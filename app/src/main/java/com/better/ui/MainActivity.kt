@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener {
 //            Repository.getTodayFixtures()
 //            Repository.getLastWeekFixtures()
-            Repository.getNextWeekFixtures()
+//            Repository.getNextWeekFixtures()
         }
         logoutButton.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)

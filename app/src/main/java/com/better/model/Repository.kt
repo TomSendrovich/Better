@@ -14,11 +14,39 @@ import kotlin.collections.ArrayList
 
 object Repository {
     private const val TAG = "Repository"
-    val fixtures = MutableLiveData<List<Fixture>>()
+
+    //    val fixtures = MutableLiveData<List<Fixture>>()
+    val fixtures = MutableLiveData<HashMap<Int, List<Fixture>>>()
     val feedList = MutableLiveData<List<EventTip>>()
     lateinit var appUser: AppUser
 
-    fun getTodayFixtures() {
+    init {
+        fixtures.value = HashMap<Int, List<Fixture>>()
+    }
+
+    fun getFixturesByDate(from: Calendar, to: Calendar) {
+        val fixturesRef = Firebase.firestore.collection(DB_COLLECTION_FIXTURES)
+        fixturesRef
+            .whereGreaterThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(from.time))
+            .whereLessThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(to.time))
+            .get()
+            .addOnSuccessListener { documents ->
+                Log.i(TAG, "queried ${documents.size()} documents")
+                val list: ArrayList<Fixture> = ArrayList()
+                val map: HashMap<Int, List<Fixture>> = fixtures.value!!
+                for (doc in documents) {
+                    val fixture = createFixtureFromDocument(doc)
+                    list.add(fixture)
+                } // end of documents loop
+                map[from[Calendar.DAY_OF_YEAR]] = list
+                fixtures.postValue(map)
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents: ", exception)
+            }
+    }
+
+/*    fun getTodayFixtures() {
         val today = Calendar.getInstance()
         val tomorrow = Calendar.getInstance()
         tomorrow.add(Calendar.DAY_OF_YEAR, 1)
@@ -94,7 +122,7 @@ object Repository {
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents: ", exception)
             }
-    }
+    }*/
 
     private fun createFixtureFromDocument(doc: QueryDocumentSnapshot): Fixture {
 //        Log.d(TAG, "${doc.id} => ${doc.data}")
@@ -180,7 +208,8 @@ object Repository {
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting user: ", exception)
-            }.addOnCompleteListener { data ->
+            }
+            .addOnCompleteListener { data ->
                 Log.d(TAG, "queryUser: completed with ${data.result?.size()} results")
                 if (data.result?.size() == 0) {
                     createNewUser()

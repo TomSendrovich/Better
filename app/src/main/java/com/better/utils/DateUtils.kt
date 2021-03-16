@@ -32,6 +32,20 @@ object DateUtils {
         return splitDate[0]
     }
 
+    fun getMonthAndYearFromCalendar(calendar: Calendar): String {
+        val formattedDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.time)
+        val splitDate = formattedDate.split(',')
+        val year = splitDate[2]
+        val month = splitDate[1].split(' ')[1]
+        return "$month $year"
+    }
+
+    fun getWeekDayAndDateFromCalendar(calendar: Calendar): String {
+        val formattedDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.time)
+        val splitDate = calendar.time.toString().split(' ')
+        return "${splitDate[0]} ${splitDate[2]}"
+    }
+
     fun getHourFromCalendar(calendar: Calendar): String {
         val hours = calendar.get(Calendar.HOUR_OF_DAY)
         val minutes = calendar.get(Calendar.MINUTE)

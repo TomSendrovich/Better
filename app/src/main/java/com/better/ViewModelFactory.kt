@@ -9,7 +9,10 @@ import com.better.ui.matches.MatchesViewModel
 import com.better.ui.profile.ProfileViewModel
 
 @Suppress("UNCHECKED_CAST")
-class ViewModelFactory(private val repository: Repository) : ViewModelProvider.Factory {
+class ViewModelFactory() : ViewModelProvider.Factory {
+
+    val repository = Repository
+
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         when {
             modelClass.isAssignableFrom(FeedViewModel::class.java) -> {
