@@ -9,7 +9,7 @@ import com.better.ui.matches.MatchesViewModel
 import com.better.ui.profile.ProfileViewModel
 
 @Suppress("UNCHECKED_CAST")
-class ViewModelFactory() : ViewModelProvider.Factory {
+class ViewModelFactory : ViewModelProvider.Factory {
 
     val repository = Repository
 
