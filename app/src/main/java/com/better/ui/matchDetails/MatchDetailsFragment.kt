@@ -7,7 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.better.R
+import com.better.adapters.EventTipAdapter
+import com.better.adapters.FixtureAdapter
+import com.better.model.dataHolders.EventTip
 import com.better.model.dataHolders.Fixture
 import com.better.ui.MainActivity
 import com.better.utils.AppUtils
@@ -18,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_match_details.view.*
 class MatchDetailsFragment : Fragment() {
 
     private val args by navArgs<MatchDetailsFragmentArgs>()
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +70,25 @@ class MatchDetailsFragment : Fragment() {
             }
         }
 
+        recyclerView = view.findViewById(R.id.recycler_view_match)
+
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        recyclerView.apply {
+            adapter = EventTipAdapter(ArrayList(),object:EventTipAdapter.EventTipListener{
+                override fun onItemClicked(item: EventTip) {
+                    TODO("Not yet implemented")
+                }
+            })
+            layoutManager = LinearLayoutManager(context)
+        }
+//        viewModel.fixtures.observe(viewLifecycleOwner, {
+//            (recyclerView.adapter as FixtureAdapter).setData(it as ArrayList<Fixture>)
+//        })
     }
 
     override fun onDestroyView() {
