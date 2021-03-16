@@ -47,30 +47,12 @@ object Repository {
             }
     }
 
-/*    fun getTodayFixtures() {
+    fun getTodayFixtures() {
         val today = Calendar.getInstance()
         val tomorrow = Calendar.getInstance()
         tomorrow.add(Calendar.DAY_OF_YEAR, 1)
 
-        val fixturesRef = Firebase.firestore.collection(DB_COLLECTION_FIXTURES)
-
-        fixturesRef
-            .whereGreaterThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(today.time))
-            .whereLessThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(tomorrow.time))
-            .get()
-            .addOnSuccessListener { documents ->
-                Log.i(TAG, "queried ${documents.size()} documents")
-                val list: ArrayList<Fixture> = ArrayList()
-                for (doc in documents) {
-                    val fixture = createFixtureFromDocument(doc)
-//                    Log.i(TAG, fixture.toString())
-                    list.add(fixture)
-                } // end of documents loop
-                fixtures.postValue(list)
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents: ", exception)
-            }
+        getFixturesByDate(from = today, to = tomorrow)
     }
 
     fun getLastWeekFixtures() {
@@ -78,25 +60,7 @@ object Repository {
         val lastWeek = Calendar.getInstance()
         lastWeek.add(Calendar.DAY_OF_YEAR, -7)
 
-        val fixturesRef = Firebase.firestore.collection(DB_COLLECTION_FIXTURES)
-
-        fixturesRef
-            .whereGreaterThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(lastWeek.time))
-            .whereLessThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(today.time))
-            .get()
-            .addOnSuccessListener { documents ->
-                Log.i(TAG, "queried ${documents.size()} documents")
-                val list: ArrayList<Fixture> = ArrayList()
-                for (doc in documents) {
-                    val fixture = createFixtureFromDocument(doc)
-//                    Log.i(TAG, fixture.toString())
-                    list.add(fixture)
-                } // end of documents loop
-                fixtures.postValue(list)
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents: ", exception)
-            }
+        getFixturesByDate(from = lastWeek, to = today)
     }
 
     fun getNextWeekFixtures() {
@@ -104,26 +68,8 @@ object Repository {
         val nextWeek = Calendar.getInstance()
         nextWeek.add(Calendar.DAY_OF_YEAR, 7)
 
-        val fixturesRef = Firebase.firestore.collection(DB_COLLECTION_FIXTURES)
-
-        fixturesRef
-            .whereGreaterThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(today.time))
-            .whereLessThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(nextWeek.time))
-            .get()
-            .addOnSuccessListener { documents ->
-                Log.i(TAG, "queried ${documents.size()} documents")
-                val list: ArrayList<Fixture> = ArrayList()
-                for (doc in documents) {
-                    val fixture = createFixtureFromDocument(doc)
-//                    Log.i(TAG, fixture.toString())
-                    list.add(fixture)
-                } // end of documents loop
-                fixtures.postValue(list)
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents: ", exception)
-            }
-    }*/
+        getFixturesByDate(from = today, to = nextWeek)
+    }
 
     private fun createFixtureFromDocument(doc: QueryDocumentSnapshot): Fixture {
 //        Log.d(TAG, "${doc.id} => ${doc.data}")
