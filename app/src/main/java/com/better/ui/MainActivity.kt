@@ -20,14 +20,12 @@ import com.better.R
 import com.better.model.Repository
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var fab: FloatingActionButton
     private lateinit var logoutButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,14 +39,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        fab = findViewById(R.id.fab)
         logoutButton = findViewById(R.id.logout)
-
-        fab.setOnClickListener {
-//            Repository.getTodayFixtures()
-//            Repository.getLastWeekFixtures()
-//            Repository.getNextWeekFixtures()
-        }
         logoutButton.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             intent.putExtra(EXTRA_LOGOUT, true)
