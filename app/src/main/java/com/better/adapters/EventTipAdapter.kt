@@ -41,8 +41,8 @@ class EventTipAdapter(
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         val eventTip = oldList[position]
-        viewHolder.description.text = EventTip.getTipDescription(eventTip)
-        viewHolder.tipValue.text = EventTip.getTipValue(eventTip)
+        viewHolder.description.text = eventTip.description
+        viewHolder.tipValue.text = eventTip.tipValue.toString()
         //TODO add the profile picture of the user
         viewHolder.itemView.setOnClickListener {
             listener.onItemClicked(oldList[position])

@@ -16,24 +16,15 @@ import kotlinx.android.parcel.Parcelize
  *  1 - home wins
  *  2 - away wins
  */
-@Parcelize
 data class EventTip(
     val tipID: String,
     val userID: String,
     val fixtureID: String,
     val description: String?,
-    val tipValue: Long
-): Parcelable {
-    companion object {
-        fun getTipValue(eventTip: EventTip):String {
-            return eventTip.tipValue.toString()
-        }
+    val tipValue: Long,
+    val isHit: Boolean
+) {
 
-        fun getTipDescription(eventTip: EventTip): String? {
-            return eventTip.description
-        }
-
-    }
 }
 
 
