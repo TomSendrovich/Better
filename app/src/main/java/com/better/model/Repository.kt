@@ -41,7 +41,6 @@ object Repository {
                 } // end of documents loop
                 map[from[Calendar.DAY_OF_YEAR]] = list
                 fixtures.postValue(map)
-                Log.d("guy", "getFixturesByDate: posted!")
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents: ", exception)
