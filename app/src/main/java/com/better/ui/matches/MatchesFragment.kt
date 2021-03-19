@@ -34,6 +34,7 @@ class MatchesFragment : Fragment() {
     private lateinit var viewPager: ViewPager2
     private lateinit var calendarViewAdapter: CalendarViewAdapter
     private lateinit var monthAndYearText: TextView
+    private lateinit var noMatchesText: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: MatchesViewModel
 
@@ -56,6 +57,7 @@ class MatchesFragment : Fragment() {
         tabLayout = view.findViewById(R.id.tab_layout)
         recyclerView = view.findViewById(R.id.recycler_view)
         monthAndYearText = view.findViewById(R.id.month_and_year_text)
+        noMatchesText = view.findViewById(R.id.no_matches_text)
 
         setViewPager()
 
@@ -113,6 +115,8 @@ class MatchesFragment : Fragment() {
                     val list = it[date[Calendar.DAY_OF_YEAR]]
                     if (list != null) {
                         (recyclerView.adapter as FixtureAdapter).setData(list as ArrayList<Fixture>)
+
+                        noMatchesText.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
                     }
                 })
             }

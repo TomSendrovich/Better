@@ -3,6 +3,7 @@ package com.better.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -59,21 +60,28 @@ class FixtureAdapter(
 
         when {
             fixture.status.isDone() -> {
+                viewHolder.topText.visibility = VISIBLE
+                viewHolder.bottomText.visibility = VISIBLE
                 viewHolder.topText.text = Fixture.buildScoreText(fixture)
                 viewHolder.bottomText.text = fixture.status.short
             }
             fixture.status.isActive() -> {
+                viewHolder.topText.visibility = VISIBLE
+                viewHolder.bottomText.visibility = VISIBLE
                 viewHolder.topText.text = Fixture.buildScoreText(fixture)
                 viewHolder.bottomText.text = Fixture.buildTimeText(fixture)
             }
             fixture.status.isNotStarted() -> {
                 val weekDay = DateUtils.getWeekDayFromCalendar(fixture.getCalendar())
                 val hour = DateUtils.getHourFromCalendar(fixture.getCalendar())
+                viewHolder.topText.visibility = VISIBLE
+                viewHolder.bottomText.visibility = VISIBLE
                 viewHolder.topText.text = weekDay
                 viewHolder.bottomText.text = hour
             }
             else -> {
                 viewHolder.topText.visibility = GONE
+                viewHolder.bottomText.visibility = VISIBLE
                 viewHolder.bottomText.text = fixture.status.short
             }
         }
