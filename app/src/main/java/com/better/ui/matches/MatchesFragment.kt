@@ -26,7 +26,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 private const val TAG = "MatchesFragment"
-private const val SEVEN_DAYS = 7
 private const val NUM_OF_DAYS = 14
 private lateinit var viewModel: MatchesViewModel
 
@@ -61,7 +60,7 @@ class MatchesFragment : Fragment() {
         //init tabs
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             val date = Calendar.getInstance()
-            date.add(Calendar.DAY_OF_YEAR, position - SEVEN_DAYS)
+            date.add(Calendar.DAY_OF_YEAR, position - PAGE_SELECTED_DEFAULT)
             tab.text = getWeekDayAndDateFromCalendar(date)
         }.attach()
 
@@ -86,8 +85,8 @@ class MatchesFragment : Fragment() {
             override fun onPageSelected(position: Int) {
                 Log.d(TAG, "onPageSelected: $position")
                 super.onPageSelected(position)
-                viewModel.getFixturesByDate(position - SEVEN_DAYS)
-                viewModel.updateMonthAndYearText(position - SEVEN_DAYS)
+                viewModel.getFixturesByDate(position - PAGE_SELECTED_DEFAULT)
+                viewModel.updateMonthAndYearText(position - PAGE_SELECTED_DEFAULT)
 
                 setSharedPrefPageSelected(position)
             }
@@ -102,11 +101,10 @@ class MatchesFragment : Fragment() {
     private fun getSharedPrefPageSelected(): Int {
         val preferences = activity?.getSharedPreferences(VIEW_PAGER, MODE_PRIVATE)
         val pageSelected = preferences?.getInt(
-            SHARED_PREF_PAGE_SELECTED,
-            (viewPager.adapter as CalendarViewAdapter).itemCount / 2
+            SHARED_PREF_PAGE_SELECTED, PAGE_SELECTED_DEFAULT
         )
 
-        return pageSelected ?: 7
+        return pageSelected ?: PAGE_SELECTED_DEFAULT
     }
 
     private fun setSharedPrefPageSelected(pageSelected: Int) {
@@ -130,7 +128,6 @@ class OneDayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         arguments?.takeIf { it.containsKey(ARG_POSITION) }?.apply {
             val position: Int = getInt(ARG_POSITION)
-
             Log.d(TAG, "onViewCreated: $position")
 
             noMatchesText = view.findViewById(R.id.no_matches_text)
@@ -153,14 +150,12 @@ class OneDayFragment : Fragment() {
             }
 
             viewModel.fixtures.observe(viewLifecycleOwner, {
-                Log.d("guy", "onViewCreated: viewModel observed! ${getInt(ARG_POSITION)}")
                 val date = Calendar.getInstance()
-                date.add(Calendar.DAY_OF_YEAR, position - SEVEN_DAYS)
+                date.add(Calendar.DAY_OF_YEAR, position - PAGE_SELECTED_DEFAULT)
 
                 val list = it[date[Calendar.DAY_OF_YEAR]]
                 if (list != null) {
                     (recyclerView.adapter as FixtureAdapter).setData(list as ArrayList<Fixture>)
-                    Log.d("guy", "onViewCreated: recyclerView updated! ${getInt(ARG_POSITION)}")
 
                     noMatchesText.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
                 }
