@@ -41,7 +41,6 @@ object DateUtils {
     }
 
     fun getWeekDayAndDateFromCalendar(calendar: Calendar): String {
-        val formattedDate = DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH).format(calendar.time)
         val splitDate = calendar.time.toString().split(' ')
         return "${splitDate[0]} ${splitDate[2]}"
     }
