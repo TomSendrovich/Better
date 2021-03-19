@@ -17,6 +17,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.better.EXTRA_LOGOUT
 import com.better.R
+import com.better.SHARED_PREF_PAGE_SELECTED
+import com.better.VIEW_PAGER
 import com.better.model.Repository
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -36,6 +38,11 @@ class MainActivity : AppCompatActivity() {
 
         initViews()
         initDrawerLayout()
+
+        val preferences = getSharedPreferences(VIEW_PAGER, MODE_PRIVATE)
+        val editor = preferences.edit()
+        editor?.putInt(SHARED_PREF_PAGE_SELECTED, 7)
+        editor?.apply()
     }
 
     private fun initViews() {

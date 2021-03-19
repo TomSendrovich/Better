@@ -2,6 +2,9 @@ package com.better
 
 // Intent Constants
 const val EXTRA_LOGOUT = "logout"
+const val ARG_POSITION = "position"
+const val SHARED_PREF_PAGE_SELECTED = "pageSelected"
+const val VIEW_PAGER = "viewPager"
 
 const val DB_COLLECTION_FIXTURES: String = "fixtures"
 const val DB_COLLECTION_LEAGUES: String = "leagues"
