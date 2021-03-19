@@ -18,7 +18,7 @@ class FeedFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModelFactory = ViewModelFactory(Repository)
+        val viewModelFactory = ViewModelFactory()
         viewModel = ViewModelProvider(this, viewModelFactory).get(FeedViewModel::class.java)
     }
 
