@@ -28,6 +28,7 @@ import kotlin.collections.ArrayList
 private const val TAG = "MatchesFragment"
 private const val SEVEN_DAYS = 7
 private const val NUM_OF_DAYS = 14
+private lateinit var viewModel: MatchesViewModel
 
 class MatchesFragment : Fragment() {
 
@@ -35,7 +36,6 @@ class MatchesFragment : Fragment() {
     private lateinit var viewPager: ViewPager2
     private lateinit var calendarViewAdapter: CalendarViewAdapter
     private lateinit var monthAndYearText: TextView
-    private lateinit var viewModel: MatchesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,13 +120,6 @@ class MatchesFragment : Fragment() {
 class OneDayFragment : Fragment() {
 
     private lateinit var noMatchesText: TextView
-    private lateinit var viewModel: OneDayViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val viewModelFactory = ViewModelFactory()
-        viewModel = ViewModelProvider(this, viewModelFactory).get(OneDayViewModel::class.java)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
