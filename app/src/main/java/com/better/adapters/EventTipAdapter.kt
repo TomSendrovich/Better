@@ -6,14 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.better.R
 import com.better.model.dataHolders.EventTip
+import com.better.model.dataHolders.Fixture
+import com.better.utils.EventTipsDiffUtil
+import com.better.utils.FixtureDiffUtil
 import java.util.ArrayList
 
 class EventTipAdapter(
     private var oldList: ArrayList<EventTip>,
-    private val listener: EventTipAdapter.EventTipListener
+    private val listener: EventTipListener
 ) : RecyclerView.Adapter<EventTipAdapter.ViewHolder>() {
 
     interface EventTipListener {
@@ -51,5 +55,12 @@ class EventTipAdapter(
 
     override fun getItemCount(): Int {
         return oldList.size
+    }
+
+    fun setData(newList: ArrayList<EventTip>) {
+        val diffUtil = EventTipsDiffUtil(oldList, newList)
+        val diffResults = DiffUtil.calculateDiff(diffUtil)
+        oldList = newList
+        diffResults.dispatchUpdatesTo(this)
     }
 }

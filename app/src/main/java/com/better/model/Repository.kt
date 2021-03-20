@@ -1,7 +1,9 @@
 package com.better.model
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.better.*
 import com.better.model.dataHolders.*
 import com.better.utils.DateUtils
@@ -208,10 +210,11 @@ object Repository {
             UID to appUser.uid,
             FIXTURE to fixture.id,
             DESCRIPTION to description,
-            TIP_VALUE to tipValue
+            TIP_VALUE to tipValue,
+            IS_HIT to null
         )
-        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).document()
-            .set(eventTip)
+        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS)
+            .add(eventTip)
             .addOnSuccessListener {
                 Log.i(
                     TAG,
@@ -221,5 +224,29 @@ object Repository {
             .addOnFailureListener{exception ->
                 Log.w(TAG, "Error creating user: ", exception)
             }
+    }
+
+    fun getEventTipsByFixtureId(fixtureId: Long){
+        Firebase.firestore.collection("eventTips").whereEqualTo("fixture", fixtureId)
+            .get()
+            .addOnSuccessListener {documents ->
+                val list: ArrayList<EventTip> = ArrayList()
+                for (doc in documents){
+                    val eventTip = createEventTipFromDocument(doc)
+                    list.add(eventTip)
+                    feedList.postValue(list)
+                }
+            }
+    }
+
+    private fun createEventTipFromDocument(doc:QueryDocumentSnapshot):EventTip{
+        return EventTip(
+            doc.id,
+            doc[UID] as String,
+            doc[FIXTURE] as Long,
+            doc[DESCRIPTION] as String,
+            doc[TIP_VALUE] as Long,
+            doc[IS_HIT] as Boolean?
+        )
     }
 }

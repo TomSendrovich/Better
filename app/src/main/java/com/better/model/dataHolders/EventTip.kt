@@ -17,14 +17,12 @@ import kotlinx.android.parcel.Parcelize
  *  2 - away wins
  */
 data class EventTip(
-    val tipID: String,
-    val userID: String,
-    val fixtureID: String,
-    val description: String?,
-    val tipValue: Long,
-    val isHit: Boolean
-) {
-
-}
+    var tipID: String,
+    var userID: String,
+    var fixtureID: Long,
+    var description: String?,
+    var tipValue: Long,
+    var isHit: Boolean?
+)
 
 
