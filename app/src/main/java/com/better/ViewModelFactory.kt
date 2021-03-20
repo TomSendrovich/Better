@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.better.model.Repository
 import com.better.ui.about.AboutViewModel
+import com.better.ui.addTip.AddTipViewModel
 import com.better.ui.feed.FeedViewModel
 import com.better.ui.matches.MatchesViewModel
 import com.better.ui.profile.ProfileViewModel

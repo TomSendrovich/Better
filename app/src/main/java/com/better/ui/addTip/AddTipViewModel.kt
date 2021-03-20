@@ -1,4 +1,4 @@
-package com.better
+package com.better.ui.addTip
 
 import androidx.lifecycle.ViewModel
 import com.better.model.Repository

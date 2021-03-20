@@ -11,7 +11,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.better.AddTipFragmentDirections
+import com.better.ui.addTip.AddTipFragmentDirections
 import com.better.R
 import com.better.adapters.EventTipAdapter
 import com.better.adapters.FixtureAdapter
