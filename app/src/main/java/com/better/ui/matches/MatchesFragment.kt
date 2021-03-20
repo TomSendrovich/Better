@@ -1,5 +1,6 @@
 package com.better.ui.matches
 
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,8 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import com.better.R
-import com.better.ViewModelFactory
+import com.better.*
 import com.better.adapters.CalendarViewAdapter
 import com.better.adapters.FixtureAdapter
 import com.better.adapters.FixtureAdapter.FixtureListener
@@ -26,7 +26,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 private const val TAG = "MatchesFragment"
-private const val SEVEN_DAYS = 7
+private const val NUM_OF_DAYS = 14
+private lateinit var viewModel: MatchesViewModel
 
 class MatchesFragment : Fragment() {
 
@@ -34,8 +35,6 @@ class MatchesFragment : Fragment() {
     private lateinit var viewPager: ViewPager2
     private lateinit var calendarViewAdapter: CalendarViewAdapter
     private lateinit var monthAndYearText: TextView
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var viewModel: MatchesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +53,6 @@ class MatchesFragment : Fragment() {
 
         viewPager = view.findViewById(R.id.pager)
         tabLayout = view.findViewById(R.id.tab_layout)
-        recyclerView = view.findViewById(R.id.recycler_view)
         monthAndYearText = view.findViewById(R.id.month_and_year_text)
 
         setViewPager()
@@ -62,26 +60,9 @@ class MatchesFragment : Fragment() {
         //init tabs
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             val date = Calendar.getInstance()
-            date.add(Calendar.DAY_OF_YEAR, position - SEVEN_DAYS)
+            date.add(Calendar.DAY_OF_YEAR, position - PAGE_SELECTED_DEFAULT)
             tab.text = getWeekDayAndDateFromCalendar(date)
         }.attach()
-
-
-        recyclerView.apply {
-            adapter = FixtureAdapter(ArrayList(), object : FixtureListener {
-                override fun onItemClicked(item: Fixture) {
-                    Log.d(TAG, "onItemClicked: ${item.home.name} - ${item.away.name}")
-
-                    val action = MatchesFragmentDirections
-                        .actionNavMatchesToMatchDetailsFragment(item)
-
-                    activity
-                        ?.findNavController(R.id.nav_host_fragment)
-                        ?.navigate(action)
-                }
-            })
-            layoutManager = LinearLayoutManager(context)
-        }
 
         viewModel.monthAndYearText.observe(viewLifecycleOwner, {
             monthAndYearText.text = it
@@ -97,30 +78,89 @@ class MatchesFragment : Fragment() {
      * 4. we invoking the onPageSelected method on that item
      */
     private fun setViewPager() {
-        calendarViewAdapter = CalendarViewAdapter(this)
+        calendarViewAdapter = CalendarViewAdapter(this, NUM_OF_DAYS)
         viewPager.adapter = calendarViewAdapter
 
         val pageChangeCallback: OnPageChangeCallback = object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                Log.d(TAG, "onPageSelected: ")
+                Log.d(TAG, "onPageSelected: $position")
                 super.onPageSelected(position)
-                viewModel.getFixturesByDate(position - SEVEN_DAYS)
-                viewModel.updateMonthAndYearText(position - SEVEN_DAYS)
-                viewModel.fixtures.observe(viewLifecycleOwner, {
-                    val date = Calendar.getInstance()
-                    date.add(Calendar.DAY_OF_YEAR, position - SEVEN_DAYS)
+                viewModel.getFixturesByDate(position - PAGE_SELECTED_DEFAULT)
+                viewModel.updateMonthAndYearText(position - PAGE_SELECTED_DEFAULT)
 
-                    val list = it[date[Calendar.DAY_OF_YEAR]]
-                    if (list != null) {
-                        (recyclerView.adapter as FixtureAdapter).setData(list as ArrayList<Fixture>)
-                    }
-                })
+                setSharedPrefPageSelected(position)
             }
         }
+
         viewPager.registerOnPageChangeCallback(pageChangeCallback)
-        viewPager.currentItem = (viewPager.adapter as CalendarViewAdapter).itemCount / 2
-        pageChangeCallback.onPageSelected(viewPager.currentItem)
+
+        val pageSelected = getSharedPrefPageSelected()
+        viewPager.currentItem = pageSelected
+    }
+
+    private fun getSharedPrefPageSelected(): Int {
+        val preferences = activity?.getSharedPreferences(VIEW_PAGER, MODE_PRIVATE)
+        val pageSelected = preferences?.getInt(
+            SHARED_PREF_PAGE_SELECTED, PAGE_SELECTED_DEFAULT
+        )
+
+        return pageSelected ?: PAGE_SELECTED_DEFAULT
+    }
+
+    private fun setSharedPrefPageSelected(pageSelected: Int) {
+        val preferences = activity?.getSharedPreferences(VIEW_PAGER, MODE_PRIVATE)
+        val editor = preferences?.edit()
+        editor?.putInt(SHARED_PREF_PAGE_SELECTED, pageSelected)
+        editor?.apply()
     }
 }
 
-class OneDayFragment : Fragment()
+class OneDayFragment : Fragment() {
+
+    private lateinit var noMatchesText: TextView
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        return inflater.inflate(R.layout.fragment_one_day, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        arguments?.takeIf { it.containsKey(ARG_POSITION) }?.apply {
+            val position: Int = getInt(ARG_POSITION)
+            Log.d(TAG, "onViewCreated: $position")
+
+            noMatchesText = view.findViewById(R.id.no_matches_text)
+
+            val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
+            recyclerView.apply {
+                adapter = FixtureAdapter(ArrayList(), object : FixtureListener {
+                    override fun onItemClicked(item: Fixture) {
+                        Log.d(TAG, "onItemClicked: ${item.home.name} - ${item.away.name}")
+
+                        val action =
+                            MatchesFragmentDirections.actionNavMatchesToMatchDetailsFragment(item)
+
+                        activity
+                            ?.findNavController(R.id.nav_host_fragment)
+                            ?.navigate(action)
+                    }
+                })
+                layoutManager = LinearLayoutManager(context)
+            }
+
+            viewModel.fixtures.observe(viewLifecycleOwner, {
+                val date = Calendar.getInstance()
+                date.add(Calendar.DAY_OF_YEAR, position - PAGE_SELECTED_DEFAULT)
+
+                val list = it[date[Calendar.DAY_OF_YEAR]]
+                if (list != null) {
+                    (recyclerView.adapter as FixtureAdapter).setData(list as ArrayList<Fixture>)
+
+                    noMatchesText.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+                }
+            })
+
+        }
+    }
+}

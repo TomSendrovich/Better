@@ -15,8 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.better.EXTRA_LOGOUT
-import com.better.R
+import com.better.*
 import com.better.model.Repository
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -36,6 +35,8 @@ class MainActivity : AppCompatActivity() {
 
         initViews()
         initDrawerLayout()
+
+        setSharedPrefPageSelectedToDefault()
     }
 
     private fun initViews() {
@@ -93,5 +94,12 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    private fun setSharedPrefPageSelectedToDefault() {
+        val preferences = getSharedPreferences(VIEW_PAGER, MODE_PRIVATE)
+        val editor = preferences.edit()
+        editor?.putInt(SHARED_PREF_PAGE_SELECTED, PAGE_SELECTED_DEFAULT)
+        editor?.apply()
     }
 }
