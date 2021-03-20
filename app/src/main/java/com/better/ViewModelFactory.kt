@@ -6,6 +6,7 @@ import com.better.model.Repository
 import com.better.ui.about.AboutViewModel
 import com.better.ui.addTip.AddTipViewModel
 import com.better.ui.feed.FeedViewModel
+import com.better.ui.matchDetails.MatchDetailsFragmentViewModel
 import com.better.ui.matches.MatchesViewModel
 import com.better.ui.profile.ProfileViewModel
 
@@ -30,6 +31,9 @@ class ViewModelFactory : ViewModelProvider.Factory {
             }
             modelClass.isAssignableFrom(AddTipViewModel::class.java)->{
                 return AddTipViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(MatchDetailsFragmentViewModel::class.java)->{
+                return MatchDetailsFragmentViewModel(repository) as T
             }
         }
         throw IllegalArgumentException("ViewModel class not found.")
