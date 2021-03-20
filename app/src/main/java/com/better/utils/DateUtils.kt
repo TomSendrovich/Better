@@ -33,7 +33,7 @@ object DateUtils {
     }
 
     fun getMonthAndYearFromCalendar(calendar: Calendar): String {
-        val formattedDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.time)
+        val formattedDate = DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH).format(calendar.time)
         val splitDate = formattedDate.split(',')
         val year = splitDate[2]
         val month = splitDate[1].split(' ')[1]
