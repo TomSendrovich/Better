@@ -24,4 +24,5 @@ data class AppUser(
     constructor(uid: String, name: String?, email: String?, photoUrl: String?) : this(
         uid, name, email, photoUrl, emptyList<String>(), 0, emptyList<String>(), emptyList<String>()
     )
+
 }
