@@ -1,5 +1,8 @@
 package com.better.model.dataHolders
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /**
  * Represents an event tip.
  * @property tipID id of the tip
@@ -17,6 +20,11 @@ data class EventTip(
     val tipID: String,
     val userID: String,
     val fixtureID: String,
-    val description: String,
-    val tipValue: Long?
-)
+    val description: String?,
+    val tipValue: Long,
+    val isHit: Boolean
+) {
+
+}
+
+

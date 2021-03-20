@@ -27,13 +27,13 @@ object DateUtils {
     }
 
     fun getWeekDayFromCalendar(calendar: Calendar): String {
-        val formattedDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.time)
+        val formattedDate = DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH).format(calendar.time)
         val splitDate = formattedDate.split(',')
         return splitDate[0]
     }
 
     fun getMonthAndYearFromCalendar(calendar: Calendar): String {
-        val formattedDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.time)
+        val formattedDate = DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH).format(calendar.time)
         val splitDate = formattedDate.split(',')
         val year = splitDate[2]
         val month = splitDate[1].split(' ')[1]
@@ -41,7 +41,6 @@ object DateUtils {
     }
 
     fun getWeekDayAndDateFromCalendar(calendar: Calendar): String {
-        val formattedDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.time)
         val splitDate = calendar.time.toString().split(' ')
         return "${splitDate[0]} ${splitDate[2]}"
     }
