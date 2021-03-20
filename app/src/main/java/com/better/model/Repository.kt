@@ -202,4 +202,24 @@ object Repository {
 
         monthAndYearText.postValue(DateUtils.getMonthAndYearFromCalendar(date))
     }
+
+    fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long){
+        val eventTip = hashMapOf(
+            UID to appUser.uid,
+            FIXTURE to fixture.id,
+            DESCRIPTION to description,
+            TIP_VALUE to tipValue
+        )
+        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).document()
+            .set(eventTip)
+            .addOnSuccessListener {
+                Log.i(
+                    TAG,
+                    "createEventTipDocument succeeded"
+                )
+            }
+            .addOnFailureListener{exception ->
+                Log.w(TAG, "Error creating user: ", exception)
+            }
+    }
 }

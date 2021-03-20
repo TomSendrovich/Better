@@ -27,6 +27,9 @@ class ViewModelFactory : ViewModelProvider.Factory {
             modelClass.isAssignableFrom(ProfileViewModel::class.java) -> {
                 return ProfileViewModel(repository) as T
             }
+            modelClass.isAssignableFrom(AddTipViewModel::class.java)->{
+                return AddTipViewModel(repository) as T
+            }
         }
         throw IllegalArgumentException("ViewModel class not found.")
     }

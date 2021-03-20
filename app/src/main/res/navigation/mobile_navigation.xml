@@ -55,5 +55,8 @@
         <action
             android:id="@+id/action_addTipFragment_to_matchDetailsFragment"
             app:destination="@id/matchDetailsFragment" />
+        <argument
+            android:name="selectedFixture"
+            app:argType="com.better.model.dataHolders.Fixture" />
     </dialog>
 </navigation>
