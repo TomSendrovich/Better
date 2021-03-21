@@ -6,19 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.better.ui.addTip.AddTipFragmentDirections
 import com.better.R
+import com.better.ViewModelFactory
 import com.better.adapters.EventTipAdapter
-import com.better.adapters.FixtureAdapter
 import com.better.model.dataHolders.EventTip
 import com.better.model.dataHolders.Fixture
 import com.better.ui.MainActivity
-import com.better.ui.matches.MatchesFragmentDirections
 import com.better.utils.AppUtils
 import com.better.utils.DateUtils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -30,10 +28,14 @@ class MatchDetailsFragment : Fragment() {
     private val args by navArgs<MatchDetailsFragmentArgs>()
     private lateinit var recyclerView: RecyclerView
     private lateinit var floatingButton: FloatingActionButton
+    private lateinit var viewModel: MatchDetailsFragmentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate: ")
+        val viewModelFactory = ViewModelFactory()
+        viewModel =
+            ViewModelProvider(this, viewModelFactory).get(MatchDetailsFragmentViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -87,28 +89,45 @@ class MatchDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView.apply {
-            adapter = EventTipAdapter(ArrayList(),object:EventTipAdapter.EventTipListener{
+            adapter = EventTipAdapter(ArrayList(), object : EventTipAdapter.EventTipListener {
                 override fun onItemClicked(item: EventTip) {
-                    TODO("Not yet implemented")
                 }
             })
             layoutManager = LinearLayoutManager(context)
         }
-//        viewModel.fixtures.observe(viewLifecycleOwner, {
-//            (recyclerView.adapter as FixtureAdapter).setData(it as ArrayList<Fixture>)
-//        })
-        floatingButton.setOnClickListener {
-            val action = MatchDetailsFragmentDirections.actionMatchDetailsFragmentToAddTipFragment(args.selectedFixture)
-            view.findNavController().navigate(action)
 
-        //Navigation.findNavController(view).navigate(R.id.action_matchDetailsFragment_to_addTipFragment)
+        floatingButton.setOnClickListener {
+            val action =
+                MatchDetailsFragmentDirections.actionMatchDetailsFragmentToAddTipFragment(args.selectedFixture)
+            view.findNavController().navigate(action)
         }
 
+        viewModel.updateEventTipsByFixtureId(args.selectedFixture.id)
+        viewModel.eventTips.observe(viewLifecycleOwner, {
+            val list = viewModel.eventTips.value
+            (recyclerView.adapter as EventTipAdapter).setData(list as ArrayList<EventTip>)
+
+        })
     }
 
     override fun onDestroyView() {
         Log.d(TAG, "onDestroyView: ")
         super.onDestroyView()
+    }
+
+    override fun onResume() {
+        Log.d(TAG, "onResume: ")
+        super.onResume()
+    }
+
+    override fun onStart() {
+        Log.d(TAG, "onStart: ")
+        super.onStart()
+    }
+
+    override fun onStop() {
+        Log.d(TAG, "onStop: ")
+        super.onStop()
     }
 
     companion object {

@@ -203,23 +203,57 @@ object Repository {
         monthAndYearText.postValue(DateUtils.getMonthAndYearFromCalendar(date))
     }
 
-    fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long){
+    fun updateEventTipsByFixtureId(fixtureId: Long) {
+        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).whereEqualTo(FIXTURE, fixtureId)
+            .get()
+            .addOnSuccessListener { documents ->
+                val list: ArrayList<EventTip> = ArrayList()
+                for (doc in documents) {
+                    val eventTip = createEventTipFromDocument(doc)
+                    list.add(eventTip)
+                }
+                feedList.postValue(list)
+            }
+    }
+
+    fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long) {
         val eventTip = hashMapOf(
             UID to appUser.uid,
-            FIXTURE to fixture.id,
+            "userPic" to appUser.photoUrl,
             DESCRIPTION to description,
-            TIP_VALUE to tipValue
+            "homeName" to fixture.home.name,
+            "awayName" to fixture.away.name,
+            "homeLogo" to fixture.home.logo,
+            "awayLogo" to fixture.away.logo,
+            FIXTURE to fixture.id,
+            TIP_VALUE to tipValue,
         )
-        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).document()
-            .set(eventTip)
+        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS)
+            .add(eventTip)
             .addOnSuccessListener {
                 Log.i(
                     TAG,
                     "createEventTipDocument succeeded"
                 )
             }
-            .addOnFailureListener{exception ->
+            .addOnFailureListener { exception ->
                 Log.w(TAG, "Error creating user: ", exception)
             }
+    }
+
+    private fun createEventTipFromDocument(doc: QueryDocumentSnapshot): EventTip {
+        return EventTip(
+            tipID = doc.id,
+            userID = doc[UID] as String,
+            userPic = doc["userPic"] as String,
+            fixtureID = doc[FIXTURE] as Long,
+            homeName = doc["homeName"] as String,
+            awayName = doc["awayName"] as String,
+            homeLogo = doc["homeLogo"] as String,
+            awayLogo = doc["awayLogo"] as String,
+            description = doc[DESCRIPTION] as String,
+            tipValue = doc[TIP_VALUE] as Long,
+            isHit = doc[IS_HIT] as Boolean?
+        )
     }
 }
