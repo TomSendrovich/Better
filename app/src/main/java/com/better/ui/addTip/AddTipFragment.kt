@@ -43,23 +43,8 @@ class AddTipFragment : BottomSheetDialogFragment() {
             val chipId = chipGroup.checkedChipId
             if (chipId != -1) {
                 val chip: Chip = chipGroup.findViewById(chipId)
-                var tipValue: Long = 0
-                chip.text.toString().apply {
-                    when {
-                        equals("1") -> {
-                            tipValue = 1
-                        }
-                        equals("X") -> {
-                            tipValue = 0
-                        }
-                        equals("2") -> {
-                            tipValue = 2
-                        }
-                    }
-                    viewModel.createEventTipDocument(args.selectedFixture, description, tipValue)
-                    viewModel.updateEventTipsByFixtureId(args.selectedFixture.id)
-                    dismiss()
-                }
+                viewModel.onClickAddTip(args.selectedFixture, description, chip.text.toString())
+                dismiss()
             } else {
                 Toast.makeText(context, "please place your bet choice", Toast.LENGTH_LONG).show()
             }
