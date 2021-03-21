@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import com.better.ui.addTip.AddTipFragmentArgs
 import com.better.R
 import com.better.ViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -58,6 +57,7 @@ class AddTipFragment : BottomSheetDialogFragment() {
                         }
                     }
                     viewModel.createEventTipDocument(args.selectedFixture, description, tipValue)
+                    viewModel.updateEventTipsByFixtureId(args.selectedFixture.id)
                     dismiss()
                 }
             } else {

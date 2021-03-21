@@ -1,9 +1,7 @@
 package com.better.model
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import com.better.*
 import com.better.model.dataHolders.*
 import com.better.utils.DateUtils
@@ -205,7 +203,7 @@ object Repository {
         monthAndYearText.postValue(DateUtils.getMonthAndYearFromCalendar(date))
     }
 
-    fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long){
+    fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long) {
         val eventTip = hashMapOf(
             UID to appUser.uid,
             FIXTURE to fixture.id,
@@ -221,25 +219,25 @@ object Repository {
                     "createEventTipDocument succeeded"
                 )
             }
-            .addOnFailureListener{exception ->
+            .addOnFailureListener { exception ->
                 Log.w(TAG, "Error creating user: ", exception)
             }
     }
 
-    fun getEventTipsByFixtureId(fixtureId: Long){
-        Firebase.firestore.collection("eventTips").whereEqualTo("fixture", fixtureId)
+    fun updateEventTipsByFixtureId(fixtureId: Long) {
+        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).whereEqualTo(FIXTURE, fixtureId)
             .get()
-            .addOnSuccessListener {documents ->
+            .addOnSuccessListener { documents ->
                 val list: ArrayList<EventTip> = ArrayList()
-                for (doc in documents){
+                for (doc in documents) {
                     val eventTip = createEventTipFromDocument(doc)
                     list.add(eventTip)
-                    feedList.postValue(list)
                 }
+                feedList.postValue(list)
             }
     }
 
-    private fun createEventTipFromDocument(doc:QueryDocumentSnapshot):EventTip{
+    private fun createEventTipFromDocument(doc: QueryDocumentSnapshot): EventTip {
         return EventTip(
             doc.id,
             doc[UID] as String,

@@ -6,10 +6,12 @@ import com.better.model.dataHolders.Fixture
 
 class AddTipViewModel(private val repository: Repository) : ViewModel() {
     fun createEventTipDocument(
-        fixture: Fixture,
-        description: String,
-        tipValue: Long
-    ){
-        repository.createEventTipDocument(fixture,description,tipValue)
+        fixture: Fixture, description: String, tipValue: Long
+    ) {
+        repository.createEventTipDocument(fixture, description, tipValue)
+    }
+
+    fun updateEventTipsByFixtureId(fixtureID : Long){
+        return repository.updateEventTipsByFixtureId(fixtureID)
     }
 }
