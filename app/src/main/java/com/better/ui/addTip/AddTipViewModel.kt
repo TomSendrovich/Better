@@ -17,13 +17,13 @@ class AddTipViewModel(private val repository: Repository) : ViewModel() {
         updateEventTipsByFixtureId(fixture.id)
     }
 
-    fun createEventTipDocument(
+    private fun createEventTipDocument(
         fixture: Fixture, description: String, tipValue: Long
     ) {
         repository.createEventTipDocument(fixture, description, tipValue)
     }
 
-    fun updateEventTipsByFixtureId(fixtureID: Long) {
+    private fun updateEventTipsByFixtureId(fixtureID: Long) {
         return repository.queryEventTipsByFixtureId(fixtureID)
     }
 }

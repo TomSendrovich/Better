@@ -6,6 +6,7 @@ import com.better.*
 import com.better.model.dataHolders.*
 import com.better.utils.DateUtils
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -156,13 +157,35 @@ object Repository {
         Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS)
             .add(eventTip)
             .addOnSuccessListener {
-                Log.i(
-                    TAG,
-                    "createEventTipDocument succeeded"
-                )
+                Log.i(TAG, "createEventTipDocument succeeded")
+                attachEventTipToUser(it)
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error creating user: ", exception)
+            }
+    }
+
+    private fun attachEventTipToUser(doc: DocumentReference) {
+        if (appUser.eventTips.isEmpty()) {
+            appUser.eventTips = listOf(doc.id)
+        } else {
+            (appUser.eventTips as ArrayList<String>).add(doc.id)
+        }
+
+        Firebase.firestore.collection(DB_COLLECTION_USERS)
+            .document(appUser.uid)
+            .update("eventTips", appUser.eventTips)
+            .addOnSuccessListener {
+                Log.i(
+                    TAG,
+                    "attachEventTipToUser: succeeded for uid ${appUser.uid} and eventTip ${doc.id}"
+                )
+            }
+            .addOnFailureListener {
+                Log.e(
+                    TAG,
+                    "attachEventTipToUser: failed for uid ${appUser.uid} and eventTip ${doc.id}"
+                )
             }
     }
 
@@ -258,7 +281,7 @@ object Repository {
         monthAndYearText.postValue(DateUtils.getMonthAndYearFromCalendar(date))
     }
 
-    private fun updateFixturesMap(map: HashMap<Int, List<Fixture>>){
+    private fun updateFixturesMap(map: HashMap<Int, List<Fixture>>) {
         fixtures.postValue(map)
     }
 
