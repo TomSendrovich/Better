@@ -9,6 +9,6 @@ class MatchDetailsFragmentViewModel(private val repository: Repository) : ViewMo
     val eventTips: LiveData<List<EventTip>> = repository.feedList
 
     fun updateEventTipsByFixtureId(fixtureID: Long) {
-        return repository.updateEventTipsByFixtureId(fixtureID)
+        return repository.queryEventTipsByFixtureId(fixtureID)
     }
 }

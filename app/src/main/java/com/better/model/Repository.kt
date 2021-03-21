@@ -25,7 +25,9 @@ object Repository {
         fixtures.value = HashMap<Int, List<Fixture>>()
     }
 
-    fun getFixturesByDate(from: Calendar, to: Calendar) {
+    //region Query from firestore
+
+    fun queryFixturesByDate(from: Calendar, to: Calendar) {
         val fixturesRef = Firebase.firestore.collection(DB_COLLECTION_FIXTURES)
         fixturesRef
             .whereGreaterThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(from.time))
@@ -47,29 +49,26 @@ object Repository {
             }
     }
 
-    fun getTodayFixtures() {
-        val today = Calendar.getInstance()
-        val tomorrow = Calendar.getInstance()
-        tomorrow.add(Calendar.DAY_OF_YEAR, 1)
-
-        getFixturesByDate(from = today, to = tomorrow)
+    fun queryEventTipsByFixtureId(fixtureId: Long) {
+        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).whereEqualTo(FIXTURE, fixtureId)
+            .get()
+            .addOnSuccessListener { documents ->
+                val list: ArrayList<EventTip> = ArrayList()
+                for (doc in documents) {
+                    val eventTip = createEventTipFromDocument(doc)
+                    list.add(eventTip)
+                }
+                feedList.postValue(list)
+            }
     }
 
-    fun getLastWeekFixtures() {
-        val today = Calendar.getInstance()
-        val lastWeek = Calendar.getInstance()
-        lastWeek.add(Calendar.DAY_OF_YEAR, -7)
+    fun queryUserByUID(uid: String) {
 
-        getFixturesByDate(from = lastWeek, to = today)
     }
 
-    fun getNextWeekFixtures() {
-        val today = Calendar.getInstance()
-        val nextWeek = Calendar.getInstance()
-        nextWeek.add(Calendar.DAY_OF_YEAR, 7)
+    //endregion
 
-        getFixturesByDate(from = today, to = nextWeek)
-    }
+    //region Create Data Classes from firebase document
 
     private fun createFixtureFromDocument(doc: QueryDocumentSnapshot): Fixture {
 //        Log.d(TAG, "${doc.id} => ${doc.data}")
@@ -133,36 +132,34 @@ object Repository {
         )
     }
 
-    fun loadUser(currentUser: FirebaseUser) {
-        appUser = AppUser(
-            uid = currentUser.uid,
-            name = currentUser.displayName,
-            email = currentUser.email,
-            photoUrl = currentUser.photoUrl?.toString()
+    private fun createEventTipFromDocument(doc: QueryDocumentSnapshot): EventTip {
+        return EventTip(
+            tipID = doc.id,
+            userID = doc[UID] as String,
+            userPic = doc["userPic"] as String,
+            fixtureID = doc[FIXTURE] as Long,
+            homeName = doc["homeName"] as String,
+            awayName = doc["awayName"] as String,
+            homeLogo = doc["homeLogo"] as String,
+            awayLogo = doc["awayLogo"] as String,
+            description = doc[DESCRIPTION] as String,
+            tipValue = doc[TIP_VALUE] as Long,
+            isHit = doc[IS_HIT] as Boolean?
         )
-
-        // query user from DB
-        val usersRef = Firebase.firestore.collection(DB_COLLECTION_USERS)
-
-        usersRef
-            .whereEqualTo(UID, currentUser.uid)
-            .get()
-            .addOnSuccessListener { documents ->
-                // TODO: 14/03/2021 update appUser with document data
-                for (document in documents) {
-//                    Log.d(TAG, "${document.id} => ${document.data}")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting user: ", exception)
-            }
-            .addOnCompleteListener { data ->
-                Log.d(TAG, "queryUser: completed with ${data.result?.size()} results")
-                if (data.result?.size() == 0) {
-                    createNewUser()
-                }
-            }
     }
+
+    //endregion
+
+    //region postValue MutableLiveData Objects
+    fun updateMonthAndYearText(position: Int) {
+        val date = Calendar.getInstance()
+        date.add(Calendar.DAY_OF_YEAR, position)
+
+        monthAndYearText.postValue(DateUtils.getMonthAndYearFromCalendar(date))
+    }
+    //endregion
+
+    //region Write Document to firestore
 
     /**
      * create new user document and save in firestore.
@@ -196,26 +193,6 @@ object Repository {
             }
     }
 
-    fun updateMonthAndYearText(position: Int) {
-        val date = Calendar.getInstance()
-        date.add(Calendar.DAY_OF_YEAR, position)
-
-        monthAndYearText.postValue(DateUtils.getMonthAndYearFromCalendar(date))
-    }
-
-    fun updateEventTipsByFixtureId(fixtureId: Long) {
-        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).whereEqualTo(FIXTURE, fixtureId)
-            .get()
-            .addOnSuccessListener { documents ->
-                val list: ArrayList<EventTip> = ArrayList()
-                for (doc in documents) {
-                    val eventTip = createEventTipFromDocument(doc)
-                    list.add(eventTip)
-                }
-                feedList.postValue(list)
-            }
-    }
-
     fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long) {
         val eventTip = hashMapOf(
             UID to appUser.uid,
@@ -241,19 +218,40 @@ object Repository {
             }
     }
 
-    private fun createEventTipFromDocument(doc: QueryDocumentSnapshot): EventTip {
-        return EventTip(
-            tipID = doc.id,
-            userID = doc[UID] as String,
-            userPic = doc["userPic"] as String,
-            fixtureID = doc[FIXTURE] as Long,
-            homeName = doc["homeName"] as String,
-            awayName = doc["awayName"] as String,
-            homeLogo = doc["homeLogo"] as String,
-            awayLogo = doc["awayLogo"] as String,
-            description = doc[DESCRIPTION] as String,
-            tipValue = doc[TIP_VALUE] as Long,
-            isHit = doc[IS_HIT] as Boolean?
+    //endregion
+
+
+    fun loadUser(currentUser: FirebaseUser) {
+        appUser = AppUser(
+            uid = currentUser.uid,
+            name = currentUser.displayName,
+            email = currentUser.email,
+            photoUrl = currentUser.photoUrl?.toString()
         )
+
+        // query user from DB
+        val usersRef = Firebase.firestore.collection(DB_COLLECTION_USERS)
+
+        usersRef
+            .whereEqualTo(UID, currentUser.uid)
+            .get()
+            .addOnSuccessListener { documents ->
+                // TODO: 14/03/2021 update appUser with document data
+
+                for (document in documents) {
+//                    Log.d(TAG, "${document.id} => ${document.data}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting user: ", exception)
+            }
+            .addOnCompleteListener { data ->
+                Log.d(TAG, "queryUser: completed with ${data.result?.size()} results")
+                if (data.result?.size() == 0) {
+                    createNewUser()
+                }
+            }
     }
+
+
 }

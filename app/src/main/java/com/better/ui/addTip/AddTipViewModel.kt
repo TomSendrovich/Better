@@ -1,7 +1,6 @@
 package com.better.ui.addTip
 
 import androidx.lifecycle.ViewModel
-import com.better.R.string.*
 import com.better.model.Repository
 import com.better.model.dataHolders.Fixture
 
@@ -25,6 +24,6 @@ class AddTipViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun updateEventTipsByFixtureId(fixtureID: Long) {
-        return repository.updateEventTipsByFixtureId(fixtureID)
+        return repository.queryEventTipsByFixtureId(fixtureID)
     }
 }

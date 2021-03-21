@@ -1,13 +1,15 @@
 package com.better.model.dataHolders
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-
 /**
  * Represents an event tip.
  * @property tipID id of the tip
  * @property userID id of the user
+ * @property userPic profile picture of the user
  * @property fixtureID id of the fixture
+ * @property homeName home team name
+ * @property awayName away team name
+ * @property homeLogo home team logo
+ * @property awayLogo away team logo
  * @property description description of the tip (free style text)
  * @property tipValue The tip value
  *
