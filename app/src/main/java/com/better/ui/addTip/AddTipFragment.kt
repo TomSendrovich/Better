@@ -44,13 +44,13 @@ class AddTipFragment : BottomSheetDialogFragment() {
             if (chipId != -1) {
                 val chip: Chip = chipGroup.findViewById(chipId)
                 var tipValue: Long = 0
-                val tipValueStr = chip.text.toString().apply {
+                chip.text.toString().apply {
                     when {
                         equals("1") -> {
-                            tipValue = 0
+                            tipValue = 1
                         }
                         equals("X") -> {
-                            tipValue = 1
+                            tipValue = 0
                         }
                         equals("2") -> {
                             tipValue = 2

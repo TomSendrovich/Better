@@ -1,6 +1,5 @@
 package com.better.adapters
 
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +9,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.better.R
 import com.better.model.dataHolders.EventTip
-import com.better.model.dataHolders.Fixture
+import com.better.utils.AppUtils
 import com.better.utils.EventTipsDiffUtil
-import com.better.utils.FixtureDiffUtil
-import java.util.ArrayList
+import java.util.*
 
 class EventTipAdapter(
     private var oldList: ArrayList<EventTip>,
@@ -28,11 +26,13 @@ class EventTipAdapter(
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
-        val userProfilePic : ImageView = view.findViewById(R.id.viewHolder_tip_profile_picture)
-        val tipValue : TextView = view.findViewById(R.id.viewHolder_tip_value)
-        val description : TextView = view.findViewById(R.id.viewHolder_tip_description)
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val userProfilePic: ImageView = view.findViewById(R.id.viewHolder_tip_profile_picture)
+        val tipValue: TextView = view.findViewById(R.id.viewHolder_tip_value)
+        val description: TextView = view.findViewById(R.id.viewHolder_tip_description)
+        val matchName: TextView = view.findViewById(R.id.viewHolder_match_name)
     }
+
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
@@ -46,8 +46,17 @@ class EventTipAdapter(
         // contents of the view with that element
         val eventTip = oldList[position]
         viewHolder.description.text = eventTip.description
-        viewHolder.tipValue.text = eventTip.tipValue.toString()
-        //TODO add the profile picture of the user
+
+        AppUtils.bindImage(viewHolder.userProfilePic, eventTip.userPic)
+        viewHolder.matchName.text = "${eventTip.homeName} - ${eventTip.awayName}"
+
+        when (eventTip.tipValue) {
+            1L -> viewHolder.tipValue.text = "Tip: Home Wins"
+            2L -> viewHolder.tipValue.text = "Tip: Away Wins"
+            0L -> viewHolder.tipValue.text = "Tip: Draw"
+
+        }
+
         viewHolder.itemView.setOnClickListener {
             listener.onItemClicked(oldList[position])
         }

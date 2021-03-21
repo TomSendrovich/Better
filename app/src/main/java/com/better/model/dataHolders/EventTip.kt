@@ -19,7 +19,12 @@ import kotlinx.android.parcel.Parcelize
 data class EventTip(
     var tipID: String,
     var userID: String,
+    var userPic: String,
     var fixtureID: Long,
+    var homeName: String,
+    var awayName: String,
+    var homeLogo: String,
+    var awayLogo: String,
     var description: String?,
     var tipValue: Long,
     var isHit: Boolean?
