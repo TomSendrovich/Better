@@ -1,9 +1,7 @@
 package com.better.model
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import com.better.*
 import com.better.model.dataHolders.*
 import com.better.utils.DateUtils
@@ -205,13 +203,30 @@ object Repository {
         monthAndYearText.postValue(DateUtils.getMonthAndYearFromCalendar(date))
     }
 
-    fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long){
+    fun updateEventTipsByFixtureId(fixtureId: Long) {
+        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).whereEqualTo(FIXTURE, fixtureId)
+            .get()
+            .addOnSuccessListener { documents ->
+                val list: ArrayList<EventTip> = ArrayList()
+                for (doc in documents) {
+                    val eventTip = createEventTipFromDocument(doc)
+                    list.add(eventTip)
+                }
+                feedList.postValue(list)
+            }
+    }
+
+    fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long) {
         val eventTip = hashMapOf(
             UID to appUser.uid,
-            FIXTURE to fixture.id,
+            "userPic" to appUser.photoUrl,
             DESCRIPTION to description,
+            "homeName" to fixture.home.name,
+            "awayName" to fixture.away.name,
+            "homeLogo" to fixture.home.logo,
+            "awayLogo" to fixture.away.logo,
+            FIXTURE to fixture.id,
             TIP_VALUE to tipValue,
-            IS_HIT to null
         )
         Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS)
             .add(eventTip)
@@ -221,32 +236,24 @@ object Repository {
                     "createEventTipDocument succeeded"
                 )
             }
-            .addOnFailureListener{exception ->
+            .addOnFailureListener { exception ->
                 Log.w(TAG, "Error creating user: ", exception)
             }
     }
 
-    fun getEventTipsByFixtureId(fixtureId: Long){
-        Firebase.firestore.collection("eventTips").whereEqualTo("fixture", fixtureId)
-            .get()
-            .addOnSuccessListener {documents ->
-                val list: ArrayList<EventTip> = ArrayList()
-                for (doc in documents){
-                    val eventTip = createEventTipFromDocument(doc)
-                    list.add(eventTip)
-                    feedList.postValue(list)
-                }
-            }
-    }
-
-    private fun createEventTipFromDocument(doc:QueryDocumentSnapshot):EventTip{
+    private fun createEventTipFromDocument(doc: QueryDocumentSnapshot): EventTip {
         return EventTip(
-            doc.id,
-            doc[UID] as String,
-            doc[FIXTURE] as Long,
-            doc[DESCRIPTION] as String,
-            doc[TIP_VALUE] as Long,
-            doc[IS_HIT] as Boolean?
+            tipID = doc.id,
+            userID = doc[UID] as String,
+            userPic = doc["userPic"] as String,
+            fixtureID = doc[FIXTURE] as Long,
+            homeName = doc["homeName"] as String,
+            awayName = doc["awayName"] as String,
+            homeLogo = doc["homeLogo"] as String,
+            awayLogo = doc["awayLogo"] as String,
+            description = doc[DESCRIPTION] as String,
+            tipValue = doc[TIP_VALUE] as Long,
+            isHit = doc[IS_HIT] as Boolean?
         )
     }
 }

@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import com.better.ui.addTip.AddTipFragmentArgs
 import com.better.R
 import com.better.ViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -44,22 +43,8 @@ class AddTipFragment : BottomSheetDialogFragment() {
             val chipId = chipGroup.checkedChipId
             if (chipId != -1) {
                 val chip: Chip = chipGroup.findViewById(chipId)
-                var tipValue: Long = 0
-                val tipValueStr = chip.text.toString().apply {
-                    when {
-                        equals("1") -> {
-                            tipValue = 0
-                        }
-                        equals("X") -> {
-                            tipValue = 1
-                        }
-                        equals("2") -> {
-                            tipValue = 2
-                        }
-                    }
-                    viewModel.createEventTipDocument(args.selectedFixture, description, tipValue)
-                    dismiss()
-                }
+                viewModel.onClickAddTip(args.selectedFixture, description, chip.text.toString())
+                dismiss()
             } else {
                 Toast.makeText(context, "please place your bet choice", Toast.LENGTH_LONG).show()
             }
