@@ -17,7 +17,7 @@ object Repository {
 
     //    val fixtures = MutableLiveData<List<Fixture>>()
     val fixtures = MutableLiveData<HashMap<Int, List<Fixture>>>()
-    val feedList = MutableLiveData<List<EventTip>>()
+    val eventTipsList = MutableLiveData<List<EventTip>>()
     val monthAndYearText = MutableLiveData<String>()
     lateinit var appUser: AppUser
 
@@ -42,7 +42,7 @@ object Repository {
                     list.add(fixture)
                 } // end of documents loop
                 map[from[Calendar.DAY_OF_YEAR]] = list
-                fixtures.postValue(map)
+                updateFixturesMap(map)
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents: ", exception)
@@ -58,12 +58,112 @@ object Repository {
                     val eventTip = createEventTipFromDocument(doc)
                     list.add(eventTip)
                 }
-                feedList.postValue(list)
+                updateEventTipsList(list)
             }
     }
 
-    fun queryUserByUID(uid: String) {
+    @Suppress("UNCHECKED_CAST")
+    fun loadUser(currentUser: FirebaseUser): AppUser? {
+        appUser = AppUser(
+            uid = currentUser.uid,
+            name = currentUser.displayName,
+            email = currentUser.email,
+            photoUrl = currentUser.photoUrl?.toString()
+        )
 
+        // query user from DB
+        val usersRef = Firebase.firestore.collection(DB_COLLECTION_USERS)
+
+        usersRef
+            .whereEqualTo(UID, currentUser.uid)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.size() > 1) {
+                    Log.wtf(TAG, "query user by uid return more than one element")
+                } else {
+                    val userDoc = documents.first()
+                    appUser.followers =
+                        (userDoc["followers"] ?: emptyList<String>()) as List<String>
+                    appUser.following =
+                        (userDoc["following"] ?: emptyList<String>()) as List<String>
+                    appUser.eventTips =
+                        (userDoc["eventTips"] ?: emptyList<String>()) as List<String>
+                    appUser.succTips = (userDoc["succTips"] ?: 0L) as Long
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting user: ", exception)
+            }
+            .addOnCompleteListener { data ->
+                Log.d(TAG, "queryUser: completed with ${data.result?.size()} results")
+                if (data.result?.size() == 0) {
+                    createNewUserDocument()
+                }
+            }
+
+        return null
+    }
+
+
+    //endregion
+
+    //region Write Document to firestore
+
+    /**
+     * create new user document and save in firestore.
+     * the data is taken from the user reference.
+     *
+     * we store only the uid of the user (unique id given by google), because the user display name
+     * and user profile picture can be changed. we can get them from the user reference.
+     *
+     * we do not set an empty list of eventTips at the point.
+     *
+     * @see appUser
+     */
+    private fun createNewUserDocument() {
+        val newUser = hashMapOf(
+            UID to appUser.uid
+        )
+
+        val usersRef = Firebase.firestore.collection(DB_COLLECTION_USERS)
+
+        usersRef
+            .document(appUser.uid)
+            .set(newUser)
+            .addOnSuccessListener {
+                Log.i(
+                    TAG,
+                    "createNewUser: document ${appUser.uid} was created for user ${appUser.name}"
+                )
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error creating user: ", exception)
+            }
+    }
+
+    fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long) {
+        val eventTip = hashMapOf(
+            UID to appUser.uid,
+            "userPic" to appUser.photoUrl,
+            DESCRIPTION to description,
+            "homeName" to fixture.home.name,
+            "awayName" to fixture.away.name,
+            "homeLogo" to fixture.home.logo,
+            "awayLogo" to fixture.away.logo,
+            FIXTURE to fixture.id,
+            TIP_VALUE to tipValue,
+        )
+        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS)
+            .add(eventTip)
+            .addOnSuccessListener {
+                Log.i(
+                    TAG,
+                    "createEventTipDocument succeeded"
+                )
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error creating user: ", exception)
+            }
     }
 
     //endregion
@@ -157,101 +257,13 @@ object Repository {
 
         monthAndYearText.postValue(DateUtils.getMonthAndYearFromCalendar(date))
     }
+
+    private fun updateFixturesMap(map: HashMap<Int, List<Fixture>>){
+        fixtures.postValue(map)
+    }
+
+    private fun updateEventTipsList(list: ArrayList<EventTip>) {
+        eventTipsList.postValue(list)
+    }
     //endregion
-
-    //region Write Document to firestore
-
-    /**
-     * create new user document and save in firestore.
-     * the data is taken from the user reference.
-     *
-     * we store only the uid of the user (unique id given by google), because the user display name
-     * and user profile picture can be changed. we can get them from the user reference.
-     *
-     * we do not set an empty list of eventTips at the point.
-     *
-     * @see appUser
-     */
-    private fun createNewUser() {
-        val newUser = hashMapOf(
-            UID to appUser.uid
-        )
-
-        val usersRef = Firebase.firestore.collection(DB_COLLECTION_USERS)
-
-        usersRef
-            .document(appUser.uid)
-            .set(newUser)
-            .addOnSuccessListener {
-                Log.i(
-                    TAG,
-                    "createNewUser: document ${appUser.uid} was created for user ${appUser.name}"
-                )
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error creating user: ", exception)
-            }
-    }
-
-    fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long) {
-        val eventTip = hashMapOf(
-            UID to appUser.uid,
-            "userPic" to appUser.photoUrl,
-            DESCRIPTION to description,
-            "homeName" to fixture.home.name,
-            "awayName" to fixture.away.name,
-            "homeLogo" to fixture.home.logo,
-            "awayLogo" to fixture.away.logo,
-            FIXTURE to fixture.id,
-            TIP_VALUE to tipValue,
-        )
-        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS)
-            .add(eventTip)
-            .addOnSuccessListener {
-                Log.i(
-                    TAG,
-                    "createEventTipDocument succeeded"
-                )
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error creating user: ", exception)
-            }
-    }
-
-    //endregion
-
-
-    fun loadUser(currentUser: FirebaseUser) {
-        appUser = AppUser(
-            uid = currentUser.uid,
-            name = currentUser.displayName,
-            email = currentUser.email,
-            photoUrl = currentUser.photoUrl?.toString()
-        )
-
-        // query user from DB
-        val usersRef = Firebase.firestore.collection(DB_COLLECTION_USERS)
-
-        usersRef
-            .whereEqualTo(UID, currentUser.uid)
-            .get()
-            .addOnSuccessListener { documents ->
-                // TODO: 14/03/2021 update appUser with document data
-
-                for (document in documents) {
-//                    Log.d(TAG, "${document.id} => ${document.data}")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting user: ", exception)
-            }
-            .addOnCompleteListener { data ->
-                Log.d(TAG, "queryUser: completed with ${data.result?.size()} results")
-                if (data.result?.size() == 0) {
-                    createNewUser()
-                }
-            }
-    }
-
-
 }

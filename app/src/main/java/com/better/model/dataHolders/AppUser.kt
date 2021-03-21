@@ -16,10 +16,10 @@ data class AppUser(
     val name: String?,
     val email: String?,
     val photoUrl: String?,
-    val eventTips: List<String>,
-    val succTips: Long,
-    val followers: List<String>,
-    val following: List<String>
+    var eventTips: List<String>,
+    var succTips: Long,
+    var followers: List<String>,
+    var following: List<String>
 ) {
     constructor(uid: String, name: String?, email: String?, photoUrl: String?) : this(
         uid, name, email, photoUrl, emptyList<String>(), 0, emptyList<String>(), emptyList<String>()
