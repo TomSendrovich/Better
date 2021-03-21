@@ -20,14 +20,13 @@ import com.better.ui.MainActivity
 import com.better.utils.AppUtils
 import com.better.utils.DateUtils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.fragment_match_details.*
 import kotlinx.android.synthetic.main.fragment_match_details.view.*
 
 
 class MatchDetailsFragment : Fragment() {
 
     private val args by navArgs<MatchDetailsFragmentArgs>()
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var floatingButton: FloatingActionButton
     private lateinit var viewModel: MatchDetailsFragmentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,9 +47,7 @@ class MatchDetailsFragment : Fragment() {
         (activity as MainActivity).supportActionBar?.title =
             Fixture.buildHead2HeadText(args.selectedFixture)
 
-
         val selectedFixture = args.selectedFixture
-
 
         AppUtils.bindImage(view.home_imageView, selectedFixture.home.logo)
         AppUtils.bindImage(view.away_imageView, selectedFixture.away.logo)
@@ -79,16 +76,13 @@ class MatchDetailsFragment : Fragment() {
             }
         }
 
-        recyclerView = view.findViewById(R.id.recycler_view_match)
-        floatingButton = view.findViewById(R.id.floatingActionButton)
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView.apply {
+        recyclerViewMatch.apply {
             adapter = EventTipAdapter(ArrayList(), object : EventTipAdapter.EventTipListener {
                 override fun onItemClicked(item: EventTip) {
                 }
@@ -96,7 +90,7 @@ class MatchDetailsFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
         }
 
-        floatingButton.setOnClickListener {
+        floatingActionButton.setOnClickListener {
             val action =
                 MatchDetailsFragmentDirections.actionMatchDetailsFragmentToAddTipFragment(args.selectedFixture)
             view.findNavController().navigate(action)
@@ -105,29 +99,9 @@ class MatchDetailsFragment : Fragment() {
         viewModel.updateEventTipsByFixtureId(args.selectedFixture.id)
         viewModel.eventTips.observe(viewLifecycleOwner, {
             val list = viewModel.eventTips.value
-            (recyclerView.adapter as EventTipAdapter).setData(list as ArrayList<EventTip>)
+            (recyclerViewMatch.adapter as EventTipAdapter).setData(list as ArrayList<EventTip>)
 
         })
-    }
-
-    override fun onDestroyView() {
-        Log.d(TAG, "onDestroyView: ")
-        super.onDestroyView()
-    }
-
-    override fun onResume() {
-        Log.d(TAG, "onResume: ")
-        super.onResume()
-    }
-
-    override fun onStart() {
-        Log.d(TAG, "onStart: ")
-        super.onStart()
-    }
-
-    override fun onStop() {
-        Log.d(TAG, "onStop: ")
-        super.onStop()
     }
 
     companion object {

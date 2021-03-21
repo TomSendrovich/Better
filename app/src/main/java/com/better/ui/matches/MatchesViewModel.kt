@@ -31,7 +31,7 @@ class MatchesViewModel(private val repository: Repository) : ViewModel() {
             oneDayAfter[Calendar.SECOND] = oneDayAfter.getActualMinimum(Calendar.SECOND)
             oneDayAfter[Calendar.MILLISECOND] = oneDayAfter.getActualMinimum(Calendar.MILLISECOND)
 
-            repository.getFixturesByDate(date, oneDayAfter)
+            repository.queryFixturesByDate(date, oneDayAfter)
         }
     }
 
