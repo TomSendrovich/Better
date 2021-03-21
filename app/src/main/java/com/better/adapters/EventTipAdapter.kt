@@ -45,7 +45,14 @@ class EventTipAdapter(
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         val eventTip = oldList[position]
-        viewHolder.description.text = eventTip.description
+
+        if (eventTip.description.isNullOrEmpty()) {
+            viewHolder.description.visibility = View.GONE
+            viewHolder.description.text = eventTip.description
+        } else {
+            viewHolder.description.visibility = View.VISIBLE
+            viewHolder.description.text = eventTip.description
+        }
 
         AppUtils.bindImage(viewHolder.userProfilePic, eventTip.userPic)
         viewHolder.matchName.text = "${eventTip.homeName} - ${eventTip.awayName}"
@@ -54,7 +61,6 @@ class EventTipAdapter(
             1L -> viewHolder.tipValue.text = "Tip: Home Wins"
             2L -> viewHolder.tipValue.text = "Tip: Away Wins"
             0L -> viewHolder.tipValue.text = "Tip: Draw"
-
         }
 
         viewHolder.itemView.setOnClickListener {
