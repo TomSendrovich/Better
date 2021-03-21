@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="170dp"
+    android:layout_height="wrap_content"
     tools:context=".ui.addTip.AddTipFragment">
 
     <TextView
@@ -22,10 +22,10 @@
         android:id="@+id/chipGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/descriptionEditText"
-        app:layout_constraintStart_toStartOf="@+id/descriptionEditText"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/tipTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tipTextView"
+        app:layout_constraintTop_toTopOf="@+id/tipTextView"
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
@@ -48,6 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2" />
+
     </com.google.android.material.chip.ChipGroup>
 
     <TextView
@@ -55,9 +56,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
         android:text="Select Value"
-        app:layout_constraintBottom_toTopOf="@+id/descriptionTextView"
-        app:layout_constraintRight_toRightOf="@id/descriptionTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -67,22 +67,22 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="27dp"
         android:ems="10"
+        android:hint="Enter Tip Description"
         android:inputType="textPersonName"
-        android:text="Enter Tip Description"
-        app:layout_constraintBottom_toTopOf="@+id/add_tip_button"
+        app:layout_constraintBottom_toBottomOf="@+id/descriptionTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/descriptionTextView"
-        app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
+        app:layout_constraintTop_toTopOf="@+id/descriptionTextView" />
 
     <Button
         android:id="@+id/add_tip_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:text="Add Tip"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionEditText" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
