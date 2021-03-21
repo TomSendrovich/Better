@@ -14,6 +14,7 @@ import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.fragment_add_tip.*
 
 class AddTipFragment : BottomSheetDialogFragment() {
+
     private lateinit var viewModel: AddTipViewModel
     private val args by navArgs<AddTipFragmentArgs>()
 
