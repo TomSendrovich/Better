@@ -1,5 +1,6 @@
 package com.better
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.better.model.Repository
@@ -11,7 +12,7 @@ import com.better.ui.matches.MatchesViewModel
 import com.better.ui.profile.ProfileViewModel
 
 @Suppress("UNCHECKED_CAST")
-class ViewModelFactory : ViewModelProvider.Factory {
+class ViewModelFactory() : ViewModelProvider.Factory {
 
     val repository = Repository
 
@@ -29,10 +30,10 @@ class ViewModelFactory : ViewModelProvider.Factory {
             modelClass.isAssignableFrom(ProfileViewModel::class.java) -> {
                 return ProfileViewModel(repository) as T
             }
-            modelClass.isAssignableFrom(AddTipViewModel::class.java)->{
+            modelClass.isAssignableFrom(AddTipViewModel::class.java) -> {
                 return AddTipViewModel(repository) as T
             }
-            modelClass.isAssignableFrom(MatchDetailsFragmentViewModel::class.java)->{
+            modelClass.isAssignableFrom(MatchDetailsFragmentViewModel::class.java) -> {
                 return MatchDetailsFragmentViewModel(repository) as T
             }
         }

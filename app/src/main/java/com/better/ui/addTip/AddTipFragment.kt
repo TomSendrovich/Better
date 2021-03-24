@@ -34,15 +34,18 @@ class AddTipFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        home_win_chip.text = args.selectedFixture.home.name
+        away_win_chip.text = args.selectedFixture.away.name
+
         addTipButton.setOnClickListener {
-            val description = descriptionEditText.text.toString()
+            val description = textInputLayoutEditText.text.toString()
             val chipId = chipGroup.checkedChipId
             if (chipId != -1) {
                 val chip: Chip = chipGroup.findViewById(chipId)
                 viewModel.onClickAddTip(args.selectedFixture, description, chip.text.toString())
                 dismiss()
             } else {
-                Toast.makeText(context, "please place your bet choice", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "please select your match result", Toast.LENGTH_LONG).show()
             }
         }
     }

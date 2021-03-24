@@ -8,15 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.better.R
 import com.better.ViewModelFactory
-import com.better.model.Repository
 import com.better.utils.AppUtils
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 
 class ProfileFragment : Fragment() {
 
     private lateinit var viewModel: ProfileViewModel
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

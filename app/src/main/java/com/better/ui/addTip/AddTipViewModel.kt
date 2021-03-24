@@ -8,10 +8,9 @@ class AddTipViewModel(private val repository: Repository) : ViewModel() {
 
     fun onClickAddTip(fixture: Fixture, description: String, chipText: String) {
         val tipValue: Long = when (chipText) {
-            "1" -> 1L
-            "2" -> 2L
-            "X" -> 0L
-            else -> 0L
+            fixture.home.name -> 1L // home wins
+            fixture.away.name -> 2L // away wins
+            else -> 0L // draw
         }
         createEventTipDocument(fixture, description, tipValue)
         updateEventTipsByFixtureId(fixture.id)
