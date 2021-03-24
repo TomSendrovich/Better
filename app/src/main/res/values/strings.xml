@@ -19,6 +19,6 @@
     <string name="chip_text_home">Home</string>
     <string name="chip_text_draw">Draw</string>
     <string name="chip_text_away">Away</string>
-    <string name="select_winner_team_textView">Select winner team:</string>
+    <string name="description_helper_text">Share your thoughts about the match</string>
 
 </resources>
