@@ -63,6 +63,19 @@ object Repository {
             }
     }
 
+    fun queryEventTipsByUserId(userId: String) {
+        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).whereEqualTo(UID, userId)
+            .get()
+            .addOnSuccessListener { documents ->
+                val list: ArrayList<EventTip> = ArrayList()
+                for (doc in documents) {
+                    val eventTip = createEventTipFromDocument(doc)
+                    list.add(eventTip)
+                }
+                updateEventTipsList(list)
+            }
+    }
+
     @Suppress("UNCHECKED_CAST")
     fun loadUser(currentUser: FirebaseUser): AppUser? {
         appUser = AppUser(
