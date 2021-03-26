@@ -6,26 +6,14 @@
     android:layout_height="wrap_content"
     tools:context=".ui.addTip.AddTipFragment">
 
-    <TextView
-        android:id="@+id/descriptionTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="31dp"
-        android:text="Description"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/tipTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tipTextView" />
-
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/tipTextView"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tipTextView"
-        app:layout_constraintTop_toTopOf="@+id/tipTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
@@ -40,7 +28,7 @@
             style="@style/Theme.Better.CustomChipStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/chip_text_tie" />
+            android:text="@string/chip_text_draw" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/away_win_chip"
@@ -49,40 +37,49 @@
             android:layout_height="wrap_content"
             android:text="@string/chip_text_away" />
 
+        <!--Add this piece of code if you want to add icon to a chip-->
+        <!--        app:checkedIcon="@drawable/ic_trophy"-->
+        <!--        app:checkedIconEnabled="true"-->
+        <!--        app:checkedIconTint="@color/white"-->
+        <!--        app:chipIcon="@drawable/ic_trophy"-->
+        <!--        app:chipIconEnabled="true"-->
+        <!--        app:chipIconTint="@color/black"-->
+
     </com.google.android.material.chip.ChipGroup>
 
-    <TextView
-        android:id="@+id/tipTextView"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:text="Select Value"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/descriptionEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="27dp"
-        android:ems="10"
-        android:hint="Enter Tip Description"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="@+id/descriptionTextView"
+        android:layout_marginEnd="16dp"
+        app:endIconMode="clear_text"
+        app:helperText="@string/description_helper_text"
+        app:helperTextTextColor="@color/green_200"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/descriptionTextView"
-        app:layout_constraintTop_toTopOf="@+id/descriptionTextView" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chipGroup"
+        app:startIconDrawable="@drawable/ic_edit">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textInputLayoutEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <Button
-        android:id="@+id/add_tip_button"
+        android:id="@+id/addTipButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:text="Add Tip"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

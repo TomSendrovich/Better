@@ -6,9 +6,9 @@ import com.better.model.Repository
 import com.better.model.dataHolders.EventTip
 
 class MatchDetailsFragmentViewModel(private val repository: Repository) : ViewModel() {
-    val eventTips: LiveData<List<EventTip>> = repository.feedList
+    val eventTips: LiveData<List<EventTip>> = repository.eventTipsList
 
     fun updateEventTipsByFixtureId(fixtureID: Long) {
-        return repository.updateEventTipsByFixtureId(fixtureID)
+        return repository.queryEventTipsByFixtureId(fixtureID)
     }
 }

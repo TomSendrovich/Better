@@ -9,7 +9,7 @@
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="120dp"
         android:background="@color/green_200"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,10 +17,10 @@
 
     <ImageView
         android:id="@+id/profile_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_centerVertical="true"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:src="@drawable/ic_profile"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,55 +29,86 @@
 
     <TextView
         android:id="@+id/profile_fullName"
+        style="@style/Theme.Better.ProfileStatsViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:text="Full Name"
-        android:textSize="30sp"
+        android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+        app:layout_constraintEnd_toEndOf="@+id/profile_image"
+        app:layout_constraintStart_toStartOf="@+id/profile_image"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+
+    <TextView
+        android:id="@+id/numTipsTitle"
+        style="@style/Theme.Better.ProfileStatsViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tips"
+        app:layout_constraintBottom_toTopOf="@+id/profile_fullName"
+        app:layout_constraintEnd_toStartOf="@+id/numFollowersTitle"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toTopOf="@+id/profile_image" />
 
     <TextView
-        android:id="@+id/numTips"
+        android:id="@+id/numTipsValue"
+        style="@style/Theme.Better.ProfileStatsViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Tips"
-        app:layout_constraintBottom_toBottomOf="@+id/numFollowers"
-        app:layout_constraintEnd_toStartOf="@+id/numFollowers"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        android:text="0"
+        app:layout_constraintEnd_toEndOf="@+id/numTipsTitle"
+        app:layout_constraintStart_toStartOf="@+id/numTipsTitle"
+        app:layout_constraintTop_toBottomOf="@id/numTipsTitle" />
 
     <TextView
-        android:id="@+id/numFollowers"
+        android:id="@+id/numFollowersTitle"
+        style="@style/Theme.Better.ProfileStatsViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="Followers"
-        app:layout_constraintBottom_toBottomOf="@+id/numFollowing"
-        app:layout_constraintEnd_toStartOf="@+id/numFollowing"
-        app:layout_constraintStart_toEndOf="@+id/numTips"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintEnd_toStartOf="@+id/numFollowingTitle"
+        app:layout_constraintStart_toEndOf="@+id/numTipsTitle"
+        app:layout_constraintTop_toTopOf="@+id/numTipsTitle" />
 
     <TextView
-        android:id="@+id/numFollowing"
+        android:id="@+id/numFollowersValue"
+        style="@style/Theme.Better.ProfileStatsViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:text="0"
+        app:layout_constraintEnd_toEndOf="@+id/numFollowersTitle"
+        app:layout_constraintStart_toStartOf="@+id/numFollowersTitle"
+        app:layout_constraintTop_toBottomOf="@+id/numFollowersTitle" />
+
+    <TextView
+        android:id="@+id/numFollowingTitle"
+        style="@style/Theme.Better.ProfileStatsViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Following"
-        app:layout_constraintBottom_toBottomOf="@+id/numFollowers"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/numFollowers"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintStart_toEndOf="@+id/numFollowersTitle"
+        app:layout_constraintTop_toTopOf="@+id/numFollowersTitle" />
+
+    <TextView
+        android:id="@+id/numFollowingValue"
+        style="@style/Theme.Better.ProfileStatsViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        app:layout_constraintEnd_toEndOf="@+id/numFollowingTitle"
+        app:layout_constraintStart_toStartOf="@+id/numFollowingTitle"
+        app:layout_constraintTop_toBottomOf="@id/numFollowingTitle" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/profileRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/numFollowers" />
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
