@@ -18,7 +18,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.better.*
-import com.better.model.Repository
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.navigation.NavigationView
@@ -83,16 +82,18 @@ class MainActivity : AppCompatActivity() {
         val navTitle = headerView.findViewById<View>(R.id.nav_header_title) as TextView
         val navSubtitle = headerView.findViewById<View>(R.id.num_header_subtitle) as TextView
 
-        navTitle.text = Repository.appUser.name
-        navSubtitle.text = Repository.appUser.email
+        viewModel.appUser.observe(this, { user ->
+            navTitle.text = user.name
+            navSubtitle.text = user.email
 
-        Glide
-            .with(imageViewUser.context)
-            .load(Repository.appUser.photoUrl)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .circleCrop()
-            .placeholder(R.drawable.ic_profile)
-            .into(imageViewUser)
+            Glide
+                .with(imageViewUser.context)
+                .load(user.photoUrl)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .circleCrop()
+                .placeholder(R.drawable.ic_profile)
+                .into(imageViewUser)
+        })
 
         viewModel.isBanned.observe(this, { value ->
             if (value) {
