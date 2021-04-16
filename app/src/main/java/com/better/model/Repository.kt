@@ -21,7 +21,7 @@ object Repository {
     val eventTipsList = MutableLiveData<List<EventTip>>()
     val monthAndYearText = MutableLiveData<String>()
     val isBanned = MutableLiveData<Boolean>()
-    lateinit var appUser: AppUser
+    val appUser = MutableLiveData<AppUser>()
 
     init {
         fixtures.value = HashMap<Int, List<Fixture>>()
@@ -79,11 +79,13 @@ object Repository {
 
     @Suppress("UNCHECKED_CAST")
     fun loadUser(currentUser: FirebaseUser): AppUser? {
-        appUser = AppUser(
-            uid = currentUser.uid,
-            name = currentUser.displayName,
-            email = currentUser.email,
-            photoUrl = currentUser.photoUrl?.toString()
+        appUser.postValue(
+            AppUser(
+                uid = currentUser.uid,
+                name = currentUser.displayName,
+                email = currentUser.email,
+                photoUrl = currentUser.photoUrl?.toString()
+            )
         )
 
         // query user from DB
@@ -97,14 +99,19 @@ object Repository {
                     Log.wtf(TAG, "query user by uid return more than one element")
                 } else if (!documents.isEmpty) {
                     val userDoc = documents.first()
-                    appUser.followers =
+
+                    val user = appUser.value!!
+
+                    user.followers =
                         (userDoc[FOLLOWERS] ?: emptyList<String>()) as List<String>
-                    appUser.following =
+                    user.following =
                         (userDoc[FOLLOWING] ?: emptyList<String>()) as List<String>
-                    appUser.eventTips =
+                    user.eventTips =
                         (userDoc[EVENT_TIPS] ?: emptyList<String>()) as List<String>
-                    appUser.succTips = (userDoc[SUCC_TIPS] ?: 0L) as Long
-                    appUser.isAdmin = (userDoc[IS_ADMIN] ?: false) as Boolean
+                    user.succTips = (userDoc[SUCC_TIPS] ?: 0L) as Long
+                    user.isAdmin = (userDoc[IS_ADMIN] ?: false) as Boolean
+
+                    appUser.postValue(user)
                 }
             }
             .addOnFailureListener { exception ->
@@ -148,21 +155,21 @@ object Repository {
      */
     private fun createNewUserDocument() {
         val newUser = hashMapOf(
-            UID to appUser.uid,
-            NAME to appUser.name,
-            EMAIL to appUser.email,
+            UID to appUser.value!!.uid,
+            NAME to appUser.value!!.name,
+            EMAIL to appUser.value!!.email,
             IS_ADMIN to false
         )
 
         val usersRef = Firebase.firestore.collection(DB_COLLECTION_USERS)
 
         usersRef
-            .document(appUser.uid)
+            .document(appUser.value!!.uid)
             .set(newUser)
             .addOnSuccessListener {
                 Log.i(
                     TAG,
-                    "createNewUser: document ${appUser.uid} was created for user ${appUser.name}"
+                    "createNewUser: document ${appUser.value!!.uid} was created for user ${appUser.value!!.name}"
                 )
             }
             .addOnFailureListener { exception ->
@@ -172,8 +179,8 @@ object Repository {
 
     fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long) {
         val eventTip = hashMapOf(
-            UID to appUser.uid,
-            "userPic" to appUser.photoUrl,
+            UID to appUser.value!!.uid,
+            "userPic" to appUser.value!!.photoUrl,
             DESCRIPTION to description,
             "homeName" to fixture.home.name,
             "awayName" to fixture.away.name,
@@ -195,18 +202,18 @@ object Repository {
 
     private fun attachEventTipToUser(eventTip: DocumentReference) {
         Firebase.firestore.collection(DB_COLLECTION_USERS)
-            .document(appUser.uid)
+            .document(appUser.value!!.uid)
             .update("eventTips", FieldValue.arrayUnion(eventTip.id))
             .addOnSuccessListener {
                 Log.i(
                     TAG,
-                    "attachEventTipToUser: succeeded for uid ${appUser.uid} and eventTip ${eventTip.id}"
+                    "attachEventTipToUser: succeeded for uid ${appUser.value!!.uid} and eventTip ${eventTip.id}"
                 )
             }
             .addOnFailureListener {
                 Log.e(
                     TAG,
-                    "attachEventTipToUser: failed for uid ${appUser.uid} and eventTip ${eventTip.id}"
+                    "attachEventTipToUser: failed for uid ${appUser.value!!.uid} and eventTip ${eventTip.id}"
                 )
             }
     }

@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -18,7 +20,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.better.*
-import com.better.model.Repository
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.navigation.NavigationView
@@ -82,17 +83,26 @@ class MainActivity : AppCompatActivity() {
         val imageViewUser = headerView.findViewById<View>(R.id.nav_header_photo) as ImageView
         val navTitle = headerView.findViewById<View>(R.id.nav_header_title) as TextView
         val navSubtitle = headerView.findViewById<View>(R.id.num_header_subtitle) as TextView
+        val adminSubtitle = headerView.findViewById<View>(R.id.admin_header_subtitle) as TextView
 
-        navTitle.text = Repository.appUser.name
-        navSubtitle.text = Repository.appUser.email
+        viewModel.appUser.observe(this, { user ->
+            navTitle.text = user.name
+            navSubtitle.text = user.email
 
-        Glide
-            .with(imageViewUser.context)
-            .load(Repository.appUser.photoUrl)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .circleCrop()
-            .placeholder(R.drawable.ic_profile)
-            .into(imageViewUser)
+            if (user.isAdmin) {
+                adminSubtitle.visibility = VISIBLE
+            } else {
+                adminSubtitle.visibility = GONE
+            }
+
+            Glide
+                .with(imageViewUser.context)
+                .load(user.photoUrl)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .circleCrop()
+                .placeholder(R.drawable.ic_profile)
+                .into(imageViewUser)
+        })
 
         viewModel.isBanned.observe(this, { value ->
             if (value) {

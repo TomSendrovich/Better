@@ -33,4 +33,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nav_header_subtitle" />
+
+    <TextView
+        android:id="@+id/admin_header_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Admin"
+        android:textColor="#FFD700"
+        android:textStyle="bold" />
 </LinearLayout>
