@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.better.R
-import com.better.ViewModelFactory
 import com.better.adapters.EventTipAdapter
 import com.better.model.dataHolders.EventTip
 import com.better.utils.AppUtils
@@ -21,8 +20,7 @@ class ProfileFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModelFactory = ViewModelFactory()
-        viewModel = ViewModelProvider(this, viewModelFactory).get(ProfileViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
     }
 
     override fun onCreateView(

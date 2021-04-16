@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.better.model.Repository
 import com.better.model.dataHolders.Fixture
 
-class AddTipViewModel(private val repository: Repository) : ViewModel() {
+class AddTipViewModel : ViewModel() {
 
     fun onClickAddTip(fixture: Fixture, description: String, chipText: String) {
         val tipValue: Long = when (chipText) {
@@ -19,10 +19,10 @@ class AddTipViewModel(private val repository: Repository) : ViewModel() {
     private fun createEventTipDocument(
         fixture: Fixture, description: String, tipValue: Long
     ) {
-        repository.createEventTipDocument(fixture, description, tipValue)
+        Repository.createEventTipDocument(fixture, description, tipValue)
     }
 
     private fun updateEventTipsByFixtureId(fixtureID: Long) {
-        return repository.queryEventTipsByFixtureId(fixtureID)
+        return Repository.queryEventTipsByFixtureId(fixtureID)
     }
 }

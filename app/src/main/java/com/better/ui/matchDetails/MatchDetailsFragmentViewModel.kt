@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModel
 import com.better.model.Repository
 import com.better.model.dataHolders.EventTip
 
-class MatchDetailsFragmentViewModel(private val repository: Repository) : ViewModel() {
-    val eventTips: LiveData<List<EventTip>> = repository.eventTipsList
+class MatchDetailsFragmentViewModel : ViewModel() {
+    val eventTips: LiveData<List<EventTip>> = Repository.eventTipsList
 
     fun updateEventTipsByFixtureId(fixtureID: Long) {
-        return repository.queryEventTipsByFixtureId(fixtureID)
+        return Repository.queryEventTipsByFixtureId(fixtureID)
     }
 }

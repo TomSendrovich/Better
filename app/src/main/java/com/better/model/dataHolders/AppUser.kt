@@ -19,9 +19,18 @@ data class AppUser(
     var eventTips: List<String>,
     var succTips: Long,
     var followers: List<String>,
-    var following: List<String>
+    var following: List<String>,
+    var isAdmin: Boolean
 ) {
     constructor(uid: String, name: String?, email: String?, photoUrl: String?) : this(
-        uid, name, email, photoUrl, emptyList<String>(), 0, emptyList<String>(), emptyList<String>()
+        uid = uid,
+        name = name,
+        email = email,
+        photoUrl = photoUrl,
+        eventTips = emptyList<String>(),
+        succTips = 0,
+        followers = emptyList<String>(),
+        following = emptyList<String>(),
+        isAdmin = false
     )
 }

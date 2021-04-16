@@ -38,8 +38,7 @@ class MatchesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModelFactory = ViewModelFactory()
-        viewModel = ViewModelProvider(this, viewModelFactory).get(MatchesViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MatchesViewModel::class.java)
     }
 
     override fun onCreateView(

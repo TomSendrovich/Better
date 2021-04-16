@@ -9,8 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.better.R
-import com.better.ViewModelFactory
-import com.better.model.Repository
 
 class FeedFragment : Fragment() {
 
@@ -18,8 +16,7 @@ class FeedFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModelFactory = ViewModelFactory()
-        viewModel = ViewModelProvider(this, viewModelFactory).get(FeedViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(FeedViewModel::class.java)
     }
 
     override fun onCreateView(

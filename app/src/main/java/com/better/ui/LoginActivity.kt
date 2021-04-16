@@ -127,11 +127,11 @@ class LoginActivity : AppCompatActivity() {
         Log.d(TAG, "updateUI: ")
         if (currentUser != null) {
             Repository.loadUser(currentUser)
+            Repository.isBannedUser(currentUser.uid)
 
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
-
     }
 }
