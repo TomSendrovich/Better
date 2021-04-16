@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -81,10 +83,17 @@ class MainActivity : AppCompatActivity() {
         val imageViewUser = headerView.findViewById<View>(R.id.nav_header_photo) as ImageView
         val navTitle = headerView.findViewById<View>(R.id.nav_header_title) as TextView
         val navSubtitle = headerView.findViewById<View>(R.id.num_header_subtitle) as TextView
+        val adminSubtitle = headerView.findViewById<View>(R.id.admin_header_subtitle) as TextView
 
         viewModel.appUser.observe(this, { user ->
             navTitle.text = user.name
             navSubtitle.text = user.email
+
+            if (user.isAdmin) {
+                adminSubtitle.visibility = VISIBLE
+            } else {
+                adminSubtitle.visibility = GONE
+            }
 
             Glide
                 .with(imageViewUser.context)
