@@ -193,26 +193,20 @@ object Repository {
             }
     }
 
-    private fun attachEventTipToUser(doc: DocumentReference) {
-        if (appUser.eventTips.isEmpty()) {
-            appUser.eventTips = listOf(doc.id)
-        } else {
-            (appUser.eventTips as ArrayList<String>).add(doc.id)
-        }
-
+    private fun attachEventTipToUser(eventTip: DocumentReference) {
         Firebase.firestore.collection(DB_COLLECTION_USERS)
             .document(appUser.uid)
-            .update("eventTips", appUser.eventTips)
+            .update("eventTips", FieldValue.arrayUnion(eventTip.id))
             .addOnSuccessListener {
                 Log.i(
                     TAG,
-                    "attachEventTipToUser: succeeded for uid ${appUser.uid} and eventTip ${doc.id}"
+                    "attachEventTipToUser: succeeded for uid ${appUser.uid} and eventTip ${eventTip.id}"
                 )
             }
             .addOnFailureListener {
                 Log.e(
                     TAG,
-                    "attachEventTipToUser: failed for uid ${appUser.uid} and eventTip ${doc.id}"
+                    "attachEventTipToUser: failed for uid ${appUser.uid} and eventTip ${eventTip.id}"
                 )
             }
     }
