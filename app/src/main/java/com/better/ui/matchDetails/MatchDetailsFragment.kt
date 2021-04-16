@@ -80,6 +80,10 @@ class MatchDetailsFragment : Fragment() {
         recyclerViewMatch.apply {
             adapter = EventTipAdapter(ArrayList(), object : EventTipAdapter.EventTipListener {
                 override fun onItemClicked(item: EventTip) {
+                    viewModel.updateAnotherUser(item.userID)
+                    val action =
+                        MatchDetailsFragmentDirections.actionMatchDetailsFragmentToNavProfile()
+                    view.findNavController().navigate(action)
                 }
             })
             layoutManager = LinearLayoutManager(context)

@@ -32,13 +32,17 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.appUser.observe(viewLifecycleOwner, { user ->
-            AppUtils.bindImage(view.profile_image, user.photoUrl)
-            view.profile_fullName.text = user.name
+        viewModel.profileToShow.observe(viewLifecycleOwner, { user ->
+            if (user != null) {
+                AppUtils.bindImage(view.profile_image, user.photoUrl)
+                view.profile_fullName.text = user.name
 
-            numTipsValue.text = user.eventTips.size.toString()
-            numFollowersValue.text = user.followers.size.toString()
-            numFollowingValue.text = user.following.size.toString()
+                numTipsValue.text = user.eventTips.size.toString()
+                numFollowersValue.text = user.followers.size.toString()
+                numFollowingValue.text = user.following.size.toString()
+
+                viewModel.updateEventTips()
+            }
         })
 
         profileRecyclerView.apply {
@@ -49,7 +53,6 @@ class ProfileFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
         }
 
-        viewModel.updateEventTips()
         viewModel.eventTips.observe(viewLifecycleOwner, {
             val list = viewModel.eventTips.value
             (profileRecyclerView.adapter as EventTipAdapter).setData(list as ArrayList<EventTip>)

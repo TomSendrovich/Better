@@ -9,4 +9,8 @@ class MainActivityViewModel : ViewModel() {
 
     val isBanned: LiveData<Boolean> = Repository.isBanned
     val appUser: LiveData<AppUser> = Repository.appUser
+
+    fun updateProfileToShow(){
+        Repository.updateProfileToShow(showCurrentUser = true)
+    }
 }

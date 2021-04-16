@@ -22,6 +22,8 @@ object Repository {
     val monthAndYearText = MutableLiveData<String>()
     val isBanned = MutableLiveData<Boolean>()
     val appUser = MutableLiveData<AppUser>()
+    private val anotherUser = MutableLiveData<AppUser>()
+    val profileToShow = MutableLiveData<AppUser>()
 
     init {
         fixtures.value = HashMap<Int, List<Fixture>>()
@@ -77,6 +79,39 @@ object Repository {
             }
     }
 
+    fun queryAnotherUser(userId: String) {
+        Firebase.firestore.collection(DB_COLLECTION_USERS)
+            .whereEqualTo(UID, userId)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.size() > 1) {
+                    Log.wtf(TAG, "query user by uid return more than one element")
+                } else if (!documents.isEmpty) {
+                    val userDoc = documents.first()
+
+                    val user = AppUser(
+                        uid = userDoc[UID] as String,
+                        name = userDoc[NAME] as String?,
+                        email = userDoc[EMAIL] as String?,
+                        photoUrl = userDoc[PHOTO_URL] as String?,
+                        followers = (userDoc[FOLLOWERS] ?: emptyList<String>()) as List<String>,
+                        following = (userDoc[FOLLOWING] ?: emptyList<String>()) as List<String>,
+                        eventTips = (userDoc[EVENT_TIPS] ?: emptyList<String>()) as List<String>,
+                        succTips = (userDoc[SUCC_TIPS] ?: 0L) as Long,
+                        isAdmin = (userDoc[IS_ADMIN] ?: false) as Boolean
+                    )
+
+                    anotherUser.postValue(user)
+                    profileToShow.postValue(user)
+                    Log.d("profile", "queryAnotherUser: ${user.name}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting user $userId: ", exception)
+            }
+    }
+
+
     @Suppress("UNCHECKED_CAST")
     fun loadUser(currentUser: FirebaseUser): AppUser? {
         appUser.postValue(
@@ -88,10 +123,7 @@ object Repository {
             )
         )
 
-        // query user from DB
-        val usersRef = Firebase.firestore.collection(DB_COLLECTION_USERS)
-
-        usersRef
+        Firebase.firestore.collection(DB_COLLECTION_USERS)
             .whereEqualTo(UID, currentUser.uid)
             .get()
             .addOnSuccessListener { documents ->
@@ -115,7 +147,7 @@ object Repository {
                 }
             }
             .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting user: ", exception)
+                Log.w(TAG, "Error getting user ${currentUser.uid}: ", exception)
             }
             .addOnCompleteListener { data ->
                 Log.d(TAG, "queryUser: completed with ${data.result?.size()} results")
@@ -158,6 +190,7 @@ object Repository {
             UID to appUser.value!!.uid,
             NAME to appUser.value!!.name,
             EMAIL to appUser.value!!.email,
+            PHOTO_URL to appUser.value!!.photoUrl,
             IS_ADMIN to false
         )
 
@@ -331,6 +364,15 @@ object Repository {
 
     private fun updateEventTipsList(list: ArrayList<EventTip>) {
         eventTipsList.postValue(list)
+    }
+
+    fun updateProfileToShow(showCurrentUser: Boolean) {
+        if (showCurrentUser) {
+            profileToShow.postValue(appUser.value)
+        } else {
+            profileToShow.postValue(anotherUser.value)
+        }
+        Log.d("profile", "updateProfileToShow: $showCurrentUser")
     }
     //endregion
 }

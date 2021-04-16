@@ -9,9 +9,9 @@ import com.better.model.dataHolders.EventTip
 class ProfileViewModel : ViewModel() {
 
     val eventTips: LiveData<List<EventTip>> = Repository.eventTipsList
-    val appUser: LiveData<AppUser> = Repository.appUser
+    val profileToShow: LiveData<AppUser> = Repository.profileToShow
 
     fun updateEventTips() {
-        return Repository.queryEventTipsByUserId(this.appUser.value!!.uid)
+        return Repository.queryEventTipsByUserId(this.profileToShow.value!!.uid)
     }
 }
