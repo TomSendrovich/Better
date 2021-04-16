@@ -16,7 +16,6 @@ import kotlin.collections.ArrayList
 object Repository {
     private const val TAG = "Repository"
 
-    //    val fixtures = MutableLiveData<List<Fixture>>()
     val fixtures = MutableLiveData<HashMap<Int, List<Fixture>>>()
     val eventTipsList = MutableLiveData<List<EventTip>>()
     val monthAndYearText = MutableLiveData<String>()

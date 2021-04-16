@@ -10,16 +10,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.better.R
-import com.better.ViewModelFactory
 import com.better.adapters.EventTipAdapter
 import com.better.model.dataHolders.EventTip
 import com.better.model.dataHolders.Fixture
 import com.better.ui.MainActivity
 import com.better.utils.AppUtils
 import com.better.utils.DateUtils
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_match_details.*
 import kotlinx.android.synthetic.main.fragment_match_details.view.*
 
@@ -32,9 +29,7 @@ class MatchDetailsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate: ")
-        val viewModelFactory = ViewModelFactory()
-        viewModel =
-            ViewModelProvider(this, viewModelFactory).get(MatchDetailsFragmentViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MatchDetailsFragmentViewModel::class.java)
     }
 
     override fun onCreateView(
