@@ -7,9 +7,11 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -26,10 +28,14 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var logoutButton: Button
+    private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
@@ -42,11 +48,15 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         logoutButton = findViewById(R.id.logout)
         logoutButton.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.putExtra(EXTRA_LOGOUT, true)
-            startActivity(intent)
-            finish()
+            logoutFromApp()
         }
+    }
+
+    private fun logoutFromApp() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.putExtra(EXTRA_LOGOUT, true)
+        startActivity(intent)
+        finish()
     }
 
     private fun initDrawerLayout() {
@@ -83,6 +93,14 @@ class MainActivity : AppCompatActivity() {
             .circleCrop()
             .placeholder(R.drawable.ic_profile)
             .into(imageViewUser)
+
+        viewModel.isBanned.observe(this, { value ->
+            if (value) {
+                Toast.makeText(applicationContext, "Your account is banned!", Toast.LENGTH_LONG)
+                    .show()
+                logoutFromApp()
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -7,6 +7,7 @@ import com.better.model.dataHolders.*
 import com.better.utils.DateUtils
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -19,6 +20,7 @@ object Repository {
     val fixtures = MutableLiveData<HashMap<Int, List<Fixture>>>()
     val eventTipsList = MutableLiveData<List<EventTip>>()
     val monthAndYearText = MutableLiveData<String>()
+    val isBanned = MutableLiveData<Boolean>()
     lateinit var appUser: AppUser
 
     init {
@@ -118,6 +120,19 @@ object Repository {
         return null
     }
 
+    fun isBannedUser(uid: String) {
+        Firebase.firestore.collection(DB_COLLECTION_BLACKLIST)
+            .document(BANNED_USERS)
+            .get()
+            .addOnSuccessListener { document ->
+                val list = document["list"] as ArrayList<*>
+                if (list.contains(uid)) {
+                    isBanned.postValue(true)
+                } else {
+                    isBanned.postValue(false)
+                }
+            }
+    }
 
     //endregion
 
@@ -127,10 +142,7 @@ object Repository {
      * create new user document and save in firestore.
      * the data is taken from the user reference.
      *
-     * we store only the uid of the user (unique id given by google), because the user display name
-     * and user profile picture can be changed. we can get them from the user reference.
-     *
-     * we do not set an empty list of eventTips at the point.
+     * we do not set an empty list of eventTips.
      *
      * @see appUser
      */
@@ -203,6 +215,21 @@ object Repository {
                     "attachEventTipToUser: failed for uid ${appUser.uid} and eventTip ${doc.id}"
                 )
             }
+    }
+
+    /**
+     * Ban any user from the app.
+     * The actual operation is adding the uid of the user to a list.
+     * The list reference is /blacklist/bannedUsers/list - array of strings.
+     *
+     * @param uid the id of the user
+     **/
+    fun banUser(uid: String) {
+        Firebase.firestore.collection(DB_COLLECTION_BLACKLIST)
+            .document(BANNED_USERS)
+            .update("list", FieldValue.arrayUnion(uid))
+            .addOnSuccessListener { Log.i(TAG, "banUser: $uid is banned successfully") }
+            .addOnFailureListener { Log.e(TAG, "banUser: ban operation is failed for $uid") }
     }
 
     //endregion
