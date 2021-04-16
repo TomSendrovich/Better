@@ -94,15 +94,16 @@ object Repository {
             .addOnSuccessListener { documents ->
                 if (documents.size() > 1) {
                     Log.wtf(TAG, "query user by uid return more than one element")
-                } else {
+                } else if (!documents.isEmpty) {
                     val userDoc = documents.first()
                     appUser.followers =
-                        (userDoc["followers"] ?: emptyList<String>()) as List<String>
+                        (userDoc[FOLLOWERS] ?: emptyList<String>()) as List<String>
                     appUser.following =
-                        (userDoc["following"] ?: emptyList<String>()) as List<String>
+                        (userDoc[FOLLOWING] ?: emptyList<String>()) as List<String>
                     appUser.eventTips =
-                        (userDoc["eventTips"] ?: emptyList<String>()) as List<String>
-                    appUser.succTips = (userDoc["succTips"] ?: 0L) as Long
+                        (userDoc[EVENT_TIPS] ?: emptyList<String>()) as List<String>
+                    appUser.succTips = (userDoc[SUCC_TIPS] ?: 0L) as Long
+                    appUser.isAdmin = (userDoc[IS_ADMIN] ?: false) as Boolean
                 }
             }
             .addOnFailureListener { exception ->
@@ -136,7 +137,10 @@ object Repository {
      */
     private fun createNewUserDocument() {
         val newUser = hashMapOf(
-            UID to appUser.uid
+            UID to appUser.uid,
+            NAME to appUser.name,
+            EMAIL to appUser.email,
+            IS_ADMIN to false
         )
 
         val usersRef = Firebase.firestore.collection(DB_COLLECTION_USERS)
