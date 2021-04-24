@@ -22,7 +22,6 @@ object Repository {
     val monthAndYearText = MutableLiveData<String>()
     val isBanned = MutableLiveData<Boolean>()
     val appUser = MutableLiveData<AppUser>()
-    private val anotherUser = MutableLiveData<AppUser>()
     val profileToShow = MutableLiveData<AppUser>()
 
     init {
@@ -101,9 +100,8 @@ object Repository {
                         isAdmin = (userDoc[IS_ADMIN] ?: false) as Boolean
                     )
 
-                    anotherUser.postValue(user)
                     profileToShow.postValue(user)
-                    Log.d("profile", "queryAnotherUser: ${user.name}")
+                    Log.d("profile", "queryUserById: ${user.name}")
                 }
             }
             .addOnFailureListener { exception ->
@@ -368,15 +366,6 @@ object Repository {
 
     private fun updateEventTipsList(list: ArrayList<EventTip>) {
         eventTipsList.postValue(list)
-    }
-
-    fun updateProfileToShow(showCurrentUser: Boolean) {
-        if (showCurrentUser) {
-            profileToShow.postValue(appUser.value)
-        } else {
-            profileToShow.postValue(anotherUser.value)
-        }
-        Log.d("profile", "updateProfileToShow: $showCurrentUser")
     }
     //endregion
 }
