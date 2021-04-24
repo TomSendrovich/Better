@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.better.R
 import com.better.adapters.EventTipAdapter
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.fragment_profile.view.*
 class ProfileFragment : Fragment() {
 
     private lateinit var viewModel: ProfileViewModel
+    private val args by navArgs<ProfileFragmentArgs>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +33,8 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.updateUser(args.userId)
 
         viewModel.profileToShow.observe(viewLifecycleOwner, { user ->
             if (user != null) {
@@ -48,6 +52,10 @@ class ProfileFragment : Fragment() {
         profileRecyclerView.apply {
             adapter = EventTipAdapter(ArrayList(), object : EventTipAdapter.EventTipListener {
                 override fun onItemClicked(item: EventTip) {
+                }
+
+                override fun onItemLongClick(item: EventTip): Boolean {
+                    return true
                 }
             })
             layoutManager = LinearLayoutManager(context)

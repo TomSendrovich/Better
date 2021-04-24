@@ -14,4 +14,12 @@ class ProfileViewModel : ViewModel() {
     fun updateEventTips() {
         return Repository.queryEventTipsByUserId(this.profileToShow.value!!.uid)
     }
+
+    fun updateUser(userID: String) {
+        if (userID.isEmpty()) {
+            Repository.profileToShow.postValue(Repository.appUser.value)
+        } else {
+            Repository.queryUserById(userID)
+        }
+    }
 }

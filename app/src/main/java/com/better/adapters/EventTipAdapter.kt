@@ -11,15 +11,15 @@ import com.better.R
 import com.better.model.dataHolders.EventTip
 import com.better.utils.AppUtils
 import com.better.utils.EventTipsDiffUtil
-import java.util.*
 
 class EventTipAdapter(
-    private var oldList: ArrayList<EventTip>,
+    private var oldList: List<EventTip>,
     private val listener: EventTipListener
 ) : RecyclerView.Adapter<EventTipAdapter.ViewHolder>() {
 
     interface EventTipListener {
         fun onItemClicked(item: EventTip)
+        fun onItemLongClick(item: EventTip): Boolean
     }
 
     /**
@@ -66,13 +66,16 @@ class EventTipAdapter(
         viewHolder.itemView.setOnClickListener {
             listener.onItemClicked(oldList[position])
         }
+        viewHolder.itemView.setOnLongClickListener {
+            listener.onItemLongClick(oldList[position])
+        }
     }
 
     override fun getItemCount(): Int {
         return oldList.size
     }
 
-    fun setData(newList: ArrayList<EventTip>) {
+    fun setData(newList: List<EventTip>) {
         val diffUtil = EventTipsDiffUtil(oldList, newList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         oldList = newList

@@ -80,10 +80,13 @@ class MatchDetailsFragment : Fragment() {
         recyclerViewMatch.apply {
             adapter = EventTipAdapter(ArrayList(), object : EventTipAdapter.EventTipListener {
                 override fun onItemClicked(item: EventTip) {
-                    viewModel.updateAnotherUser(item.userID)
                     val action =
-                        MatchDetailsFragmentDirections.actionMatchDetailsFragmentToNavProfile()
+                        MatchDetailsFragmentDirections.actionMatchDetailsFragmentToNavProfile(item.userID)
                     view.findNavController().navigate(action)
+                }
+
+                override fun onItemLongClick(item: EventTip): Boolean {
+                    return true
                 }
             })
             layoutManager = LinearLayoutManager(context)
@@ -97,9 +100,14 @@ class MatchDetailsFragment : Fragment() {
 
         viewModel.updateEventTipsByFixtureId(args.selectedFixture.id)
         viewModel.eventTips.observe(viewLifecycleOwner, {
-            val list = viewModel.eventTips.value
-            (recyclerViewMatch.adapter as EventTipAdapter).setData(list as ArrayList<EventTip>)
+            val list = viewModel.eventTips.value ?: emptyList()
+            (recyclerViewMatch.adapter as EventTipAdapter).setData(list)
 
+            /*
+            notifyDataSetChanged, to fix a bug when the item positions are wrong when navigating
+            to this fragment from profile fragment (pressed back button)
+            */
+            (recyclerViewMatch.adapter as EventTipAdapter).notifyDataSetChanged()
         })
     }
 

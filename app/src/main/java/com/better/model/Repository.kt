@@ -79,7 +79,7 @@ object Repository {
             }
     }
 
-    fun queryAnotherUser(userId: String) {
+    fun queryUserById(userId: String) {
         Firebase.firestore.collection(DB_COLLECTION_USERS)
             .whereEqualTo(UID, userId)
             .get()
@@ -265,6 +265,10 @@ object Repository {
             .addOnSuccessListener { Log.i(TAG, "banUser: $uid is banned successfully") }
             .addOnFailureListener { Log.e(TAG, "banUser: ban operation is failed for $uid") }
     }
+
+    //endregion
+
+    //region Delete Documents from firestore
 
     //endregion
 

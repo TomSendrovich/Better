@@ -49,7 +49,12 @@
         android:id="@+id/nav_profile"
         android:name="com.better.ui.profile.ProfileFragment"
         android:label="@string/menu_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <argument
+            android:name="userId"
+            app:argType="string"
+            android:defaultValue='' />
+    </fragment>
     <dialog
         android:id="@+id/addTipFragment"
         android:name="com.better.ui.addTip.AddTipFragment"

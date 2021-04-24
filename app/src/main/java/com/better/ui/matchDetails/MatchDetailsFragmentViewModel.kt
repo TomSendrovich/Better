@@ -11,8 +11,4 @@ class MatchDetailsFragmentViewModel : ViewModel() {
     fun updateEventTipsByFixtureId(fixtureID: Long) {
         Repository.queryEventTipsByFixtureId(fixtureID)
     }
-
-    fun updateAnotherUser(userID: String) {
-        Repository.queryAnotherUser(userID)
-    }
 }

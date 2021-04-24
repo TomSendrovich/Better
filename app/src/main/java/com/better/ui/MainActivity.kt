@@ -86,7 +86,6 @@ class MainActivity : AppCompatActivity() {
 
         imageViewUser.setOnClickListener {
             // navigate to profile fragment
-            viewModel.updateProfileToShow()
             navController.navigate(R.id.nav_profile)
             drawerLayout.close()
         }
