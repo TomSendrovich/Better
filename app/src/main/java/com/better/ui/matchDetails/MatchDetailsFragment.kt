@@ -23,7 +23,6 @@ import com.better.utils.AppUtils
 import com.better.utils.DateUtils
 import kotlinx.android.synthetic.main.fragment_match_details.*
 import kotlinx.android.synthetic.main.fragment_match_details.view.*
-import kotlinx.android.synthetic.main.fragment_profile.*
 
 
 class MatchDetailsFragment : Fragment() {
@@ -115,8 +114,8 @@ class MatchDetailsFragment : Fragment() {
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            MENU_DELETE -> (profileRecyclerView.adapter as EventTipAdapter).removeItem(item.groupId)
-            MENU_BAN -> (profileRecyclerView.adapter as EventTipAdapter).banUser(item.groupId)
+            MENU_DELETE -> (recyclerViewMatch.adapter as EventTipAdapter).removeItem(item.groupId)
+            MENU_BAN -> (recyclerViewMatch.adapter as EventTipAdapter).banUser(item.groupId)
         }
         return true
     }
