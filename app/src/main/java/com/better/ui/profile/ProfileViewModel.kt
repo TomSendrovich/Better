@@ -30,4 +30,8 @@ class ProfileViewModel : ViewModel() {
     fun deleteEventTip(item: EventTip) {
         Repository.deleteEventTip(item)
     }
+
+    fun banUser(userID: String) {
+        Repository.banUser(userID)
+    }
 }

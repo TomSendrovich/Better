@@ -37,7 +37,7 @@ object Repository {
             .whereLessThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(to.time))
             .get()
             .addOnSuccessListener { documents ->
-                Log.i(TAG, "queried ${documents.size()} documents")
+                Log.i(TAG, "queried ${documents.size()} documents (Fixtures)")
                 val list: ArrayList<Fixture> = ArrayList()
                 val map: HashMap<Int, List<Fixture>> = fixtures.value!!
                 for (doc in documents) {
@@ -171,9 +171,9 @@ object Repository {
             }
     }
 
-    //endregion
+//endregion
 
-    //region Write Document to firestore
+//region Write Document to firestore
 
     /**
      * create new user document and save in firestore.
@@ -264,9 +264,9 @@ object Repository {
             .addOnFailureListener { Log.e(TAG, "banUser: ban operation is failed for $uid") }
     }
 
-    //endregion
+//endregion
 
-    //region Delete Documents from firestore
+//region Delete Documents from firestore
 
     fun deleteEventTip(eventTip: EventTip) {
         Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).document(eventTip.tipID)
@@ -297,9 +297,9 @@ object Repository {
     }
 
 
-    //endregion
+//endregion
 
-    //region Create Data Classes from firebase document
+//region Create Data Classes from firebase document
 
     private fun createFixtureFromDocument(doc: QueryDocumentSnapshot): Fixture {
 //        Log.d(TAG, "${doc.id} => ${doc.data}")
@@ -379,7 +379,7 @@ object Repository {
         )
     }
 
-    //endregion
+//endregion
 
     //region postValue MutableLiveData Objects
     fun updateMonthAndYearText(position: Int) {
@@ -396,5 +396,5 @@ object Repository {
     private fun updateEventTipsList(list: ArrayList<EventTip>) {
         eventTipsList.postValue(list)
     }
-    //endregion
+//endregion
 }

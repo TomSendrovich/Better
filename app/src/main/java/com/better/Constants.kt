@@ -9,6 +9,10 @@ const val VIEW_PAGER = "viewPager"
 
 const val PAGE_SELECTED_DEFAULT = 7
 
+// Admin Options
+const val MENU_DELETE = 1
+const val MENU_BAN = 2
+
 const val DB_COLLECTION_FIXTURES: String = "fixtures"
 const val DB_COLLECTION_LEAGUES: String = "leagues"
 const val DB_COLLECTION_TEAMS: String = "teams"

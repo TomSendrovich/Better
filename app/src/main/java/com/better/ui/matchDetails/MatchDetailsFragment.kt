@@ -2,8 +2,8 @@ package com.better.ui.matchDetails
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -12,6 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.better.MENU_BAN
+import com.better.MENU_DELETE
 import com.better.R
 import com.better.adapters.EventTipAdapter
 import com.better.model.dataHolders.EventTip
@@ -21,6 +23,7 @@ import com.better.utils.AppUtils
 import com.better.utils.DateUtils
 import kotlinx.android.synthetic.main.fragment_match_details.*
 import kotlinx.android.synthetic.main.fragment_match_details.view.*
+import kotlinx.android.synthetic.main.fragment_profile.*
 
 
 class MatchDetailsFragment : Fragment() {
@@ -30,7 +33,6 @@ class MatchDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate: ")
         viewModel = ViewModelProvider(this).get(MatchDetailsFragmentViewModel::class.java)
     }
 
@@ -38,7 +40,6 @@ class MatchDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d(TAG, "onCreateView: ")
         val view = inflater.inflate(R.layout.fragment_match_details, container, false)
 
         (activity as MainActivity).supportActionBar?.title =
@@ -87,10 +88,8 @@ class MatchDetailsFragment : Fragment() {
                     view.findNavController().navigate(action)
                 }
 
-                override fun onItemLongClick(item: EventTip): Boolean {
-                    showAlertDialog(item)
-                    return true
-                }
+                override fun onItemRemoveClicked(item: EventTip) = showDeleteItemDialog(item)
+                override fun onUserBanClicked(userID: String) = showBanUserDialog(userID)
             })
             layoutManager = LinearLayoutManager(context)
         }
@@ -114,7 +113,15 @@ class MatchDetailsFragment : Fragment() {
         })
     }
 
-    private fun showAlertDialog(item: EventTip) {
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            MENU_DELETE -> (profileRecyclerView.adapter as EventTipAdapter).removeItem(item.groupId)
+            MENU_BAN -> (profileRecyclerView.adapter as EventTipAdapter).banUser(item.groupId)
+        }
+        return true
+    }
+
+    private fun showDeleteItemDialog(item: EventTip) {
         if (viewModel.isAdmin()) {
             val alert = AlertDialog.Builder(requireContext())
             alert.setTitle("Delete Tip")
@@ -124,6 +131,24 @@ class MatchDetailsFragment : Fragment() {
                 viewModel.deleteEventTip(item)
                 viewModel.updateEventTipsByFixtureId(item.fixtureID)
                 Toast.makeText(requireContext(), "Deleted", Toast.LENGTH_SHORT).show()
+            }
+
+            alert.setNegativeButton("No") { _, _ -> }
+
+            alert.show()
+        }
+    }
+
+    private fun showBanUserDialog(userID: String) {
+        if (viewModel.isAdmin()) {
+            val alert = AlertDialog.Builder(requireContext())
+            alert.setTitle("Ban User")
+            alert.setMessage("Are you sure you want to ban this user?")
+
+            alert.setPositiveButton("Yes") { _, _ ->
+                viewModel.banUser(userID)
+
+                Toast.makeText(requireContext(), "Banned", Toast.LENGTH_SHORT).show()
             }
 
             alert.setNegativeButton("No") { _, _ -> }
