@@ -211,12 +211,12 @@ object Repository {
     fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long) {
         val eventTip = hashMapOf(
             UID to appUser.value!!.uid,
-            "userPic" to appUser.value!!.photoUrl,
+            USER_PIC to appUser.value!!.photoUrl,
             DESCRIPTION to description,
-            "homeName" to fixture.home.name,
-            "awayName" to fixture.away.name,
-            "homeLogo" to fixture.home.logo,
-            "awayLogo" to fixture.away.logo,
+            HOME_NAME to fixture.home.name,
+            AWAY_NAME to fixture.away.name,
+            HOME_LOGO to fixture.home.logo,
+            AWAY_LOGO to fixture.away.logo,
             FIXTURE to fixture.id,
             TIP_VALUE to tipValue,
         )
@@ -367,12 +367,12 @@ object Repository {
         return EventTip(
             tipID = doc.id,
             userID = doc[UID] as String,
-            userPic = doc["userPic"] as String,
+            userPic = doc[USER_PIC] as String,
             fixtureID = doc[FIXTURE] as Long,
-            homeName = doc["homeName"] as String,
-            awayName = doc["awayName"] as String,
-            homeLogo = doc["homeLogo"] as String,
-            awayLogo = doc["awayLogo"] as String,
+            homeName = doc[HOME_NAME] as String,
+            awayName = doc[AWAY_NAME] as String,
+            homeLogo = doc[HOME_LOGO] as String,
+            awayLogo = doc[AWAY_LOGO] as String,
             description = doc[DESCRIPTION] as String,
             tipValue = doc[TIP_VALUE] as Long,
             isHit = doc[IS_HIT] as Boolean?
