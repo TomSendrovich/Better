@@ -6,10 +6,10 @@ import com.better.model.Repository
 import com.better.model.dataHolders.Fixture
 import java.util.*
 
-class MatchesViewModel(private val repository: Repository) : ViewModel() {
+class MatchesViewModel : ViewModel() {
 
-    val fixtures: LiveData<HashMap<Int, List<Fixture>>> = repository.fixtures
-    val monthAndYearText: LiveData<String> = repository.monthAndYearText
+    val fixtures: LiveData<HashMap<Int, List<Fixture>>> = Repository.fixtures
+    val monthAndYearText: LiveData<String> = Repository.monthAndYearText
 
     fun getFixturesByDate(position: Int) {
         val date = Calendar.getInstance()
@@ -19,7 +19,7 @@ class MatchesViewModel(private val repository: Repository) : ViewModel() {
 
         val list = fixtures.value?.get(date[Calendar.DAY_OF_YEAR])
         if (list != null) {
-            repository.fixtures.postValue(fixtures.value)
+            Repository.fixtures.postValue(fixtures.value)
         } else {
             date[Calendar.HOUR_OF_DAY] = date.getActualMinimum(Calendar.HOUR_OF_DAY)
             date[Calendar.MINUTE] = date.getActualMinimum(Calendar.MINUTE)
@@ -31,11 +31,11 @@ class MatchesViewModel(private val repository: Repository) : ViewModel() {
             oneDayAfter[Calendar.SECOND] = oneDayAfter.getActualMinimum(Calendar.SECOND)
             oneDayAfter[Calendar.MILLISECOND] = oneDayAfter.getActualMinimum(Calendar.MILLISECOND)
 
-            repository.queryFixturesByDate(date, oneDayAfter)
+            Repository.queryFixturesByDate(date, oneDayAfter)
         }
     }
 
     fun updateMonthAndYearText(position: Int) {
-        repository.updateMonthAndYearText(position)
+        Repository.updateMonthAndYearText(position)
     }
 }

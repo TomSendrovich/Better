@@ -7,6 +7,7 @@ import com.better.model.dataHolders.*
 import com.better.utils.DateUtils
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -16,11 +17,11 @@ import kotlin.collections.ArrayList
 object Repository {
     private const val TAG = "Repository"
 
-    //    val fixtures = MutableLiveData<List<Fixture>>()
     val fixtures = MutableLiveData<HashMap<Int, List<Fixture>>>()
     val eventTipsList = MutableLiveData<List<EventTip>>()
     val monthAndYearText = MutableLiveData<String>()
-    lateinit var appUser: AppUser
+    val isBanned = MutableLiveData<Boolean>()
+    val appUser = MutableLiveData<AppUser>()
 
     init {
         fixtures.value = HashMap<Int, List<Fixture>>()
@@ -78,11 +79,13 @@ object Repository {
 
     @Suppress("UNCHECKED_CAST")
     fun loadUser(currentUser: FirebaseUser): AppUser? {
-        appUser = AppUser(
-            uid = currentUser.uid,
-            name = currentUser.displayName,
-            email = currentUser.email,
-            photoUrl = currentUser.photoUrl?.toString()
+        appUser.postValue(
+            AppUser(
+                uid = currentUser.uid,
+                name = currentUser.displayName,
+                email = currentUser.email,
+                photoUrl = currentUser.photoUrl?.toString()
+            )
         )
 
         // query user from DB
@@ -94,15 +97,21 @@ object Repository {
             .addOnSuccessListener { documents ->
                 if (documents.size() > 1) {
                     Log.wtf(TAG, "query user by uid return more than one element")
-                } else {
+                } else if (!documents.isEmpty) {
                     val userDoc = documents.first()
-                    appUser.followers =
-                        (userDoc["followers"] ?: emptyList<String>()) as List<String>
-                    appUser.following =
-                        (userDoc["following"] ?: emptyList<String>()) as List<String>
-                    appUser.eventTips =
-                        (userDoc["eventTips"] ?: emptyList<String>()) as List<String>
-                    appUser.succTips = (userDoc["succTips"] ?: 0L) as Long
+
+                    val user = appUser.value!!
+
+                    user.followers =
+                        (userDoc[FOLLOWERS] ?: emptyList<String>()) as List<String>
+                    user.following =
+                        (userDoc[FOLLOWING] ?: emptyList<String>()) as List<String>
+                    user.eventTips =
+                        (userDoc[EVENT_TIPS] ?: emptyList<String>()) as List<String>
+                    user.succTips = (userDoc[SUCC_TIPS] ?: 0L) as Long
+                    user.isAdmin = (userDoc[IS_ADMIN] ?: false) as Boolean
+
+                    appUser.postValue(user)
                 }
             }
             .addOnFailureListener { exception ->
@@ -118,6 +127,19 @@ object Repository {
         return null
     }
 
+    fun isBannedUser(uid: String) {
+        Firebase.firestore.collection(DB_COLLECTION_BLACKLIST)
+            .document(BANNED_USERS)
+            .get()
+            .addOnSuccessListener { document ->
+                val list = document["list"] as ArrayList<*>
+                if (list.contains(uid)) {
+                    isBanned.postValue(true)
+                } else {
+                    isBanned.postValue(false)
+                }
+            }
+    }
 
     //endregion
 
@@ -127,27 +149,27 @@ object Repository {
      * create new user document and save in firestore.
      * the data is taken from the user reference.
      *
-     * we store only the uid of the user (unique id given by google), because the user display name
-     * and user profile picture can be changed. we can get them from the user reference.
-     *
-     * we do not set an empty list of eventTips at the point.
+     * we do not set an empty list of eventTips.
      *
      * @see appUser
      */
     private fun createNewUserDocument() {
         val newUser = hashMapOf(
-            UID to appUser.uid
+            UID to appUser.value!!.uid,
+            NAME to appUser.value!!.name,
+            EMAIL to appUser.value!!.email,
+            IS_ADMIN to false
         )
 
         val usersRef = Firebase.firestore.collection(DB_COLLECTION_USERS)
 
         usersRef
-            .document(appUser.uid)
+            .document(appUser.value!!.uid)
             .set(newUser)
             .addOnSuccessListener {
                 Log.i(
                     TAG,
-                    "createNewUser: document ${appUser.uid} was created for user ${appUser.name}"
+                    "createNewUser: document ${appUser.value!!.uid} was created for user ${appUser.value!!.name}"
                 )
             }
             .addOnFailureListener { exception ->
@@ -157,8 +179,8 @@ object Repository {
 
     fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long) {
         val eventTip = hashMapOf(
-            UID to appUser.uid,
-            "userPic" to appUser.photoUrl,
+            UID to appUser.value!!.uid,
+            "userPic" to appUser.value!!.photoUrl,
             DESCRIPTION to description,
             "homeName" to fixture.home.name,
             "awayName" to fixture.away.name,
@@ -178,28 +200,37 @@ object Repository {
             }
     }
 
-    private fun attachEventTipToUser(doc: DocumentReference) {
-        if (appUser.eventTips.isEmpty()) {
-            appUser.eventTips = listOf(doc.id)
-        } else {
-            (appUser.eventTips as ArrayList<String>).add(doc.id)
-        }
-
+    private fun attachEventTipToUser(eventTip: DocumentReference) {
         Firebase.firestore.collection(DB_COLLECTION_USERS)
-            .document(appUser.uid)
-            .update("eventTips", appUser.eventTips)
+            .document(appUser.value!!.uid)
+            .update("eventTips", FieldValue.arrayUnion(eventTip.id))
             .addOnSuccessListener {
                 Log.i(
                     TAG,
-                    "attachEventTipToUser: succeeded for uid ${appUser.uid} and eventTip ${doc.id}"
+                    "attachEventTipToUser: succeeded for uid ${appUser.value!!.uid} and eventTip ${eventTip.id}"
                 )
             }
             .addOnFailureListener {
                 Log.e(
                     TAG,
-                    "attachEventTipToUser: failed for uid ${appUser.uid} and eventTip ${doc.id}"
+                    "attachEventTipToUser: failed for uid ${appUser.value!!.uid} and eventTip ${eventTip.id}"
                 )
             }
+    }
+
+    /**
+     * Ban any user from the app.
+     * The actual operation is adding the uid of the user to a list.
+     * The list reference is /blacklist/bannedUsers/list - array of strings.
+     *
+     * @param uid the id of the user
+     **/
+    fun banUser(uid: String) {
+        Firebase.firestore.collection(DB_COLLECTION_BLACKLIST)
+            .document(BANNED_USERS)
+            .update("list", FieldValue.arrayUnion(uid))
+            .addOnSuccessListener { Log.i(TAG, "banUser: $uid is banned successfully") }
+            .addOnFailureListener { Log.e(TAG, "banUser: ban operation is failed for $uid") }
     }
 
     //endregion

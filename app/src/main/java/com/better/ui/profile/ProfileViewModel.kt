@@ -6,12 +6,12 @@ import com.better.model.Repository
 import com.better.model.dataHolders.AppUser
 import com.better.model.dataHolders.EventTip
 
-class ProfileViewModel(private val repository: Repository) : ViewModel() {
+class ProfileViewModel : ViewModel() {
 
-    val eventTips: LiveData<List<EventTip>> = repository.eventTipsList
-    val appUser: AppUser = repository.appUser
+    val eventTips: LiveData<List<EventTip>> = Repository.eventTipsList
+    val appUser: LiveData<AppUser> = Repository.appUser
 
     fun updateEventTips() {
-        return repository.queryEventTipsByUserId(appUser.uid)
+        return Repository.queryEventTipsByUserId(this.appUser.value!!.uid)
     }
 }
