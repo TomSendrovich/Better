@@ -1,5 +1,6 @@
 package com.better.adapters
 
+import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,27 +12,41 @@ import com.better.R
 import com.better.model.dataHolders.EventTip
 import com.better.utils.AppUtils
 import com.better.utils.EventTipsDiffUtil
-import java.util.*
 
 class EventTipAdapter(
-    private var oldList: ArrayList<EventTip>,
+    private var oldList: List<EventTip>,
     private val listener: EventTipListener
 ) : RecyclerView.Adapter<EventTipAdapter.ViewHolder>() {
 
     interface EventTipListener {
         fun onItemClicked(item: EventTip)
+        fun onItemRemoveClicked(item: EventTip)
+        fun onUserBanClicked(userID: String)
     }
 
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnCreateContextMenuListener {
         val userProfilePic: ImageView = view.findViewById(R.id.viewHolder_tip_profile_picture)
         val tipValue: TextView = view.findViewById(R.id.viewHolder_tip_value)
         val description: TextView = view.findViewById(R.id.viewHolder_tip_description)
         val matchName: TextView = view.findViewById(R.id.viewHolder_match_name)
+
+        init {
+            view.setOnCreateContextMenuListener(this)
+        }
+
+        override fun onCreateContextMenu(
+            menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?
+        ) {
+            menu!!.setHeaderTitle("Admin Options")
+            menu.add(this.adapterPosition, 1, 1, "Delete Tip")
+            menu.add(this.adapterPosition, 2, 2, "Ban User")
+        }
     }
+
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -72,7 +87,17 @@ class EventTipAdapter(
         return oldList.size
     }
 
-    fun setData(newList: ArrayList<EventTip>) {
+    fun removeItem(position: Int) {
+        val tip = oldList[position]
+        listener.onItemRemoveClicked(tip)
+    }
+
+    fun banUser(position: Int) {
+        val tip = oldList[position]
+        listener.onUserBanClicked(tip.userID)
+    }
+
+    fun setData(newList: List<EventTip>) {
         val diffUtil = EventTipsDiffUtil(oldList, newList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         oldList = newList

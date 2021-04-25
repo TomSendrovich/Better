@@ -9,6 +9,18 @@ class MatchDetailsFragmentViewModel : ViewModel() {
     val eventTips: LiveData<List<EventTip>> = Repository.eventTipsList
 
     fun updateEventTipsByFixtureId(fixtureID: Long) {
-        return Repository.queryEventTipsByFixtureId(fixtureID)
+        Repository.queryEventTipsByFixtureId(fixtureID)
+    }
+
+    fun isAdmin(): Boolean {
+        return Repository.appUser.value?.isAdmin ?: false
+    }
+
+    fun deleteEventTip(item: EventTip) {
+        Repository.deleteEventTip(item)
+    }
+
+    fun banUser(userID: String) {
+        Repository.banUser(userID)
     }
 }

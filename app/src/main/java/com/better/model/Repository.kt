@@ -22,6 +22,7 @@ object Repository {
     val monthAndYearText = MutableLiveData<String>()
     val isBanned = MutableLiveData<Boolean>()
     val appUser = MutableLiveData<AppUser>()
+    val profileToShow = MutableLiveData<AppUser>()
 
     init {
         fixtures.value = HashMap<Int, List<Fixture>>()
@@ -36,7 +37,7 @@ object Repository {
             .whereLessThanOrEqualTo(FIXTURE_DATE, DateUtils.toSimpleString(to.time))
             .get()
             .addOnSuccessListener { documents ->
-                Log.i(TAG, "queried ${documents.size()} documents")
+                Log.i(TAG, "queried ${documents.size()} documents (Fixtures)")
                 val list: ArrayList<Fixture> = ArrayList()
                 val map: HashMap<Int, List<Fixture>> = fixtures.value!!
                 for (doc in documents) {
@@ -77,6 +78,38 @@ object Repository {
             }
     }
 
+    fun queryUserById(userId: String) {
+        Firebase.firestore.collection(DB_COLLECTION_USERS)
+            .whereEqualTo(UID, userId)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.size() > 1) {
+                    Log.wtf(TAG, "query user by uid return more than one element")
+                } else if (!documents.isEmpty) {
+                    val userDoc = documents.first()
+
+                    val user = AppUser(
+                        uid = userDoc[UID] as String,
+                        name = userDoc[NAME] as String?,
+                        email = userDoc[EMAIL] as String?,
+                        photoUrl = userDoc[PHOTO_URL] as String?,
+                        followers = (userDoc[FOLLOWERS] ?: emptyList<String>()) as List<String>,
+                        following = (userDoc[FOLLOWING] ?: emptyList<String>()) as List<String>,
+                        eventTips = (userDoc[EVENT_TIPS] ?: emptyList<String>()) as List<String>,
+                        succTips = (userDoc[SUCC_TIPS] ?: 0L) as Long,
+                        isAdmin = (userDoc[IS_ADMIN] ?: false) as Boolean
+                    )
+
+                    profileToShow.postValue(user)
+                    Log.d("profile", "queryUserById: ${user.name}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting user $userId: ", exception)
+            }
+    }
+
+
     @Suppress("UNCHECKED_CAST")
     fun loadUser(currentUser: FirebaseUser): AppUser? {
         appUser.postValue(
@@ -88,10 +121,7 @@ object Repository {
             )
         )
 
-        // query user from DB
-        val usersRef = Firebase.firestore.collection(DB_COLLECTION_USERS)
-
-        usersRef
+        Firebase.firestore.collection(DB_COLLECTION_USERS)
             .whereEqualTo(UID, currentUser.uid)
             .get()
             .addOnSuccessListener { documents ->
@@ -115,7 +145,7 @@ object Repository {
                 }
             }
             .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting user: ", exception)
+                Log.w(TAG, "Error getting user ${currentUser.uid}: ", exception)
             }
             .addOnCompleteListener { data ->
                 Log.d(TAG, "queryUser: completed with ${data.result?.size()} results")
@@ -141,9 +171,9 @@ object Repository {
             }
     }
 
-    //endregion
+//endregion
 
-    //region Write Document to firestore
+//region Write Document to firestore
 
     /**
      * create new user document and save in firestore.
@@ -158,6 +188,7 @@ object Repository {
             UID to appUser.value!!.uid,
             NAME to appUser.value!!.name,
             EMAIL to appUser.value!!.email,
+            PHOTO_URL to appUser.value!!.photoUrl,
             IS_ADMIN to false
         )
 
@@ -180,12 +211,12 @@ object Repository {
     fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long) {
         val eventTip = hashMapOf(
             UID to appUser.value!!.uid,
-            "userPic" to appUser.value!!.photoUrl,
+            USER_PIC to appUser.value!!.photoUrl,
             DESCRIPTION to description,
-            "homeName" to fixture.home.name,
-            "awayName" to fixture.away.name,
-            "homeLogo" to fixture.home.logo,
-            "awayLogo" to fixture.away.logo,
+            HOME_NAME to fixture.home.name,
+            AWAY_NAME to fixture.away.name,
+            HOME_LOGO to fixture.home.logo,
+            AWAY_LOGO to fixture.away.logo,
             FIXTURE to fixture.id,
             TIP_VALUE to tipValue,
         )
@@ -233,9 +264,42 @@ object Repository {
             .addOnFailureListener { Log.e(TAG, "banUser: ban operation is failed for $uid") }
     }
 
-    //endregion
+//endregion
 
-    //region Create Data Classes from firebase document
+//region Delete Documents from firestore
+
+    fun deleteEventTip(eventTip: EventTip) {
+        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).document(eventTip.tipID)
+            .delete()
+            .addOnSuccessListener {
+                Log.d(TAG, "EventTip successfully deleted!")
+                removeEventTipFromUser(eventTip.tipID, eventTip.userID)
+            }
+            .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+    }
+
+    private fun removeEventTipFromUser(eventTipId: String, userId: String) {
+        Firebase.firestore.collection(DB_COLLECTION_USERS)
+            .document(userId)
+            .update("eventTips", FieldValue.arrayRemove(eventTipId))
+            .addOnSuccessListener {
+                Log.i(
+                    TAG,
+                    "removeEventTipFromUser: succeeded for uid ${appUser.value!!.uid} and eventTip $eventTipId"
+                )
+            }
+            .addOnFailureListener {
+                Log.e(
+                    TAG,
+                    "removeEventTipFromUser: failed for uid ${appUser.value!!.uid} and eventTip $eventTipId"
+                )
+            }
+    }
+
+
+//endregion
+
+//region Create Data Classes from firebase document
 
     private fun createFixtureFromDocument(doc: QueryDocumentSnapshot): Fixture {
 //        Log.d(TAG, "${doc.id} => ${doc.data}")
@@ -303,19 +367,19 @@ object Repository {
         return EventTip(
             tipID = doc.id,
             userID = doc[UID] as String,
-            userPic = doc["userPic"] as String,
+            userPic = doc[USER_PIC] as String,
             fixtureID = doc[FIXTURE] as Long,
-            homeName = doc["homeName"] as String,
-            awayName = doc["awayName"] as String,
-            homeLogo = doc["homeLogo"] as String,
-            awayLogo = doc["awayLogo"] as String,
+            homeName = doc[HOME_NAME] as String,
+            awayName = doc[AWAY_NAME] as String,
+            homeLogo = doc[HOME_LOGO] as String,
+            awayLogo = doc[AWAY_LOGO] as String,
             description = doc[DESCRIPTION] as String,
             tipValue = doc[TIP_VALUE] as Long,
             isHit = doc[IS_HIT] as Boolean?
         )
     }
 
-    //endregion
+//endregion
 
     //region postValue MutableLiveData Objects
     fun updateMonthAndYearText(position: Int) {
@@ -332,5 +396,5 @@ object Repository {
     private fun updateEventTipsList(list: ArrayList<EventTip>) {
         eventTipsList.postValue(list)
     }
-    //endregion
+//endregion
 }
