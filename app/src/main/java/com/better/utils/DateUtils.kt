@@ -27,13 +27,15 @@ object DateUtils {
     }
 
     fun getWeekDayFromCalendar(calendar: Calendar): String {
-        val formattedDate = DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH).format(calendar.time)
+        val formattedDate =
+            DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH).format(calendar.time)
         val splitDate = formattedDate.split(',')
         return splitDate[0]
     }
 
     fun getMonthAndYearFromCalendar(calendar: Calendar): String {
-        val formattedDate = DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH).format(calendar.time)
+        val formattedDate =
+            DateFormat.getDateInstance(DateFormat.FULL, Locale.ENGLISH).format(calendar.time)
         val splitDate = formattedDate.split(',')
         val year = splitDate[2]
         val month = splitDate[1].split(' ')[1]
@@ -48,6 +50,6 @@ object DateUtils {
     fun getHourFromCalendar(calendar: Calendar): String {
         val hours = calendar.get(Calendar.HOUR_OF_DAY)
         val minutes = calendar.get(Calendar.MINUTE)
-        return String.format("%02d:%02d", hours, minutes);
+        return String.format("%02d:%02d", hours, minutes)
     }
 }

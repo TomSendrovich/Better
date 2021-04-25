@@ -70,8 +70,7 @@ class MainActivity : AppCompatActivity() {
             setOf(
                 R.id.nav_feed,
                 R.id.nav_matches,
-                R.id.nav_about,
-                R.id.nav_profile
+                R.id.nav_about
             ),
             drawerLayout
         )
@@ -84,6 +83,12 @@ class MainActivity : AppCompatActivity() {
         val navTitle = headerView.findViewById<View>(R.id.nav_header_title) as TextView
         val navSubtitle = headerView.findViewById<View>(R.id.num_header_subtitle) as TextView
         val adminSubtitle = headerView.findViewById<View>(R.id.admin_header_subtitle) as TextView
+
+        imageViewUser.setOnClickListener {
+            // navigate to profile fragment
+            navController.navigate(R.id.nav_profile)
+            drawerLayout.close()
+        }
 
         viewModel.appUser.observe(this, { user ->
             navTitle.text = user.name

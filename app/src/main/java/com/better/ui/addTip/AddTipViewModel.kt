@@ -16,9 +16,7 @@ class AddTipViewModel : ViewModel() {
         updateEventTipsByFixtureId(fixture.id)
     }
 
-    private fun createEventTipDocument(
-        fixture: Fixture, description: String, tipValue: Long
-    ) {
+    private fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long) {
         Repository.createEventTipDocument(fixture, description, tipValue)
     }
 

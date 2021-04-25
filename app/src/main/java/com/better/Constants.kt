@@ -9,6 +9,10 @@ const val VIEW_PAGER = "viewPager"
 
 const val PAGE_SELECTED_DEFAULT = 7
 
+// Admin Options
+const val MENU_DELETE = 1
+const val MENU_BAN = 2
+
 const val DB_COLLECTION_FIXTURES: String = "fixtures"
 const val DB_COLLECTION_LEAGUES: String = "leagues"
 const val DB_COLLECTION_TEAMS: String = "teams"
@@ -45,11 +49,17 @@ const val TEAMS: String = "teams"
 const val LOGO: String = "logo"
 const val NAME: String = "name"
 const val EMAIL: String = "email"
+const val PHOTO_URL: String = "photoUrl"
 const val WINNER: String = "winner"
 const val DESCRIPTION: String = "description"
 const val TIP_VALUE: String = "tipValue"
 const val IS_HIT: String = "isHit"
 const val BANNED_USERS: String = "bannedUsers"
+const val USER_PIC: String = "userPic"
+const val HOME_NAME: String = "$HOME$NAME"
+const val AWAY_NAME: String = "$AWAY$NAME"
+const val HOME_LOGO: String = "$HOME$LOGO"
+const val AWAY_LOGO: String = "$AWAY$LOGO"
 
 const val FIXTURE_ID: String = "${FIXTURE}.${ID}"
 const val FIXTURE_DATE: String = "${FIXTURE}.${DATE}"
