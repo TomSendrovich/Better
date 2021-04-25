@@ -1,10 +1,12 @@
 package com.better.ui.matchDetails
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -86,6 +88,7 @@ class MatchDetailsFragment : Fragment() {
                 }
 
                 override fun onItemLongClick(item: EventTip): Boolean {
+                    showAlertDialog(item)
                     return true
                 }
             })
@@ -109,6 +112,24 @@ class MatchDetailsFragment : Fragment() {
             */
             (recyclerViewMatch.adapter as EventTipAdapter).notifyDataSetChanged()
         })
+    }
+
+    private fun showAlertDialog(item: EventTip) {
+        if (viewModel.isAdmin()) {
+            val alert = AlertDialog.Builder(requireContext())
+            alert.setTitle("Delete Tip")
+            alert.setMessage("Are you sure you want to delete?")
+
+            alert.setPositiveButton("Yes") { _, _ ->
+                viewModel.deleteEventTip(item)
+                viewModel.updateEventTipsByFixtureId(item.fixtureID)
+                Toast.makeText(requireContext(), "Deleted", Toast.LENGTH_SHORT).show()
+            }
+
+            alert.setNegativeButton("No") { _, _ -> }
+
+            alert.show()
+        }
     }
 
     companion object {

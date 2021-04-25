@@ -1,9 +1,11 @@
 package com.better.ui.profile
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -55,6 +57,7 @@ class ProfileFragment : Fragment() {
                 }
 
                 override fun onItemLongClick(item: EventTip): Boolean {
+                    showAlertDialog(item)
                     return true
                 }
             })
@@ -65,5 +68,27 @@ class ProfileFragment : Fragment() {
             val list = viewModel.eventTips.value
             (profileRecyclerView.adapter as EventTipAdapter).setData(list as ArrayList<EventTip>)
         })
+    }
+
+    private fun showAlertDialog(item: EventTip) {
+        if (viewModel.isAdmin()) {
+            val alert = AlertDialog.Builder(requireContext())
+            alert.setTitle("Delete Tip")
+            alert.setMessage("Are you sure you want to delete?")
+
+            alert.setPositiveButton("Yes") { _, _ ->
+                viewModel.deleteEventTip(item)
+                viewModel.updateEventTips()
+
+                //decrement tipCount of user by 1
+                numTipsValue.text = numTipsValue.text.toString().toInt().dec().toString()
+
+                Toast.makeText(requireContext(), "Deleted", Toast.LENGTH_SHORT).show()
+            }
+
+            alert.setNegativeButton("No") { _, _ -> }
+
+            alert.show()
+        }
     }
 }

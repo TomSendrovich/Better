@@ -22,4 +22,12 @@ class ProfileViewModel : ViewModel() {
             Repository.queryUserById(userID)
         }
     }
+
+    fun isAdmin(): Boolean {
+        return Repository.appUser.value?.isAdmin ?: false
+    }
+
+    fun deleteEventTip(item: EventTip) {
+        Repository.deleteEventTip(item)
+    }
 }

@@ -268,6 +268,35 @@ object Repository {
 
     //region Delete Documents from firestore
 
+    fun deleteEventTip(eventTip: EventTip) {
+        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).document(eventTip.tipID)
+            .delete()
+            .addOnSuccessListener {
+                Log.d(TAG, "EventTip successfully deleted!")
+                removeEventTipFromUser(eventTip.tipID, eventTip.userID)
+            }
+            .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+    }
+
+    private fun removeEventTipFromUser(eventTipId: String, userId: String) {
+        Firebase.firestore.collection(DB_COLLECTION_USERS)
+            .document(userId)
+            .update("eventTips", FieldValue.arrayRemove(eventTipId))
+            .addOnSuccessListener {
+                Log.i(
+                    TAG,
+                    "removeEventTipFromUser: succeeded for uid ${appUser.value!!.uid} and eventTip $eventTipId"
+                )
+            }
+            .addOnFailureListener {
+                Log.e(
+                    TAG,
+                    "removeEventTipFromUser: failed for uid ${appUser.value!!.uid} and eventTip $eventTipId"
+                )
+            }
+    }
+
+
     //endregion
 
     //region Create Data Classes from firebase document
