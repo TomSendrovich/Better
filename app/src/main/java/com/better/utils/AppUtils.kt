@@ -14,4 +14,13 @@ object AppUtils {
             .circleCrop()
             .into(imgView)
     }
+
+    fun bindImage(imgView: ImageView, drawable: Int?) {
+        Glide
+            .with(imgView.context)
+            .load(drawable)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .circleCrop()
+            .into(imgView)
+    }
 }

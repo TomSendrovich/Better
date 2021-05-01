@@ -34,4 +34,8 @@ class ProfileViewModel : ViewModel() {
     fun banUser(userID: String) {
         Repository.banUser(userID)
     }
+
+    fun isMyProfile(): Boolean {
+        return profileToShow.value?.uid == Repository.appUser.value?.uid
+    }
 }

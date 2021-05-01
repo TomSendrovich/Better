@@ -2,10 +2,12 @@ package com.better.ui.profile
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -39,8 +41,12 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initRecyclerView()
+        initObservers(view)
         viewModel.updateUser(args.userId)
+    }
 
+    private fun initObservers(view: View) {
         viewModel.profileToShow.observe(viewLifecycleOwner, { user ->
             if (user != null) {
                 AppUtils.bindImage(view.profile_image, user.photoUrl)
@@ -54,6 +60,13 @@ class ProfileFragment : Fragment() {
             }
         })
 
+        viewModel.eventTips.observe(viewLifecycleOwner, {
+            val list = viewModel.eventTips.value
+            (profileRecyclerView.adapter as EventTipAdapter).setData(list as ArrayList<EventTip>)
+        })
+    }
+
+    private fun initRecyclerView() {
         profileRecyclerView.apply {
             adapter = EventTipAdapter(ArrayList(), object : EventTipAdapter.EventTipListener {
                 override fun onItemClicked(item: EventTip) {}
@@ -62,11 +75,6 @@ class ProfileFragment : Fragment() {
             })
             layoutManager = LinearLayoutManager(context)
         }
-
-        viewModel.eventTips.observe(viewLifecycleOwner, {
-            val list = viewModel.eventTips.value
-            (profileRecyclerView.adapter as EventTipAdapter).setData(list as ArrayList<EventTip>)
-        })
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {

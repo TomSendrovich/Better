@@ -97,6 +97,11 @@ class EventTipAdapter(
         listener.onUserBanClicked(tip.userID)
     }
 
+    fun clearList() {
+        oldList = emptyList()
+        notifyDataSetChanged()
+    }
+
     fun setData(newList: List<EventTip>) {
         val diffUtil = EventTipsDiffUtil(oldList, newList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
