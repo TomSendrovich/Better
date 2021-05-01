@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.better.*
 import com.better.model.dataHolders.*
 import com.better.utils.DateUtils
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
@@ -189,6 +190,7 @@ object Repository {
             NAME to appUser.value!!.name,
             EMAIL to appUser.value!!.email,
             PHOTO_URL to appUser.value!!.photoUrl,
+            CREATED to FieldValue.serverTimestamp(),
             IS_ADMIN to false
         )
 
@@ -219,6 +221,7 @@ object Repository {
             AWAY_LOGO to fixture.away.logo,
             FIXTURE to fixture.id,
             TIP_VALUE to tipValue,
+            CREATED to FieldValue.serverTimestamp()
         )
         Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS)
             .add(eventTip)
@@ -375,7 +378,8 @@ object Repository {
             awayLogo = doc[AWAY_LOGO] as String,
             description = doc[DESCRIPTION] as String,
             tipValue = doc[TIP_VALUE] as Long,
-            isHit = doc[IS_HIT] as Boolean?
+            isHit = doc[IS_HIT] as Boolean?,
+            created = (doc[CREATED] ?: Timestamp.now()) as Timestamp
         )
     }
 

@@ -1,5 +1,7 @@
 package com.better.model.dataHolders
 
+import com.google.firebase.Timestamp
+
 /**
  * Represents an event tip.
  * @property tipID id of the tip
@@ -29,7 +31,8 @@ data class EventTip(
     var awayLogo: String,
     var description: String?,
     var tipValue: Long,
-    var isHit: Boolean?
+    var isHit: Boolean?,
+    var created: Timestamp
 )
 
 
