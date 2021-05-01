@@ -33,6 +33,7 @@ class EventTipAdapter(
         val tipValue: TextView = view.findViewById(R.id.viewHolder_tip_value)
         val description: TextView = view.findViewById(R.id.viewHolder_tip_description)
         val matchName: TextView = view.findViewById(R.id.viewHolder_match_name)
+        val winnerTeamLogo: ImageView = view.findViewById(R.id.viewHolder_tip_team_winner_logo)
 
         init {
             view.setOnCreateContextMenuListener(this)
@@ -73,9 +74,18 @@ class EventTipAdapter(
         viewHolder.matchName.text = "${eventTip.homeName} - ${eventTip.awayName}"
 
         when (eventTip.tipValue) {
-            1L -> viewHolder.tipValue.text = "Tip: Home Wins"
-            2L -> viewHolder.tipValue.text = "Tip: Away Wins"
-            0L -> viewHolder.tipValue.text = "Tip: Draw"
+            1L -> {
+                viewHolder.tipValue.text = "Tip: ${eventTip.homeName} Wins"
+                AppUtils.bindImage(viewHolder.winnerTeamLogo, eventTip.homeLogo)
+            }
+            2L -> {
+                viewHolder.tipValue.text = "Tip: ${eventTip.awayName} Wins"
+                AppUtils.bindImage(viewHolder.winnerTeamLogo, eventTip.awayLogo)
+            }
+            0L -> {
+                viewHolder.tipValue.text = "Tip: Draw"
+                AppUtils.bindImage(viewHolder.winnerTeamLogo, R.drawable.draw)
+            }
         }
 
         viewHolder.itemView.setOnClickListener {
