@@ -213,6 +213,7 @@ object Repository {
     fun createEventTipDocument(fixture: Fixture, description: String, tipValue: Long) {
         val eventTip = hashMapOf(
             UID to appUser.value!!.uid,
+            USER_NAME to appUser.value!!.name,
             USER_PIC to appUser.value!!.photoUrl,
             DESCRIPTION to description,
             HOME_NAME to fixture.home.name,
@@ -370,6 +371,7 @@ object Repository {
         return EventTip(
             tipID = doc.id,
             userID = doc[UID] as String,
+            userName = (doc[USER_NAME] ?: "Unknown User") as String,
             userPic = doc[USER_PIC] as String,
             fixtureID = doc[FIXTURE] as Long,
             homeName = doc[HOME_NAME] as String,

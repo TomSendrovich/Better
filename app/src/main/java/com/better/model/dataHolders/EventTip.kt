@@ -23,6 +23,7 @@ import com.google.firebase.Timestamp
 data class EventTip(
     var tipID: String,
     var userID: String,
+    var userName: String,
     var userPic: String,
     var fixtureID: Long,
     var homeName: String,

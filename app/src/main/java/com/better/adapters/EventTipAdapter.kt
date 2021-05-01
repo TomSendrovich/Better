@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.better.R
 import com.better.model.dataHolders.EventTip
 import com.better.utils.AppUtils
+import com.better.utils.DateUtils
 import com.better.utils.EventTipsDiffUtil
 
 class EventTipAdapter(
@@ -34,6 +35,8 @@ class EventTipAdapter(
         val description: TextView = view.findViewById(R.id.viewHolder_tip_description)
         val matchName: TextView = view.findViewById(R.id.viewHolder_match_name)
         val winnerTeamLogo: ImageView = view.findViewById(R.id.viewHolder_tip_team_winner_logo)
+        val userName: TextView = view.findViewById(R.id.viewHolder_tip_user_name)
+        val timeCreated: TextView = view.findViewById(R.id.viewHolder_tip_time_created)
 
         init {
             view.setOnCreateContextMenuListener(this)
@@ -72,6 +75,8 @@ class EventTipAdapter(
 
         AppUtils.bindImage(viewHolder.userProfilePic, eventTip.userPic)
         viewHolder.matchName.text = "${eventTip.homeName} - ${eventTip.awayName}"
+        viewHolder.userName.text = eventTip.userName
+        viewHolder.timeCreated.text = DateUtils.toPostCreatedString(eventTip.created.toDate())
 
         when (eventTip.tipValue) {
             1L -> {

@@ -20,10 +20,9 @@
 
             <ImageView
                 android:id="@+id/viewHolder_tip_profile_picture"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 app:srcCompat="@drawable/ic_profile" />
@@ -36,21 +35,53 @@
                 android:layout_marginStart="16dp"
                 android:layout_toEndOf="@+id/viewHolder_tip_profile_picture"
                 android:padding="4dp"
+                android:textColor="#0095ff"
+                android:textSize="18sp"
                 android:text="Match Name"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/viewHolder_tip_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewHolder_match_name"
+                android:padding="4dp"
+                android:layout_alignStart="@+id/viewHolder_match_name"
+                android:text="Israel Israeli"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/viewHolder_tip_dot_separator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewHolder_match_name"
+                android:layout_toEndOf="@+id/viewHolder_tip_user_name"
+                android:padding="4dp"
+                android:text="•"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/viewHolder_tip_time_created"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewHolder_match_name"
+                android:padding="4dp"
+                android:layout_toEndOf="@+id/viewHolder_tip_dot_separator"
+                android:text="Sat 22:05"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/viewHolder_tip_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/viewHolder_match_name"
+                android:layout_below="@+id/viewHolder_tip_user_name"
                 android:layout_alignStart="@+id/viewHolder_match_name"
                 android:ellipsize="end"
                 android:maxEms="15"
                 android:maxLines="3"
                 android:padding="4dp"
-                android:text="Description"
-                android:textSize="18sp" />
+                android:text="Tip Description"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/viewHolder_tip_value"
@@ -60,7 +91,8 @@
                 android:layout_alignStart="@+id/viewHolder_tip_description"
                 android:padding="4dp"
                 android:text="Tip Value"
-                android:textColor="@color/green_500"
+                android:textSize="12sp"
+                android:textColor="#0095ff"
                 android:textStyle="bold" />
 
             <ImageView
@@ -68,10 +100,10 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
+                android:layout_alignBottom="@id/viewHolder_tip_value"
                 android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                app:srcCompat="@drawable/ic_menu_soccer" />
+                android:layout_marginBottom="16dp"
+                app:srcCompat="@drawable/draw" />
 
         </RelativeLayout>
 

@@ -19,6 +19,12 @@ object DateUtils {
         return format.format(date)
     }
 
+    fun toPostCreatedString(date: Date): String {
+        val dateFormat = "EEE HH:mm"
+        val format = SimpleDateFormat(dateFormat, Locale.US)
+        return format.format(date)
+    }
+
     fun getCalendarFromTimestamp(timestamp: Long): Calendar {
         val cal = Calendar.getInstance()
         cal.timeInMillis = timestamp * 1000
