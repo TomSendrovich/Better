@@ -8,6 +8,7 @@ const val SHARED_PREF_PAGE_SELECTED = "pageSelected"
 const val VIEW_PAGER = "viewPager"
 
 const val PAGE_SELECTED_DEFAULT = 7
+const val EVENT_TIPS_QUERY_LIMIT = 50L
 
 // Admin Options
 const val MENU_DELETE = 1

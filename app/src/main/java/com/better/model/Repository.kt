@@ -9,6 +9,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -54,7 +55,11 @@ object Repository {
     }
 
     fun queryEventTipsByFixtureId(fixtureId: Long) {
-        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).whereEqualTo(FIXTURE, fixtureId)
+        Firebase.firestore
+            .collection(DB_COLLECTION_EVENT_TIPS)
+            .whereEqualTo(FIXTURE, fixtureId)
+            .orderBy(CREATED, Query.Direction.DESCENDING)
+            .limit(EVENT_TIPS_QUERY_LIMIT)
             .get()
             .addOnSuccessListener { documents ->
                 val list: ArrayList<EventTip> = ArrayList()
@@ -67,7 +72,27 @@ object Repository {
     }
 
     fun queryEventTipsByUserId(userId: String) {
-        Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).whereEqualTo(UID, userId)
+        Firebase.firestore
+            .collection(DB_COLLECTION_EVENT_TIPS)
+            .whereEqualTo(UID, userId)
+            .orderBy(CREATED, Query.Direction.DESCENDING)
+            .limit(EVENT_TIPS_QUERY_LIMIT)
+            .get()
+            .addOnSuccessListener { documents ->
+                val list: ArrayList<EventTip> = ArrayList()
+                for (doc in documents) {
+                    val eventTip = createEventTipFromDocument(doc)
+                    list.add(eventTip)
+                }
+                updateEventTipsList(list)
+            }
+    }
+
+    fun queryFeedEventTips() {
+        Firebase.firestore
+            .collection(DB_COLLECTION_EVENT_TIPS)
+            .orderBy(CREATED, Query.Direction.DESCENDING)
+            .limit(EVENT_TIPS_QUERY_LIMIT)
             .get()
             .addOnSuccessListener { documents ->
                 val list: ArrayList<EventTip> = ArrayList()
@@ -174,7 +199,7 @@ object Repository {
 
 //endregion
 
-//region Write Document to firestore
+    //region Write Document to firestore
 
     /**
      * create new user document and save in firestore.
@@ -270,7 +295,7 @@ object Repository {
 
 //endregion
 
-//region Delete Documents from firestore
+    //region Delete Documents from firestore
 
     fun deleteEventTip(eventTip: EventTip) {
         Firebase.firestore.collection(DB_COLLECTION_EVENT_TIPS).document(eventTip.tipID)
@@ -303,7 +328,7 @@ object Repository {
 
 //endregion
 
-//region Create Data Classes from firebase document
+    //region Create Data Classes from firebase document
 
     private fun createFixtureFromDocument(doc: QueryDocumentSnapshot): Fixture {
 //        Log.d(TAG, "${doc.id} => ${doc.data}")

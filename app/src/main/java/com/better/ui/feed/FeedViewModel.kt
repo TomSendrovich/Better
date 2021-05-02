@@ -1,13 +1,31 @@
 package com.better.ui.feed
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.better.model.Repository
+import com.better.model.dataHolders.EventTip
 
 class FeedViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is feed Fragment"
+    val eventTips: LiveData<List<EventTip>> = Repository.eventTipsList
+
+    fun updateEventTips() {
+        Repository.queryFeedEventTips()
     }
-    val text: LiveData<String> = _text
+
+    fun isAdmin(): Boolean {
+        return Repository.appUser.value?.isAdmin ?: false
+    }
+
+    fun deleteEventTip(item: EventTip) {
+        Repository.deleteEventTip(item)
+    }
+
+    fun banUser(userID: String) {
+        Repository.banUser(userID)
+    }
+
+    fun queryFeedEventTips(){
+        Repository.queryFeedEventTips()
+    }
 }
