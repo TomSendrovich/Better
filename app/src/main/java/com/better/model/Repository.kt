@@ -104,6 +104,7 @@ object Repository {
             }
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun queryUserById(userId: String) {
         Firebase.firestore.collection(DB_COLLECTION_USERS)
             .whereEqualTo(UID, userId)

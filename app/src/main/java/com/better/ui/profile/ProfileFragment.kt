@@ -2,12 +2,11 @@ package com.better.ui.profile
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +24,8 @@ import kotlinx.android.synthetic.main.fragment_profile.view.*
 class ProfileFragment : Fragment() {
 
     private lateinit var viewModel: ProfileViewModel
+    private lateinit var followBtn: Button
+    private lateinit var viewAction: View
     private val args by navArgs<ProfileFragmentArgs>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +36,12 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        val view = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        followBtn = view.findViewById(R.id.followBtn)
+        viewAction = view.findViewById(R.id.view_action)
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,7 +55,7 @@ class ProfileFragment : Fragment() {
     private fun initObservers(view: View) {
         viewModel.profileToShow.observe(viewLifecycleOwner, { user ->
             if (user != null) {
-                AppUtils.bindImage(view.profile_image, user.photoUrl)
+                AppUtils.bindImageCrop(view.profile_image, user.photoUrl)
                 view.profile_fullName.text = user.name
 
                 numTipsValue.text = user.eventTips.size.toString()
@@ -57,6 +63,11 @@ class ProfileFragment : Fragment() {
                 numFollowingValue.text = user.following.size.toString()
 
                 viewModel.updateEventTips()
+
+                if (viewModel.isMyProfile()) {
+                    viewAction.visibility = View.GONE
+                    followBtn.visibility = View.GONE
+                }
             }
         })
 

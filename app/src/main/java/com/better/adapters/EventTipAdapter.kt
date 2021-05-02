@@ -73,7 +73,7 @@ class EventTipAdapter(
             viewHolder.description.text = eventTip.description
         }
 
-        AppUtils.bindImage(viewHolder.userProfilePic, eventTip.userPic)
+        AppUtils.bindImageCrop(viewHolder.userProfilePic, eventTip.userPic)
         viewHolder.matchName.text = "${eventTip.homeName} - ${eventTip.awayName}"
         viewHolder.userName.text = eventTip.userName
         viewHolder.timeCreated.text = DateUtils.toPostCreatedString(eventTip.created.toDate())
