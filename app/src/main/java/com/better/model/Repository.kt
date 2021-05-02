@@ -264,7 +264,7 @@ object Repository {
     private fun attachEventTipToUser(eventTip: DocumentReference) {
         Firebase.firestore.collection(DB_COLLECTION_USERS)
             .document(appUser.value!!.uid)
-            .update("eventTips", FieldValue.arrayUnion(eventTip.id))
+            .update(EVENT_TIPS, FieldValue.arrayUnion(eventTip.id))
             .addOnSuccessListener {
                 Log.i(
                     TAG,
@@ -276,6 +276,54 @@ object Repository {
                     TAG,
                     "attachEventTipToUser: failed for uid ${appUser.value!!.uid} and eventTip ${eventTip.id}"
                 )
+            }
+    }
+
+    fun addFollowing(userToFollow: String) {
+        Firebase.firestore.collection(DB_COLLECTION_USERS)
+            .document(appUser.value!!.uid)
+            .update(FOLLOWING, FieldValue.arrayUnion(userToFollow))
+            .addOnSuccessListener {
+                Log.i(TAG, "followUser: succeeded to follow $userToFollow")
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "followUser: failed to follow $userToFollow")
+            }
+    }
+
+    fun addFollower(userToFollow: String) {
+        Firebase.firestore.collection(DB_COLLECTION_USERS)
+            .document(userToFollow)
+            .update(FOLLOWERS, FieldValue.arrayUnion(appUser.value!!.uid))
+            .addOnSuccessListener {
+                Log.i(TAG, "addFollower: succeeded to follow $userToFollow")
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "addFollower: failed to follow $userToFollow")
+            }
+    }
+
+    fun removeFollowing(userToFollow: String) {
+        Firebase.firestore.collection(DB_COLLECTION_USERS)
+            .document(appUser.value!!.uid)
+            .update(FOLLOWING, FieldValue.arrayRemove(userToFollow))
+            .addOnSuccessListener {
+                Log.i(TAG, "followUser: succeeded to follow $userToFollow")
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "followUser: failed to follow $userToFollow")
+            }
+    }
+
+    fun removeFollower(userToFollow: String) {
+        Firebase.firestore.collection(DB_COLLECTION_USERS)
+            .document(userToFollow)
+            .update(FOLLOWERS, FieldValue.arrayRemove(appUser.value!!.uid))
+            .addOnSuccessListener {
+                Log.i(TAG, "addFollower: succeeded to follow $userToFollow")
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "addFollower: failed to follow $userToFollow")
             }
     }
 

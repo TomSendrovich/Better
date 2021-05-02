@@ -38,4 +38,36 @@ class ProfileViewModel : ViewModel() {
     fun isMyProfile(): Boolean {
         return profileToShow.value?.uid == Repository.appUser.value?.uid
     }
+
+    fun isFollowingUser(): Boolean {
+        return Repository.appUser.value!!.following.contains(profileToShow.value!!.uid)
+    }
+
+    fun onFollowBtnClicked() {
+        addFollowingToLocalAppUser()
+
+        Repository.addFollowing(profileToShow.value!!.uid)
+        Repository.addFollower(profileToShow.value!!.uid)
+        updateUser(profileToShow.value!!.uid)
+    }
+
+    fun onUnFollowBtnClicked() {
+        removeFollowingFromLocalAppUser()
+
+        Repository.removeFollowing(profileToShow.value!!.uid)
+        Repository.removeFollower(profileToShow.value!!.uid)
+        updateUser(profileToShow.value!!.uid)
+    }
+
+    private fun addFollowingToLocalAppUser() {
+        val list = Repository.appUser.value!!.following as ArrayList<String>
+        list.add(profileToShow.value!!.uid)
+        Repository.appUser.postValue(Repository.appUser.value)
+    }
+
+    private fun removeFollowingFromLocalAppUser() {
+        val list = Repository.appUser.value!!.following as ArrayList<String>
+        list.remove(profileToShow.value!!.uid)
+        Repository.appUser.postValue(Repository.appUser.value)
+    }
 }

@@ -25,6 +25,7 @@ class ProfileFragment : Fragment() {
 
     private lateinit var viewModel: ProfileViewModel
     private lateinit var followBtn: Button
+    private lateinit var unFollowBtn: Button
     private lateinit var viewAction: View
     private val args by navArgs<ProfileFragmentArgs>()
 
@@ -34,11 +35,12 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
         followBtn = view.findViewById(R.id.followBtn)
+        unFollowBtn = view.findViewById(R.id.unFollowBtn)
         viewAction = view.findViewById(R.id.view_action)
 
         return view
@@ -49,7 +51,13 @@ class ProfileFragment : Fragment() {
 
         initRecyclerView()
         initObservers(view)
+        addEventListeners()
         viewModel.updateUser(args.userId)
+    }
+
+    private fun addEventListeners() {
+        followBtn.setOnClickListener { viewModel.onFollowBtnClicked() }
+        unFollowBtn.setOnClickListener { viewModel.onUnFollowBtnClicked() }
     }
 
     private fun initObservers(view: View) {
@@ -67,6 +75,18 @@ class ProfileFragment : Fragment() {
                 if (viewModel.isMyProfile()) {
                     viewAction.visibility = View.GONE
                     followBtn.visibility = View.GONE
+                    unFollowBtn.visibility = View.GONE
+                } else {
+                    viewAction.visibility = View.VISIBLE
+
+                    // we display another user profile. handle which btn to display
+                    if (viewModel.isFollowingUser()) {
+                        followBtn.visibility = View.GONE
+                        unFollowBtn.visibility = View.VISIBLE
+                    } else {
+                        followBtn.visibility = View.VISIBLE
+                        unFollowBtn.visibility = View.GONE
+                    }
                 }
             }
         })
