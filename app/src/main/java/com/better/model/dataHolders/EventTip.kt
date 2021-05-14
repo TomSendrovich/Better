@@ -30,10 +30,11 @@ data class EventTip(
     var awayName: String,
     var homeLogo: String,
     var awayLogo: String,
+    var league: Long,
     var description: String?,
     var tipValue: Long,
     var isHit: Boolean?,
-    var created: Timestamp
+    var created: Timestamp,
 )
 
 

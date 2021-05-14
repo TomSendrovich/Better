@@ -246,6 +246,7 @@ object Repository {
             AWAY_NAME to fixture.away.name,
             HOME_LOGO to fixture.home.logo,
             AWAY_LOGO to fixture.away.logo,
+            LEAGUE to fixture.league,
             FIXTURE to fixture.id,
             TIP_VALUE to tipValue,
             CREATED to FieldValue.serverTimestamp()
@@ -452,6 +453,7 @@ object Repository {
             awayName = doc[AWAY_NAME] as String,
             homeLogo = doc[HOME_LOGO] as String,
             awayLogo = doc[AWAY_LOGO] as String,
+            league = (doc[LEAGUE] ?: 0L) as Long,
             description = doc[DESCRIPTION] as String,
             tipValue = doc[TIP_VALUE] as Long,
             isHit = doc[IS_HIT] as Boolean?,
