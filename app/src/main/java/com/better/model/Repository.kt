@@ -25,6 +25,7 @@ object Repository {
     val isBanned = MutableLiveData<Boolean>()
     val appUser = MutableLiveData<AppUser>()
     val profileToShow = MutableLiveData<AppUser>()
+    val leagues = MutableLiveData<List<League>>()
 
     init {
         fixtures.value = HashMap<Int, List<Fixture>>()
@@ -54,10 +55,10 @@ object Repository {
             }
     }
 
-    fun queryEventTipsByFixtureId(fixtureId: Long) {
+    fun queryEventTipsByFixtureId(fixtureID: Long) {
         Firebase.firestore
             .collection(DB_COLLECTION_EVENT_TIPS)
-            .whereEqualTo(FIXTURE, fixtureId)
+            .whereEqualTo(FIXTURE, fixtureID)
             .orderBy(CREATED, Query.Direction.DESCENDING)
             .limit(EVENT_TIPS_QUERY_LIMIT)
             .get()
@@ -71,10 +72,10 @@ object Repository {
             }
     }
 
-    fun queryEventTipsByUserId(userId: String) {
+    fun queryEventTipsByUserId(userID: String) {
         Firebase.firestore
             .collection(DB_COLLECTION_EVENT_TIPS)
-            .whereEqualTo(UID, userId)
+            .whereEqualTo(UID, userID)
             .orderBy(CREATED, Query.Direction.DESCENDING)
             .limit(EVENT_TIPS_QUERY_LIMIT)
             .get()
@@ -105,9 +106,9 @@ object Repository {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun queryUserById(userId: String) {
+    fun queryUserById(userID: String) {
         Firebase.firestore.collection(DB_COLLECTION_USERS)
-            .whereEqualTo(UID, userId)
+            .whereEqualTo(UID, userID)
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.size() > 1) {
@@ -132,7 +133,23 @@ object Repository {
                 }
             }
             .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting user $userId: ", exception)
+                Log.w(TAG, "Error getting user $userID: ", exception)
+            }
+    }
+
+    fun queryLeagues() {
+        Firebase.firestore.collection(DB_COLLECTION_LEAGUES)
+            .get()
+            .addOnSuccessListener { documents ->
+                val list: ArrayList<League> = ArrayList()
+                for (doc in documents) {
+                    val league = createLeagueFromDocument(doc)
+                    list.add(league)
+                }
+                updateLeagueList(list)
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting leagues", exception)
             }
     }
 
@@ -461,6 +478,14 @@ object Repository {
         )
     }
 
+    private fun createLeagueFromDocument(doc: QueryDocumentSnapshot): League {
+        return League(
+            id = doc[LEAGUE_ID] as Long,
+            name = doc[LEAGUE_NAME] as String,
+            logo = doc[LEAGUE_LOGO] as String
+        )
+    }
+
 //endregion
 
     //region postValue MutableLiveData Objects
@@ -477,6 +502,10 @@ object Repository {
 
     private fun updateEventTipsList(list: ArrayList<EventTip>) {
         eventTipsList.postValue(list)
+    }
+
+    private fun updateLeagueList(list: ArrayList<League>) {
+        leagues.postValue(list)
     }
 //endregion
 }

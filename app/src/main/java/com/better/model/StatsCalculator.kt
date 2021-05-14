@@ -5,7 +5,7 @@ import com.better.model.dataHolders.EventTip
 object StatsCalculator {
     private const val TAG = "StatsCalculator"
 
-    fun calculateHits(tips: ArrayList<EventTip>): HashMap<Long, IntArray> {
+    fun calculateHits(tips: List<EventTip>): HashMap<Long, IntArray> {
         val countMap = hashMapOf<Long, IntArray>()
 
         tips.forEach { tip ->

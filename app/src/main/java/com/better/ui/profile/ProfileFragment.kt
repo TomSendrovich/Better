@@ -94,6 +94,16 @@ class ProfileFragment : Fragment() {
         viewModel.eventTips.observe(viewLifecycleOwner, {
             val list = viewModel.eventTips.value
             (profileRecyclerView.adapter as EventTipAdapter).setData(list as ArrayList<EventTip>)
+
+            viewModel.calculateStats()
+        })
+
+        viewModel.stats.observe(viewLifecycleOwner, {
+            Toast.makeText(context, "calculateStats Done!", Toast.LENGTH_SHORT).show()
+        })
+
+        viewModel.leagues.observe(viewLifecycleOwner, {
+            Toast.makeText(context, "leagues Done!", Toast.LENGTH_SHORT).show()
         })
     }
 
