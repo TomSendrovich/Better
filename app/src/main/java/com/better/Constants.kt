@@ -10,6 +10,10 @@ const val VIEW_PAGER = "viewPager"
 const val PAGE_SELECTED_DEFAULT = 7
 const val EVENT_TIPS_QUERY_LIMIT = 50L
 
+// League IDs
+const val PL = 39L
+const val PD = 140L
+
 // Admin Options
 const val MENU_DELETE = 1
 const val MENU_BAN = 2

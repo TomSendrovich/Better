@@ -10,6 +10,7 @@ object StatsCalculator {
 
         tips.forEach { tip ->
             if (tip.isHit != null) {
+                countMap.putIfAbsent(tip.league, IntArray(2))
                 if (tip.isHit == true) {
                     countMap[tip.league]!!.hit++
                 } else {
@@ -22,9 +23,9 @@ object StatsCalculator {
     }
 
     private var IntArray.hit
-        set(value) = set(1, value)
-        get() = get(1)
-    private var IntArray.miss
         set(value) = set(0, value)
         get() = get(0)
+    private var IntArray.miss
+        set(value) = set(1, value)
+        get() = get(1)
 }

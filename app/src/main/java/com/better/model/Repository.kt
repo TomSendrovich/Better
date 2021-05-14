@@ -138,9 +138,11 @@ object Repository {
     }
 
     fun queryLeagues() {
-        Firebase.firestore.collection(DB_COLLECTION_LEAGUES)
+        Firebase.firestore
+            .collection(DB_COLLECTION_LEAGUES)
             .get()
             .addOnSuccessListener { documents ->
+                Log.d(TAG, "queryLeagues: ${documents.size()} documents")
                 val list: ArrayList<League> = ArrayList()
                 for (doc in documents) {
                     val league = createLeagueFromDocument(doc)

@@ -12,9 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.better.MENU_BAN
-import com.better.MENU_DELETE
-import com.better.R
+import com.better.*
 import com.better.adapters.EventTipAdapter
 import com.better.model.dataHolders.EventTip
 import com.better.utils.AppUtils
@@ -41,7 +39,7 @@ class ProfileFragment : Fragment() {
 
         followBtn = view.findViewById(R.id.followBtn)
         unFollowBtn = view.findViewById(R.id.unFollowBtn)
-        viewAction = view.findViewById(R.id.view_action)
+        viewAction = view.findViewById(R.id.view_buttons)
 
         return view
     }
@@ -98,11 +96,26 @@ class ProfileFragment : Fragment() {
             viewModel.calculateStats()
         })
 
-        viewModel.stats.observe(viewLifecycleOwner, {
-            Toast.makeText(context, "calculateStats Done!", Toast.LENGTH_SHORT).show()
+        viewModel.stats.observe(viewLifecycleOwner, { map ->
+            if (map.isNotEmpty()) {
+                view.hit_pl.text = "Hit: " + (map[PL]?.get(0) ?: 0).toString()
+                view.miss_pl.text = "Miss: " + (map[PL]?.get(1) ?: 0).toString()
+
+                view.hit_pd.text = "Hit: " + (map[PD]?.get(0) ?: 0).toString()
+                view.miss_pd.text = "Miss: " + (map[PD]?.get(1) ?: 0).toString()
+
+                Toast.makeText(context, "calculateStats Done!", Toast.LENGTH_SHORT).show()
+            }
         })
 
-        viewModel.leagues.observe(viewLifecycleOwner, {
+        viewModel.leagues.observe(viewLifecycleOwner, { list ->
+            list.forEach { league ->
+                when (league.id) {
+                    39L -> AppUtils.bindImage(view.logo_pl, league.logo)
+                    140L -> AppUtils.bindImage(view.logo_pd, league.logo)
+                }
+            }
+
             Toast.makeText(context, "leagues Done!", Toast.LENGTH_SHORT).show()
         })
     }
@@ -165,4 +178,6 @@ class ProfileFragment : Fragment() {
             alert.show()
         }
     }
+
+
 }

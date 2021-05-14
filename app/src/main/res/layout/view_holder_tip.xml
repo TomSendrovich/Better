@@ -115,6 +115,16 @@
                 android:layout_marginBottom="16dp"
                 app:srcCompat="@drawable/draw" />
 
+            <ImageView
+                android:id="@+id/viewHolder_tip_hit_image"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:srcCompat="@drawable/ic_tip_hit" />
+
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
