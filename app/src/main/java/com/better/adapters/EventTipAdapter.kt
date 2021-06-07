@@ -16,7 +16,7 @@ import com.better.utils.EventTipsDiffUtil
 
 class EventTipAdapter(
     private var oldList: List<EventTip>,
-    private val listener: EventTipListener
+    private val listener: EventTipListener,
 ) : RecyclerView.Adapter<EventTipAdapter.ViewHolder>() {
 
     interface EventTipListener {
@@ -37,13 +37,14 @@ class EventTipAdapter(
         val winnerTeamLogo: ImageView = view.findViewById(R.id.viewHolder_tip_team_winner_logo)
         val userName: TextView = view.findViewById(R.id.viewHolder_tip_user_name)
         val timeCreated: TextView = view.findViewById(R.id.viewHolder_tip_time_created)
+        val isHitImage: ImageView = view.findViewById(R.id.viewHolder_tip_hit_image)
 
         init {
             view.setOnCreateContextMenuListener(this)
         }
 
         override fun onCreateContextMenu(
-            menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?
+            menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?,
         ) {
             menu!!.setHeaderTitle("Admin Options")
             menu.add(this.adapterPosition, 1, 1, "Delete Tip")
@@ -92,6 +93,18 @@ class EventTipAdapter(
                 AppUtils.bindImage(viewHolder.winnerTeamLogo, R.drawable.draw)
             }
         }
+
+        if (eventTip.isHit == null) {
+            viewHolder.isHitImage.visibility = View.GONE
+        } else {
+            viewHolder.isHitImage.visibility = View.VISIBLE
+            if (eventTip.isHit == true) {
+                AppUtils.bindImage(viewHolder.isHitImage, R.drawable.ic_tip_hit)
+            } else {
+                AppUtils.bindImage(viewHolder.isHitImage, R.drawable.ic_tip_miss)
+            }
+        }
+
 
         viewHolder.itemView.setOnClickListener {
             listener.onItemClicked(oldList[position])

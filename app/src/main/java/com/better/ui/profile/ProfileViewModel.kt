@@ -1,15 +1,20 @@
 package com.better.ui.profile
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.better.model.Repository
+import com.better.model.StatsCalculator
 import com.better.model.dataHolders.AppUser
 import com.better.model.dataHolders.EventTip
+import com.better.model.dataHolders.League
 
 class ProfileViewModel : ViewModel() {
 
     val eventTips: LiveData<List<EventTip>> = Repository.eventTipsList
+    val leagues: LiveData<List<League>> = Repository.leagues
     val profileToShow: LiveData<AppUser> = Repository.profileToShow
+    val stats = MutableLiveData<HashMap<Long, IntArray>>()
 
     fun updateEventTips() {
         return Repository.queryEventTipsByUserId(this.profileToShow.value!!.uid)
@@ -69,5 +74,10 @@ class ProfileViewModel : ViewModel() {
         val list = Repository.appUser.value!!.following as ArrayList<String>
         list.remove(profileToShow.value!!.uid)
         Repository.appUser.postValue(Repository.appUser.value)
+    }
+
+    fun calculateStats() {
+        val map = StatsCalculator.calculateHits(eventTips.value!!)
+        stats.postValue(map)
     }
 }

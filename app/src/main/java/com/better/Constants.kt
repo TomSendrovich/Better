@@ -10,6 +10,10 @@ const val VIEW_PAGER = "viewPager"
 const val PAGE_SELECTED_DEFAULT = 7
 const val EVENT_TIPS_QUERY_LIMIT = 50L
 
+// League IDs
+const val PL = 39L
+const val PD = 140L
+
 // Admin Options
 const val MENU_DELETE = 1
 const val MENU_BAN = 2
@@ -82,6 +86,8 @@ const val SCORE_HALF_TIME_AWAY: String = "${SCORE}.${HALF_TIME}.${AWAY}"
 const val SCORE_PENALTY_HOME: String = "${SCORE}.${PENALTY}.${HOME}"
 const val SCORE_PENALTY_AWAY: String = "${SCORE}.${PENALTY}.${AWAY}"
 const val LEAGUE_ID: String = "${LEAGUE}.${ID}"
+const val LEAGUE_NAME: String = "${LEAGUE}.${NAME}"
+const val LEAGUE_LOGO: String = "${LEAGUE}.${LOGO}"
 const val TEAMS_HOME_ID: String = "${TEAMS}.${HOME}.${ID}"
 const val TEAMS_HOME_LOGO: String = "${TEAMS}.${HOME}.${LOGO}"
 const val TEAMS_HOME_NAME: String = "${TEAMS}.${HOME}.${NAME}"
