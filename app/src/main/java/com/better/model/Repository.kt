@@ -91,19 +91,24 @@ object Repository {
     }
 
     fun queryFeedEventTips() {
-        Firebase.firestore
-            .collection(DB_COLLECTION_EVENT_TIPS)
-            .orderBy(CREATED, Query.Direction.DESCENDING)
-            .limit(EVENT_TIPS_QUERY_LIMIT)
-            .get()
-            .addOnSuccessListener { documents ->
-                val list: ArrayList<EventTip> = ArrayList()
-                for (doc in documents) {
-                    val eventTip = createEventTipFromDocument(doc)
-                    list.add(eventTip)
+        val following = appUser.value?.following ?: emptyList()
+
+        if (following.isNotEmpty()) {
+            Firebase.firestore
+                .collection(DB_COLLECTION_EVENT_TIPS)
+                .whereIn(UID, following)
+                .orderBy(CREATED, Query.Direction.DESCENDING)
+                .limit(EVENT_TIPS_QUERY_LIMIT)
+                .get()
+                .addOnSuccessListener { documents ->
+                    val list: ArrayList<EventTip> = ArrayList()
+                    for (doc in documents) {
+                        val eventTip = createEventTipFromDocument(doc)
+                        list.add(eventTip)
+                    }
+                    updateEventTipsList(list, isForInsight = false)
                 }
-                updateEventTipsList(list, isForInsight = false)
-            }
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
