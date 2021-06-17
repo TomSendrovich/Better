@@ -32,7 +32,6 @@ data class Fixture(
     val away: FixtureTeam
 ) : Parcelable {
     companion object {
-
         fun buildScoreText(fixture: Fixture): String {
             val homeScore = fixture.goals.home.toString()
             val awayScore = fixture.goals.away.toString()

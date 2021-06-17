@@ -21,6 +21,7 @@ object Repository {
 
     val fixtures = MutableLiveData<HashMap<Int, List<Fixture>>>()
     val eventTipsList = MutableLiveData<List<EventTip>>()
+    val insightEventTipsList = MutableLiveData<List<EventTip>>()
     val monthAndYearText = MutableLiveData<String>()
     val isBanned = MutableLiveData<Boolean>()
     val appUser = MutableLiveData<AppUser>()
@@ -68,11 +69,11 @@ object Repository {
                     val eventTip = createEventTipFromDocument(doc)
                     list.add(eventTip)
                 }
-                updateEventTipsList(list)
+                updateEventTipsList(list, isForInsight = false)
             }
     }
 
-    fun queryEventTipsByUserId(userID: String) {
+    fun queryEventTipsByUserId(userID: String, isForInsight: Boolean) {
         Firebase.firestore
             .collection(DB_COLLECTION_EVENT_TIPS)
             .whereEqualTo(UID, userID)
@@ -85,7 +86,7 @@ object Repository {
                     val eventTip = createEventTipFromDocument(doc)
                     list.add(eventTip)
                 }
-                updateEventTipsList(list)
+                updateEventTipsList(list, isForInsight)
             }
     }
 
@@ -101,7 +102,7 @@ object Repository {
                     val eventTip = createEventTipFromDocument(doc)
                     list.add(eventTip)
                 }
-                updateEventTipsList(list)
+                updateEventTipsList(list, isForInsight = false)
             }
     }
 
@@ -502,8 +503,12 @@ object Repository {
         fixtures.postValue(map)
     }
 
-    private fun updateEventTipsList(list: ArrayList<EventTip>) {
-        eventTipsList.postValue(list)
+    private fun updateEventTipsList(list: ArrayList<EventTip>, isForInsight: Boolean) {
+        if (isForInsight) {
+            insightEventTipsList.postValue(list)
+        } else {
+            eventTipsList.postValue(list)
+        }
     }
 
     private fun updateLeagueList(list: ArrayList<League>) {

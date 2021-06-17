@@ -17,7 +17,7 @@ class ProfileViewModel : ViewModel() {
     val stats = MutableLiveData<HashMap<Long, IntArray>>()
 
     fun updateEventTips() {
-        return Repository.queryEventTipsByUserId(this.profileToShow.value!!.uid)
+        return Repository.queryEventTipsByUserId(this.profileToShow.value!!.uid, isForInsight = false)
     }
 
     fun updateUser(userID: String) {

@@ -17,6 +17,7 @@ const val PD = 140L
 // Admin Options
 const val MENU_DELETE = 1
 const val MENU_BAN = 2
+const val MENU_INSIGHTS = 3
 
 const val DB_COLLECTION_FIXTURES: String = "fixtures"
 const val DB_COLLECTION_LEAGUES: String = "leagues"

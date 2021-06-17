@@ -72,7 +72,7 @@ object StatsCalculator {
             val miss = countMap[team]!!.miss.toDouble()
             val percent = hit / (hit + miss)
 
-            results[team] = percent
+            results[team] = percent * 100
         }
 
         return results

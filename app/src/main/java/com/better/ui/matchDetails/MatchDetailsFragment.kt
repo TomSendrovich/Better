@@ -19,6 +19,7 @@ import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.charts.Pie
 import com.better.MENU_BAN
 import com.better.MENU_DELETE
+import com.better.MENU_INSIGHTS
 import com.better.R
 import com.better.adapters.EventTipAdapter
 import com.better.model.dataHolders.EventTip
@@ -97,13 +98,18 @@ class MatchDetailsFragment : Fragment() {
 
                 override fun onItemRemoveClicked(item: EventTip) = showDeleteItemDialog(item)
                 override fun onUserBanClicked(userID: String) = showBanUserDialog(userID)
+                override fun onInsightsClicked(item: EventTip) {
+                    val action = MatchDetailsFragmentDirections
+                        .actionMatchDetailsFragmentToInsightsFragment(item)
+                    view.findNavController().navigate(action)
+                }
             })
             layoutManager = LinearLayoutManager(context)
         }
 
         floatingActionButton.setOnClickListener {
-            val action =
-                MatchDetailsFragmentDirections.actionMatchDetailsFragmentToAddTipFragment(args.selectedFixture)
+            val action = MatchDetailsFragmentDirections
+                .actionMatchDetailsFragmentToAddTipFragment(args.selectedFixture)
             view.findNavController().navigate(action)
         }
 
@@ -150,6 +156,7 @@ class MatchDetailsFragment : Fragment() {
         when (item.itemId) {
             MENU_DELETE -> (recyclerViewMatch.adapter as EventTipAdapter).removeItem(item.groupId)
             MENU_BAN -> (recyclerViewMatch.adapter as EventTipAdapter).banUser(item.groupId)
+            MENU_INSIGHTS -> (recyclerViewMatch.adapter as EventTipAdapter).openInsights(item.groupId)
         }
         return true
     }

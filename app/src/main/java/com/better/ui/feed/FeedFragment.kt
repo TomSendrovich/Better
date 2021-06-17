@@ -55,6 +55,10 @@ class FeedFragment : Fragment() {
                 override fun onUserBanClicked(userID: String) {
                     showBanUserDialog(userID)
                 }
+
+                override fun onInsightsClicked(item: EventTip) {
+                    TODO("Not yet implemented")
+                }
             })
             layoutManager = LinearLayoutManager(context)
         }
