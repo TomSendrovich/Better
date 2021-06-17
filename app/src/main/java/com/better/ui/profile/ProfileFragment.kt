@@ -93,7 +93,7 @@ class ProfileFragment : Fragment() {
             val list = viewModel.eventTips.value
             (profileRecyclerView.adapter as EventTipAdapter).setData(list as ArrayList<EventTip>)
 
-            viewModel.calculateStats()
+            viewModel.calculateHits()
         })
 
         viewModel.stats.observe(viewLifecycleOwner, { map ->

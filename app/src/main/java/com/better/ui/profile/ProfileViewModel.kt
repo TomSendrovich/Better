@@ -76,8 +76,9 @@ class ProfileViewModel : ViewModel() {
         Repository.appUser.postValue(Repository.appUser.value)
     }
 
-    fun calculateStats() {
+    fun calculateHits() {
         val map = StatsCalculator.calculateHits(eventTips.value!!)
         stats.postValue(map)
     }
+
 }

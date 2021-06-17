@@ -67,6 +67,14 @@
         app:layout_constraintTop_toBottomOf="@id/topText"
         tools:ignore="HardcodedText" />
 
+    <com.anychart.AnyChartView
+        android:id="@+id/any_chart_view"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/away_textView" />
+
     <View
         android:id="@+id/view3"
         android:layout_width="wrap_content"
@@ -75,7 +83,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/away_textView" />
+        app:layout_constraintTop_toBottomOf="@+id/any_chart_view" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMatch"
@@ -96,8 +104,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

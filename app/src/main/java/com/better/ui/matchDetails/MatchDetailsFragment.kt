@@ -12,6 +12,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.anychart.AnyChart
+import com.anychart.AnyChartView
+import com.anychart.chart.common.dataentry.DataEntry
+import com.anychart.chart.common.dataentry.ValueDataEntry
+import com.anychart.charts.Pie
 import com.better.MENU_BAN
 import com.better.MENU_DELETE
 import com.better.R
@@ -29,6 +34,7 @@ class MatchDetailsFragment : Fragment() {
 
     private val args by navArgs<MatchDetailsFragmentArgs>()
     private lateinit var viewModel: MatchDetailsFragmentViewModel
+    private lateinit var anyChartView: AnyChartView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +42,12 @@ class MatchDetailsFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View? {
         val view = inflater.inflate(R.layout.fragment_match_details, container, false)
+
+        anyChartView = view.findViewById(R.id.any_chart_view)
+        anyChartView.visibility = View.GONE
 
         (activity as MainActivity).supportActionBar?.title =
             Fixture.buildHead2HeadText(args.selectedFixture)
@@ -109,7 +117,33 @@ class MatchDetailsFragment : Fragment() {
             to this fragment from profile fragment (pressed back button)
             */
             (recyclerViewMatch.adapter as EventTipAdapter).notifyDataSetChanged()
+
+            if (list.isNotEmpty()) {
+                viewModel.calculateGuesses()
+            }
         })
+
+        viewModel.pie.observe(viewLifecycleOwner, { map ->
+            setupPieChart(map)
+            anyChartView.visibility = View.VISIBLE
+        })
+    }
+
+    private fun setupPieChart(map: HashMap<Long, Int>) {
+        val pie: Pie = AnyChart.pie()
+        val dataEntries: ArrayList<DataEntry> = arrayListOf()
+
+        dataEntries.add(ValueDataEntry(args.selectedFixture.home.name, map[1]))
+        dataEntries.add(ValueDataEntry(args.selectedFixture.away.name, map[2]))
+        dataEntries.add(ValueDataEntry("Draw", map[0]))
+
+        pie
+            .title("Tips Distribution")
+            .background("#000000")
+            .animation(true)
+            .data(dataEntries)
+
+        anyChartView.setChart(pie)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -157,6 +191,6 @@ class MatchDetailsFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG = "MatchDetailsFragment"
+//        private const val TAG = "MatchDetailsFragment"
     }
 }
