@@ -89,12 +89,10 @@ class MatchDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (args.selectedFixture.prediction == -1L) {
-            viewModel.updateModelPrediction(args.selectedFixture)
-        } else {
-            Log.d(TAG,
-                "id: ${args.selectedFixture.id}, getModelPrediction: ${args.selectedFixture.prediction}")
-        }
+        viewModel.updateModelPrediction(args.selectedFixture)
+        viewModel.prediction.observe(viewLifecycleOwner, {
+            view.model_prediction_text.text = "Model Prediction: $it"
+        })
 
         recyclerViewMatch.apply {
             adapter = EventTipAdapter(ArrayList(), object : EventTipAdapter.EventTipListener {

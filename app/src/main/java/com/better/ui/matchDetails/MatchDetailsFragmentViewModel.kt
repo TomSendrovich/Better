@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 class MatchDetailsFragmentViewModel : ViewModel() {
     val eventTips: LiveData<List<EventTip>> = Repository.eventTipsList
     val pie = MutableLiveData<HashMap<Long, Int>>()
+    val prediction = MutableLiveData<String>()
 
     fun updateEventTipsByFixtureId(fixtureID: Long) {
         Repository.queryEventTipsByFixtureId(fixtureID)
@@ -37,10 +38,24 @@ class MatchDetailsFragmentViewModel : ViewModel() {
     }
 
     fun updateModelPrediction(fixture: Fixture) {
-        viewModelScope.launch {
-            val response: String = Repository.updateModelPrediction(fixture.id)
-            Log.d(TAG, "id: ${fixture.id}, model prediction: $response")
-            fixture.prediction = response.toLong()
+        if (fixture.prediction == -1L) {
+            viewModelScope.launch {
+                val response: String = Repository.updateModelPrediction(fixture.id)
+                Log.d(TAG, "id: ${fixture.id}, model prediction: $response")
+                fixture.prediction = response.toLong()
+
+                when (response) {
+                    "1" -> prediction.postValue(fixture.home.name)
+                    "2" -> prediction.postValue(fixture.away.name)
+                    "0" -> prediction.postValue("Draw")
+                }
+            }
+        } else {
+            when (fixture.prediction) {
+                1L -> prediction.postValue(fixture.home.name)
+                2L -> prediction.postValue(fixture.away.name)
+                0L -> prediction.postValue("Draw")
+            }
         }
     }
 
