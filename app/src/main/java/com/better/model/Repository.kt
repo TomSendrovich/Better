@@ -3,6 +3,7 @@ package com.better.model
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.better.*
+import com.better.api.RetrofitInstance
 import com.better.model.dataHolders.*
 import com.better.utils.DateUtils
 import com.google.firebase.Timestamp
@@ -32,8 +33,11 @@ object Repository {
         fixtures.value = HashMap<Int, List<Fixture>>()
     }
 
-    //region Query from firestore
+    suspend fun updateModelPrediction(id: Long): String {
+        return RetrofitInstance.API.updateModelPrediction(id)
+    }
 
+    //region Query from firestore
     fun queryFixturesByDate(from: Calendar, to: Calendar) {
         val fixturesRef = Firebase.firestore.collection(DB_COLLECTION_FIXTURES)
         fixturesRef
@@ -452,6 +456,7 @@ object Repository {
             name = doc[TEAMS_AWAY_NAME] as String,
             winner = doc[TEAMS_AWAY_WINNER] as Boolean?
         )
+        val prediction = (doc[PREDICTION] ?: -1L) as Long
 
         return Fixture(
             id = id,
@@ -463,7 +468,8 @@ object Repository {
             league = league,
             score = score,
             home = home,
-            away = away
+            away = away,
+            prediction = prediction
         )
     }
 

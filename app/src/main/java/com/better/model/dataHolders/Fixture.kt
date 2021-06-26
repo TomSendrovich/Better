@@ -29,7 +29,8 @@ data class Fixture(
     val league: Long,
     val score: Score,
     val home: FixtureTeam,
-    val away: FixtureTeam
+    val away: FixtureTeam,
+    var prediction: Long,
 ) : Parcelable {
     companion object {
         fun buildScoreText(fixture: Fixture): String {

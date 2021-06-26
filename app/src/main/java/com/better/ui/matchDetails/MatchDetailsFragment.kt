@@ -2,6 +2,7 @@ package com.better.ui.matchDetails
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -87,6 +88,13 @@ class MatchDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (args.selectedFixture.prediction == -1L) {
+            viewModel.updateModelPrediction(args.selectedFixture)
+        } else {
+            Log.d(TAG,
+                "id: ${args.selectedFixture.id}, getModelPrediction: ${args.selectedFixture.prediction}")
+        }
 
         recyclerViewMatch.apply {
             adapter = EventTipAdapter(ArrayList(), object : EventTipAdapter.EventTipListener {
@@ -198,6 +206,7 @@ class MatchDetailsFragment : Fragment() {
     }
 
     companion object {
-//        private const val TAG = "MatchDetailsFragment"
+        //        private const val TAG = "MatchDetailsFragment"
+        private const val TAG = "MatchDetailsFragment"
     }
 }
