@@ -67,26 +67,43 @@
         app:layout_constraintTop_toBottomOf="@id/topText"
         tools:ignore="HardcodedText" />
 
-    <com.anychart.AnyChartView
-        android:id="@+id/any_chart_view"
+    <View
+        android:id="@+id/all_charts_view"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/away_textView" />
 
+    <!--    <com.anychart.AnyChartView-->
+    <!--        android:id="@+id/users_chart_view"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="300dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="@+id/all_charts_view"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/all_charts_view"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/away_textView" />-->
+
+    <com.anychart.AnyChartView
+        android:id="@+id/model_chart_view"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toBottomOf="@id/all_charts_view"
+        app:layout_constraintEnd_toEndOf="@+id/all_charts_view"
+        app:layout_constraintStart_toStartOf="@+id/all_charts_view" />
+
     <TextView
         android:id="@+id/model_prediction_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Model Prediction: Evaluating..."
-        android:textColor="@color/gold"
         android:textAlignment="center"
+        android:textColor="@color/gold"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/any_chart_view" />
+        app:layout_constraintTop_toBottomOf="@id/all_charts_view"
+        tools:ignore="HardcodedText" />
 
     <View
         android:id="@+id/view3"
@@ -116,7 +133,8 @@
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_input_add"
+        tools:ignore="ContentDescription" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

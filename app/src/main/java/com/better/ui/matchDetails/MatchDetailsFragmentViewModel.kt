@@ -10,11 +10,12 @@ import com.better.model.StatsCalculator
 import com.better.model.dataHolders.EventTip
 import com.better.model.dataHolders.Fixture
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class MatchDetailsFragmentViewModel : ViewModel() {
     val eventTips: LiveData<List<EventTip>> = Repository.eventTipsList
     val pie = MutableLiveData<HashMap<Long, Int>>()
-    val prediction = MutableLiveData<String>()
+    val prediction = MutableLiveData<ArrayList<Double>>()
 
     fun updateEventTipsByFixtureId(fixtureID: Long) {
         Repository.queryEventTipsByFixtureId(fixtureID)
@@ -38,24 +39,32 @@ class MatchDetailsFragmentViewModel : ViewModel() {
     }
 
     fun updateModelPrediction(fixture: Fixture) {
-        if (fixture.prediction == -1L) {
+        if (fixture.prediction == arrayListOf(0, 0, 0)) {
             viewModelScope.launch {
-                val response: String = Repository.updateModelPrediction(fixture.id)
-                Log.d(TAG, "id: ${fixture.id}, model prediction: $response")
-                fixture.prediction = response.toLong()
+                try {
+                    val response: Response<String> = Repository.updateModelPrediction(fixture.id)
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()!!
+                        Log.d(TAG, "id: ${fixture.id}, model prediction: $responseBody")
+                        val predictionList =
+                            (responseBody.trim('[', ']', ' ').split(' ') as ArrayList)
+                        predictionList.removeIf { it.isBlank() }
 
-                when (response) {
-                    "1" -> prediction.postValue(fixture.home.name)
-                    "2" -> prediction.postValue(fixture.away.name)
-                    "0" -> prediction.postValue("Draw")
+                        fixture.prediction = arrayListOf(
+                            predictionList[0].toDouble(),
+                            predictionList[1].toDouble(),
+                            predictionList[2].toDouble())
+                        prediction.postValue(fixture.prediction)
+                    } else {
+                        Log.e(TAG, "updateModelPrediction: Error: ${response.errorBody()}")
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "updateModelPrediction: CATCH Error: ${e.message}")
                 }
+
             }
         } else {
-            when (fixture.prediction) {
-                1L -> prediction.postValue(fixture.home.name)
-                2L -> prediction.postValue(fixture.away.name)
-                0L -> prediction.postValue("Draw")
-            }
+            prediction.postValue(fixture.prediction)
         }
     }
 

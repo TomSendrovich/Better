@@ -36,7 +36,8 @@ class MatchDetailsFragment : Fragment() {
 
     private val args by navArgs<MatchDetailsFragmentArgs>()
     private lateinit var viewModel: MatchDetailsFragmentViewModel
-    private lateinit var anyChartView: AnyChartView
+//    private lateinit var usersChartView: AnyChartView
+    private lateinit var modelChartView: AnyChartView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +49,10 @@ class MatchDetailsFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_match_details, container, false)
 
-        anyChartView = view.findViewById(R.id.any_chart_view)
-        anyChartView.visibility = View.GONE
+//        usersChartView = view.findViewById(R.id.users_chart_view)
+        modelChartView = view.findViewById(R.id.model_chart_view)
+//        usersChartView.visibility = View.GONE
+        modelChartView.visibility = View.GONE
 
         (activity as MainActivity).supportActionBar?.title =
             Fixture.buildHead2HeadText(args.selectedFixture)
@@ -136,12 +139,17 @@ class MatchDetailsFragment : Fragment() {
         })
 
         viewModel.pie.observe(viewLifecycleOwner, { map ->
-            setupPieChart(map)
-            anyChartView.visibility = View.VISIBLE
+//            setupUsersPieChart(map)
+//            usersChartView.visibility = View.VISIBLE
+        })
+        viewModel.prediction.observe(viewLifecycleOwner, { prediction ->
+            setupModelPieChart(prediction)
+            modelChartView.visibility = View.VISIBLE
+            model_prediction_text.visibility = View.GONE
         })
     }
 
-    private fun setupPieChart(map: HashMap<Long, Int>) {
+    private fun setupUsersPieChart(map: HashMap<Long, Int>) {
         val pie: Pie = AnyChart.pie()
         val dataEntries: ArrayList<DataEntry> = arrayListOf()
 
@@ -155,7 +163,26 @@ class MatchDetailsFragment : Fragment() {
             .animation(true)
             .data(dataEntries)
 
-        anyChartView.setChart(pie)
+//        usersChartView.setChart(pie)
+        Log.d(TAG, "setupUsersPieChart: ")
+    }
+
+    private fun setupModelPieChart(prediction: ArrayList<Double>) {
+        val pie: Pie = AnyChart.pie()
+        val dataEntries: ArrayList<DataEntry> = arrayListOf()
+
+        dataEntries.add(ValueDataEntry(args.selectedFixture.home.name, prediction[0]))
+        dataEntries.add(ValueDataEntry(args.selectedFixture.away.name, prediction[2]))
+        dataEntries.add(ValueDataEntry("Draw", prediction[1]))
+
+        pie
+            .title("Model Evaluation")
+            .background("#000000")
+            .animation(true)
+            .data(dataEntries)
+
+        modelChartView.setChart(pie)
+        Log.d(TAG, "setupModelPieChart: ")
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {

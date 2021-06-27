@@ -14,6 +14,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -33,7 +34,7 @@ object Repository {
         fixtures.value = HashMap<Int, List<Fixture>>()
     }
 
-    suspend fun updateModelPrediction(id: Long): String {
+    suspend fun updateModelPrediction(id: Long): Response<String> {
         return RetrofitInstance.API.updateModelPrediction(id)
     }
 
@@ -410,7 +411,7 @@ object Repository {
     //region Create Data Classes from firebase document
 
     private fun createFixtureFromDocument(doc: QueryDocumentSnapshot): Fixture {
-//        Log.d(TAG, "${doc.id} => ${doc.data}")
+//        Log.e(TAG, "${doc.id} => ${doc.data}")
         val id = doc[FIXTURE_ID] as Long
         val date = doc[FIXTURE_DATE] as String
         val timestamp = doc[FIXTURE_TIMESTAMP] as Long
@@ -456,7 +457,7 @@ object Repository {
             name = doc[TEAMS_AWAY_NAME] as String,
             winner = doc[TEAMS_AWAY_WINNER] as Boolean?
         )
-        val prediction = (doc[PREDICTION] ?: -1L) as Long
+        val prediction = (doc[PREDICTION] ?: arrayListOf(0, 0, 0)) as ArrayList<Double>
 
         return Fixture(
             id = id,
