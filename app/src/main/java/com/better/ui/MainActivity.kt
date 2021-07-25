@@ -69,8 +69,7 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_feed,
-                R.id.nav_matches,
-                R.id.nav_about
+                R.id.nav_matches
             ),
             drawerLayout
         )

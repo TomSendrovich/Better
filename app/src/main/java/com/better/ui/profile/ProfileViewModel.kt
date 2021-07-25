@@ -17,7 +17,8 @@ class ProfileViewModel : ViewModel() {
     val stats = MutableLiveData<HashMap<Long, IntArray>>()
 
     fun updateEventTips() {
-        return Repository.queryEventTipsByUserId(this.profileToShow.value!!.uid, isForInsight = false)
+        return Repository.queryEventTipsByUserId(this.profileToShow.value!!.uid,
+            isForInsight = false)
     }
 
     fun updateUser(userID: String) {
@@ -65,8 +66,13 @@ class ProfileViewModel : ViewModel() {
     }
 
     private fun addFollowingToLocalAppUser() {
-        val list = Repository.appUser.value!!.following as ArrayList<String>
-        list.add(profileToShow.value!!.uid)
+        var list = Repository.appUser.value!!.following
+
+        if (list.isEmpty()) {
+            list = ArrayList()
+        }
+
+        (list as ArrayList<String>).add(profileToShow.value!!.uid)
         Repository.appUser.postValue(Repository.appUser.value)
     }
 
