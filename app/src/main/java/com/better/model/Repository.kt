@@ -3,6 +3,7 @@ package com.better.model
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.better.*
+import com.better.api.RetrofitInstance
 import com.better.model.dataHolders.*
 import com.better.utils.DateUtils
 import com.google.firebase.Timestamp
@@ -13,6 +14,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -21,6 +23,7 @@ object Repository {
 
     val fixtures = MutableLiveData<HashMap<Int, List<Fixture>>>()
     val eventTipsList = MutableLiveData<List<EventTip>>()
+    val insightEventTipsList = MutableLiveData<List<EventTip>>()
     val monthAndYearText = MutableLiveData<String>()
     val isBanned = MutableLiveData<Boolean>()
     val appUser = MutableLiveData<AppUser>()
@@ -31,8 +34,11 @@ object Repository {
         fixtures.value = HashMap<Int, List<Fixture>>()
     }
 
-    //region Query from firestore
+    suspend fun updateModelPrediction(id: Long): Response<String> {
+        return RetrofitInstance.API.updateModelPrediction(id)
+    }
 
+    //region Query from firestore
     fun queryFixturesByDate(from: Calendar, to: Calendar) {
         val fixturesRef = Firebase.firestore.collection(DB_COLLECTION_FIXTURES)
         fixturesRef
@@ -68,11 +74,11 @@ object Repository {
                     val eventTip = createEventTipFromDocument(doc)
                     list.add(eventTip)
                 }
-                updateEventTipsList(list)
+                updateEventTipsList(list, isForInsight = false)
             }
     }
 
-    fun queryEventTipsByUserId(userID: String) {
+    fun queryEventTipsByUserId(userID: String, isForInsight: Boolean) {
         Firebase.firestore
             .collection(DB_COLLECTION_EVENT_TIPS)
             .whereEqualTo(UID, userID)
@@ -85,24 +91,29 @@ object Repository {
                     val eventTip = createEventTipFromDocument(doc)
                     list.add(eventTip)
                 }
-                updateEventTipsList(list)
+                updateEventTipsList(list, isForInsight)
             }
     }
 
     fun queryFeedEventTips() {
-        Firebase.firestore
-            .collection(DB_COLLECTION_EVENT_TIPS)
-            .orderBy(CREATED, Query.Direction.DESCENDING)
-            .limit(EVENT_TIPS_QUERY_LIMIT)
-            .get()
-            .addOnSuccessListener { documents ->
-                val list: ArrayList<EventTip> = ArrayList()
-                for (doc in documents) {
-                    val eventTip = createEventTipFromDocument(doc)
-                    list.add(eventTip)
+        val following = appUser.value?.following ?: emptyList()
+
+        if (following.isNotEmpty()) {
+            Firebase.firestore
+                .collection(DB_COLLECTION_EVENT_TIPS)
+                .whereIn(UID, following)
+                .orderBy(CREATED, Query.Direction.DESCENDING)
+                .limit(EVENT_TIPS_QUERY_LIMIT)
+                .get()
+                .addOnSuccessListener { documents ->
+                    val list: ArrayList<EventTip> = ArrayList()
+                    for (doc in documents) {
+                        val eventTip = createEventTipFromDocument(doc)
+                        list.add(eventTip)
+                    }
+                    updateEventTipsList(list, isForInsight = false)
                 }
-                updateEventTipsList(list)
-            }
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -400,7 +411,7 @@ object Repository {
     //region Create Data Classes from firebase document
 
     private fun createFixtureFromDocument(doc: QueryDocumentSnapshot): Fixture {
-//        Log.d(TAG, "${doc.id} => ${doc.data}")
+//        Log.e(TAG, "${doc.id} => ${doc.data}")
         val id = doc[FIXTURE_ID] as Long
         val date = doc[FIXTURE_DATE] as String
         val timestamp = doc[FIXTURE_TIMESTAMP] as Long
@@ -446,6 +457,7 @@ object Repository {
             name = doc[TEAMS_AWAY_NAME] as String,
             winner = doc[TEAMS_AWAY_WINNER] as Boolean?
         )
+        val prediction = (doc[PREDICTION] ?: arrayListOf(0, 0, 0)) as ArrayList<Double>
 
         return Fixture(
             id = id,
@@ -457,7 +469,8 @@ object Repository {
             league = league,
             score = score,
             home = home,
-            away = away
+            away = away,
+            prediction = prediction
         )
     }
 
@@ -502,8 +515,12 @@ object Repository {
         fixtures.postValue(map)
     }
 
-    private fun updateEventTipsList(list: ArrayList<EventTip>) {
-        eventTipsList.postValue(list)
+    private fun updateEventTipsList(list: ArrayList<EventTip>, isForInsight: Boolean) {
+        if (isForInsight) {
+            insightEventTipsList.postValue(list)
+        } else {
+            eventTipsList.postValue(list)
+        }
     }
 
     private fun updateLeagueList(list: ArrayList<League>) {

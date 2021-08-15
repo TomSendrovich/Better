@@ -93,7 +93,7 @@ class ProfileFragment : Fragment() {
             val list = viewModel.eventTips.value
             (profileRecyclerView.adapter as EventTipAdapter).setData(list as ArrayList<EventTip>)
 
-            viewModel.calculateStats()
+            viewModel.calculateHits()
         })
 
         viewModel.stats.observe(viewLifecycleOwner, { map ->
@@ -104,7 +104,7 @@ class ProfileFragment : Fragment() {
                 view.hit_pd.text = "Hit: " + (map[PD]?.get(0) ?: 0).toString()
                 view.miss_pd.text = "Miss: " + (map[PD]?.get(1) ?: 0).toString()
 
-                Toast.makeText(context, "calculateStats Done!", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "calculateStats Done!", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -116,7 +116,7 @@ class ProfileFragment : Fragment() {
                 }
             }
 
-            Toast.makeText(context, "leagues Done!", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(context, "leagues Done!", Toast.LENGTH_SHORT).show()
         })
     }
 
@@ -126,6 +126,9 @@ class ProfileFragment : Fragment() {
                 override fun onItemClicked(item: EventTip) {}
                 override fun onItemRemoveClicked(item: EventTip) = showDeleteItemDialog(item)
                 override fun onUserBanClicked(userID: String) = showBanUserDialog(userID)
+                override fun onInsightsClicked(item: EventTip) {
+                    TODO("Not yet implemented")
+                }
             })
             layoutManager = LinearLayoutManager(context)
         }

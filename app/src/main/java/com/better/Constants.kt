@@ -10,6 +10,8 @@ const val VIEW_PAGER = "viewPager"
 const val PAGE_SELECTED_DEFAULT = 7
 const val EVENT_TIPS_QUERY_LIMIT = 50L
 
+const val BASE_URL = "https://us-central1-better-gsts.cloudfunctions.net"
+
 // League IDs
 const val PL = 39L
 const val PD = 140L
@@ -17,6 +19,7 @@ const val PD = 140L
 // Admin Options
 const val MENU_DELETE = 1
 const val MENU_BAN = 2
+const val MENU_INSIGHTS = 3
 
 const val DB_COLLECTION_FIXTURES: String = "fixtures"
 const val DB_COLLECTION_LEAGUES: String = "leagues"
@@ -37,6 +40,7 @@ const val SUCC_TIPS: String = "succTips"
 const val DATE: String = "date"
 const val TIMESTAMP: String = "timestamp"
 const val TIMEZONE: String = "timezone"
+const val PREDICTION: String = "prediction"
 const val STATUS: String = "status"
 const val ELAPSED: String = "elapsed"
 const val LONG: String = "long"

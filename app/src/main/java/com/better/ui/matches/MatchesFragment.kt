@@ -82,7 +82,6 @@ class MatchesFragment : Fragment() {
 
         val pageChangeCallback: OnPageChangeCallback = object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                Log.d(TAG, "onPageSelected: $position")
                 super.onPageSelected(position)
                 viewModel.getFixturesByDate(position - PAGE_SELECTED_DEFAULT)
                 viewModel.updateMonthAndYearText(position - PAGE_SELECTED_DEFAULT)
@@ -127,7 +126,6 @@ class OneDayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         arguments?.takeIf { it.containsKey(ARG_POSITION) }?.apply {
             val position: Int = getInt(ARG_POSITION)
-            Log.d(TAG, "onViewCreated: $position")
 
             noMatchesText = view.findViewById(R.id.no_matches_text)
 

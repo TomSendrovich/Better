@@ -48,6 +48,9 @@
         <action
             android:id="@+id/action_matchDetailsFragment_to_nav_profile"
             app:destination="@id/nav_profile" />
+        <action
+            android:id="@+id/action_matchDetailsFragment_to_insightsFragment"
+            app:destination="@id/insightsFragment" />
     </fragment>
     <fragment
         android:id="@+id/nav_profile"
@@ -70,5 +73,13 @@
         <argument
             android:name="selectedFixture"
             app:argType="com.better.model.dataHolders.Fixture" />
+    </dialog>
+    <dialog
+        android:id="@+id/insightsFragment"
+        android:name="com.better.ui.insights.InsightsFragment"
+        android:label="InsightsFragment" >
+        <argument
+            android:name="selectedEventTip"
+            app:argType="com.better.model.dataHolders.EventTip" />
     </dialog>
 </navigation>

@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.better.utils.DateUtils
 import kotlinx.android.parcel.Parcelize
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Represents a fixture.
@@ -29,10 +30,10 @@ data class Fixture(
     val league: Long,
     val score: Score,
     val home: FixtureTeam,
-    val away: FixtureTeam
+    val away: FixtureTeam,
+    var prediction: ArrayList<Double>,
 ) : Parcelable {
     companion object {
-
         fun buildScoreText(fixture: Fixture): String {
             val homeScore = fixture.goals.home.toString()
             val awayScore = fixture.goals.away.toString()

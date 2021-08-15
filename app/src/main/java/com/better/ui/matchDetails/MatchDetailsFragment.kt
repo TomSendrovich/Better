@@ -2,6 +2,7 @@ package com.better.ui.matchDetails
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -12,8 +13,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.anychart.AnyChart
+import com.anychart.AnyChartView
+import com.anychart.chart.common.dataentry.DataEntry
+import com.anychart.chart.common.dataentry.ValueDataEntry
+import com.anychart.charts.Pie
 import com.better.MENU_BAN
 import com.better.MENU_DELETE
+import com.better.MENU_INSIGHTS
 import com.better.R
 import com.better.adapters.EventTipAdapter
 import com.better.model.dataHolders.EventTip
@@ -29,6 +36,8 @@ class MatchDetailsFragment : Fragment() {
 
     private val args by navArgs<MatchDetailsFragmentArgs>()
     private lateinit var viewModel: MatchDetailsFragmentViewModel
+//    private lateinit var usersChartView: AnyChartView
+    private lateinit var modelChartView: AnyChartView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +45,14 @@ class MatchDetailsFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View? {
         val view = inflater.inflate(R.layout.fragment_match_details, container, false)
+
+//        usersChartView = view.findViewById(R.id.users_chart_view)
+        modelChartView = view.findViewById(R.id.model_chart_view)
+//        usersChartView.visibility = View.GONE
+        modelChartView.visibility = View.GONE
 
         (activity as MainActivity).supportActionBar?.title =
             Fixture.buildHead2HeadText(args.selectedFixture)
@@ -79,6 +92,11 @@ class MatchDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.updateModelPrediction(args.selectedFixture)
+        viewModel.prediction.observe(viewLifecycleOwner, {
+            view.model_prediction_text.text = "Model Prediction: $it"
+        })
+
         recyclerViewMatch.apply {
             adapter = EventTipAdapter(ArrayList(), object : EventTipAdapter.EventTipListener {
                 override fun onItemClicked(item: EventTip) {
@@ -89,13 +107,18 @@ class MatchDetailsFragment : Fragment() {
 
                 override fun onItemRemoveClicked(item: EventTip) = showDeleteItemDialog(item)
                 override fun onUserBanClicked(userID: String) = showBanUserDialog(userID)
+                override fun onInsightsClicked(item: EventTip) {
+                    val action = MatchDetailsFragmentDirections
+                        .actionMatchDetailsFragmentToInsightsFragment(item)
+                    view.findNavController().navigate(action)
+                }
             })
             layoutManager = LinearLayoutManager(context)
         }
 
         floatingActionButton.setOnClickListener {
-            val action =
-                MatchDetailsFragmentDirections.actionMatchDetailsFragmentToAddTipFragment(args.selectedFixture)
+            val action = MatchDetailsFragmentDirections
+                .actionMatchDetailsFragmentToAddTipFragment(args.selectedFixture)
             view.findNavController().navigate(action)
         }
 
@@ -109,13 +132,64 @@ class MatchDetailsFragment : Fragment() {
             to this fragment from profile fragment (pressed back button)
             */
             (recyclerViewMatch.adapter as EventTipAdapter).notifyDataSetChanged()
+
+            if (list.isNotEmpty()) {
+                viewModel.calculateGuesses()
+            }
         })
+
+        viewModel.pie.observe(viewLifecycleOwner, { map ->
+//            setupUsersPieChart(map)
+//            usersChartView.visibility = View.VISIBLE
+        })
+        viewModel.prediction.observe(viewLifecycleOwner, { prediction ->
+            setupModelPieChart(prediction)
+            modelChartView.visibility = View.VISIBLE
+            model_prediction_text.visibility = View.GONE
+        })
+    }
+
+    private fun setupUsersPieChart(map: HashMap<Long, Int>) {
+        val pie: Pie = AnyChart.pie()
+        val dataEntries: ArrayList<DataEntry> = arrayListOf()
+
+        dataEntries.add(ValueDataEntry(args.selectedFixture.home.name, map[1]))
+        dataEntries.add(ValueDataEntry(args.selectedFixture.away.name, map[2]))
+        dataEntries.add(ValueDataEntry("Draw", map[0]))
+
+        pie
+            .title("Tips Distribution")
+            .background("#000000")
+            .animation(true)
+            .data(dataEntries)
+
+//        usersChartView.setChart(pie)
+        Log.d(TAG, "setupUsersPieChart: ")
+    }
+
+    private fun setupModelPieChart(prediction: ArrayList<Double>) {
+        val pie: Pie = AnyChart.pie()
+        val dataEntries: ArrayList<DataEntry> = arrayListOf()
+
+        dataEntries.add(ValueDataEntry(args.selectedFixture.home.name, prediction[0]))
+        dataEntries.add(ValueDataEntry(args.selectedFixture.away.name, prediction[2]))
+        dataEntries.add(ValueDataEntry("Draw", prediction[1]))
+
+        pie
+            .title("Model Evaluation")
+            .background("#000000")
+            .animation(true)
+            .data(dataEntries)
+
+        modelChartView.setChart(pie)
+        Log.d(TAG, "setupModelPieChart: ")
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             MENU_DELETE -> (recyclerViewMatch.adapter as EventTipAdapter).removeItem(item.groupId)
             MENU_BAN -> (recyclerViewMatch.adapter as EventTipAdapter).banUser(item.groupId)
+            MENU_INSIGHTS -> (recyclerViewMatch.adapter as EventTipAdapter).openInsights(item.groupId)
         }
         return true
     }
@@ -157,6 +231,7 @@ class MatchDetailsFragment : Fragment() {
     }
 
     companion object {
+        //        private const val TAG = "MatchDetailsFragment"
         private const val TAG = "MatchDetailsFragment"
     }
 }

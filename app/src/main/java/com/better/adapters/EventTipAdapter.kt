@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.better.R
+import com.better.model.Repository
 import com.better.model.dataHolders.EventTip
 import com.better.utils.AppUtils
 import com.better.utils.DateUtils
@@ -23,6 +24,7 @@ class EventTipAdapter(
         fun onItemClicked(item: EventTip)
         fun onItemRemoveClicked(item: EventTip)
         fun onUserBanClicked(userID: String)
+        fun onInsightsClicked(item: EventTip)
     }
 
     /**
@@ -46,9 +48,15 @@ class EventTipAdapter(
         override fun onCreateContextMenu(
             menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?,
         ) {
-            menu!!.setHeaderTitle("Admin Options")
-            menu.add(this.adapterPosition, 1, 1, "Delete Tip")
-            menu.add(this.adapterPosition, 2, 2, "Ban User")
+            if (Repository.appUser.value!!.isAdmin) {
+                menu!!.setHeaderTitle("Admin Options")
+                menu.add(this.adapterPosition, 1, 1, "Delete Tip")
+                menu.add(this.adapterPosition, 2, 2, "Ban User")
+                menu.add(this.adapterPosition, 3, 3, "Insights")
+            } else {
+                menu!!.setHeaderTitle("Options")
+                menu.add(this.adapterPosition, 3, 3, "Insights")
+            }
         }
     }
 
@@ -123,6 +131,11 @@ class EventTipAdapter(
     fun banUser(position: Int) {
         val tip = oldList[position]
         listener.onUserBanClicked(tip.userID)
+    }
+
+    fun openInsights(position: Int) {
+        val tip = oldList[position]
+        listener.onInsightsClicked(tip)
     }
 
     fun clearList() {

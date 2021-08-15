@@ -1,6 +1,8 @@
 package com.better.model.dataHolders
 
+import android.os.Parcelable
 import com.google.firebase.Timestamp
+import kotlinx.android.parcel.Parcelize
 
 /**
  * Represents an event tip.
@@ -20,6 +22,7 @@ import com.google.firebase.Timestamp
  *  1 - home wins
  *  2 - away wins
  */
+@Parcelize
 data class EventTip(
     var tipID: String,
     var userID: String,
@@ -35,6 +38,6 @@ data class EventTip(
     var tipValue: Long,
     var isHit: Boolean?,
     var created: Timestamp,
-)
+) : Parcelable
 
 
