@@ -2,10 +2,10 @@
 ## University Final Project
 ___
 
-
+### Description:
 The app provides a friendly framework for sports gamblers to share their recommendations and review recommendations from other users.
-In addition, a machine learning algorithm is integrated which analyzes and gives a recommendation according to a variety of data.
 
+In addition, a machine learning algorithm is integrated which analyzes and gives a recommendation according to a variety of data.
 
 
 ### Objectives:
