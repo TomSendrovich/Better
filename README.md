@@ -18,5 +18,3 @@ In addition, a machine learning algorithm is integrated which analyzes and gives
 * :white_check_mark: MVVM Architecture
 * :white_check_mark: Navigation Component
 * :white_check_mark: Retrofit with Kotlin Coroutines
-
-#*Better - A smart way to bet*
