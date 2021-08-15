@@ -1,4 +1,4 @@
-# Better
+# Better :trophy:
 ## University Final Project
 ___
 
@@ -14,7 +14,7 @@ In addition, a machine learning algorithm is integrated which analyzes and gives
     * Firebase Storage
     * Authentication
     * Cloud functions
-* :white_check_mark: Fully Kotlin Application
-* :white_check_mark:Fully MVVM Architecture
-* :white_check_mark:Using Navigation Component
-* :white_check_mark:Using Retrofit with Kotlin Coroutines
+* :white_check_mark: 100% Kotlin Application
+* :white_check_mark: MVVM Architecture
+* :white_check_mark: Navigation Component
+* :white_check_mark: Retrofit with Kotlin Coroutines
